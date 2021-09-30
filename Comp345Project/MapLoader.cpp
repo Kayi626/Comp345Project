@@ -4,11 +4,21 @@
 #include "MapLoader.h"
 
 void MapLoader::mapReader(const string& mapName) {
+  cout << "---Loading Map---" << endl;
   mapPath = mapName;
   int lineFlag;
   string line;
   ifstream mapFile;
-  mapFile.open(mapName.c_str());
+  mapFile.open(mapName.c_str(), ios::in);
+
+  if (!mapFile.is_open()) {
+    cout << "Invalid MapFile: " << mapPath << " can not find!" << endl;
+    exit(0);
+  } else if (mapFile.peek() == EOF) {
+    cout << "Invalid MapFile: there is nothing to read within " << mapPath<< endl;
+    exit(0);
+  }
+    
 
   while (getline(mapFile, line) && !mapFile.eof()) {
     if (line.empty() || line.at(0) == ';') {
@@ -65,6 +75,8 @@ void MapLoader::mapReader(const string& mapName) {
     vector<string> borderLine = split(element, ' ');
     borderVec.push_back(borderLine);
   }
+
+  cout << "---Map Loaded---" << endl;
 }
 
 void MapLoader::toString() {
@@ -124,7 +136,7 @@ void MapLoader::validate() {
     }
   }
 
-  // 1. what if there are two ore more country has same name?
+  // 1. what if there are two or more country has same name?
   if (!checkUnique(ctrName)) {
     cerr << "Invalid MapFile: the [country] data within " << mapPath
          << " has two or more identical country name" << endl;
