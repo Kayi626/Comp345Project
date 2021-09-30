@@ -2,6 +2,6 @@
 //3. what if map file has wrong format?
 //4. what if there are two same country number?
 //5. what if there is a country has no border?
-
+//5. what if MapFile is empty.
 
 //not for mapLoader: check reference of a country to continent is whether out of bound.
