@@ -11,7 +11,8 @@ Continent::Continent(int continentID, string continentName) {
 }
 
 Continent::Continent() {
-
+	continentID = 0;
+	continentName = "";
 }
 
 

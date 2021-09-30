@@ -8,7 +8,7 @@ using namespace std;
 
 //Constructors
 Map::Map() {
-
+   
 }
 
 //Copy constructor
@@ -64,6 +64,76 @@ bool Map::is_connected() {
 	return true;
 }
 
+bool Map::countryMatched(const Territory& territory) {
+	bool matched = false;
+	for (int x = 0; x < mapGraph.size(); x++) {
+		Territory temp = *(mapGraph[x][0]);
+		matched = matched || (&territory == &temp);
+	}
+	return matched;
+}
+
+bool Map::is_subgraphs() {
+	bool is_subgraphs = true;
+	//if each country of continentGraph is included in mapGraph, it will be connected(checked by is_connected() function). Otherwise, it is not connected.
+	for (int x = 0; x < continentGraph.size(); x++) {
+		Continent temp = *(continentGraph[x]);
+		vector<Territory*> tempCountryInside = temp.getCountryInside();
+		for (int y = 0; y < tempCountryInside.size(); y++) {
+			is_subgraphs = is_subgraphs && countryMatched(*(tempCountryInside[y]));
+		}
+	}
+	return is_subgraphs;
+
+}
+
+//Helper function: help to check whether each country belongs to one continent and only one continent
+bool Map::belongTo_OneContinent() {
+	bool belongTo = true;
+	for (int x = 0; x < mapGraph.size(); x++) {
+		Territory temp = *(mapGraph[x][0]);
+		int tempID = temp.getBelongedContinentID();
+		//A false value will fail the checking.
+		belongTo = belongTo && continentMatched(tempID);		
+	}
+	return belongTo;
+}
+
+//Helper function: help to check whether the given belongedContinentID mathces any of continents of continentGraph
+bool Map::continentMatched(int continentID) {
+	bool matched = false;
+	if (continentID < 0) {
+		return matched;
+	}
+	//if no ID mathced for the given one, it will return false(It means that the country does not belong to any existing continent)
+	for (int x = 0; x < continentGraph.size(); x++) {
+		Continent temp = *(continentGraph[x]);
+		int tempID = temp.getID();
+		matched = matched || (continentID == tempID);
+	}
+	return matched;
+}
+
+//Helper function: help to find the index of the continent with the same ID as that of the given ID
+int Map::continentMatched2(int continentID) {
+	int index = -1;
+	if (continentID < 0) {
+		return index;
+	}
+	//if no ID mathced for the given one, it will return false(It means that the country does not belong to any existing continent)
+	for (int x = 0; x < continentGraph.size(); x++) {
+		Continent temp = *(continentGraph[x]);
+		int tempID = temp.getID();
+		if (tempID == continentID)
+			index = x;
+	}
+	return index;
+}
+
+
+
+
+
 
 //Other class functions
 void Map::display() {
@@ -83,7 +153,12 @@ void Map::display() {
 
 //Validate whether the map is a connected graph/continents are connected subgraphs/each country belongs to 1 and only 1 continent
 bool Map::validate() {
-	return 1;
+	//First to check the entire graph is connected. Second to check if continents are subgraphs(if they are subgraphs, they are connected as well). Third to check if each country belongs to 1 continent
+
+	if (is_connected() && is_subgraphs() && belongTo_OneContinent()) 
+		return true;
+	return false;
+
 }
 
 
@@ -99,6 +174,17 @@ bool Map::addCountry(Territory* t) {
 	//Add the argument territory into the vector<Territory>
 	try {
 		mapGraph[currentSize].push_back(t);
+        
+		//To allocate the given country to the corresponding continent
+		Territory temp = *(t);
+		int tempID = temp.getBelongedContinentID();
+		int indexOfConti;
+		//Continent ID is invalid. It will return false. No country will be added to any continent
+		if ((indexOfConti = continentMatched2(tempID)) == -1)
+			return false;
+		else
+			continentGraph[indexOfConti]->getCountryInside().push_back(t);
+
 		return true;
 	}
 	catch (exception& e) {
@@ -108,20 +194,22 @@ bool Map::addCountry(Territory* t) {
 	}
 
 }
-bool Map::addContinent(Continent* c) {
+bool Map::addContinent(Continent* conti1) {
 	try {
 		//Add a continent into continentGraph
-		for (Continent* c : continentGraph) {
-			Continent temp = *(c);
-			if (temp.getName().compare(temp.getName()) == 0) {
-				return true;
+		for (Continent* conti2 : continentGraph) {
+			Continent temp1 = *(conti1);
+			Continent temp2 = *(conti2);
+			//The given continent already exists. It wont be added any more
+			if (temp1.getID() == temp2.getID()) {
+				return false;
 			}
 		}
-		continentGraph.push_back(c);
+		continentGraph.push_back(conti1);
 		return true;
 	}
 	catch (exception& e) {
-		cout << e.what() << endl;
+		cout << "Failed to add a continent into the map"<<e.what() << endl;
 
 	}
 }

@@ -7,19 +7,26 @@
 using namespace std;
 
 //Constructors
-Territory::Territory(string countryName, int armyNumber,int countryID) {
-	Territory::countryName = countryName;
+Territory::Territory(string countryName, int armyNumber,int countryID,int belongToWhichContinent,int x,int y) {
+	Territory::ctrName = countryName;
 	Territory::armyNumber = armyNumber;
-	Territory::countryID = countryID;
+	Territory::ctrID = (countryID <0)? abs(countryID): countryID;
+	Territory::contiBelong = (belongToWhichContinent < 0)? abs(belongToWhichContinent) : belongToWhichContinent;
+	Territory::ctrAxisX = (x < 0) ? abs(x) : x;
+	Territory::ctrAxisY = (y < 0) ? abs(y) : y;
+
 }
 Territory::Territory() {
-	
+	ctrAxisX = 0;
+	ctrAxisY = 0;
+	ctrID = 0;
+	ctrName = "";
 }
 
 //Accessors
 string Territory::getName() {
 
-	return Territory::countryName;
+	return Territory::ctrName;
 }
 int Territory::getArmyNumber() {
 
@@ -28,13 +35,25 @@ int Territory::getArmyNumber() {
 
 int Territory::getCountryID() {
 	
-	return Territory::countryID;
+	return Territory::ctrID;
 }
+
+int Territory::getBelongedContinentID() {
+	return Territory::contiBelong;
+}
+
+int Territory::getCtrAxisX() {
+	return Territory::ctrAxisX;
+}
+int Territory::getCtrAxisY() {
+	return Territory::ctrAxisY;
+}
+
 
 //Mutators
 void Territory::setName(string countryName) {
 
-	Territory::countryName = countryName;
+	Territory::ctrName = countryName;
 	
 }
 
@@ -45,6 +64,17 @@ void Territory::setArmyNumber(int armyNumber) {
 }
 void Territory::setCountryID(int countryID) {
 	
-	Territory::countryID = countryID;
+	Territory::ctrID = countryID;
+}
+
+void Territory::setBelongedContinentID(int belongToWhichContinent) {
+    Territory::contiBelong =belongToWhichContinent;
+}
+
+void Territory::setCtrAxisX(int x) {
+	Territory::ctrAxisX = x;
+};
+void Territory::setCtrAxisY(int y) {
+	Territory::ctrAxisY = y;
 }
 
