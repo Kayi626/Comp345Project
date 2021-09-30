@@ -146,7 +146,7 @@ bool Map::releaseMap() {
 		return true;
 	}
 	catch (exception& e) {
-		return false;
 		cout << e.what() << endl;
+		return false;	
 	}
 }

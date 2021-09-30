@@ -13,7 +13,7 @@ Territory::Territory(string countryName, int armyNumber,int countryID) {
 	Territory::countryID = countryID;
 }
 Territory::Territory() {
-  
+	
 }
 
 //Accessors

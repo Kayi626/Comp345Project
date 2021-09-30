@@ -29,7 +29,8 @@ private:
 	// Helper function: help to obtain the index of a country given its ID
 	int getCountryIndex(int ID);
 
-	//Helper function: help to obtain the index of a coun
+	//Helper function: help to 
+
 public:
 	//Constructors
 	Map();
@@ -37,7 +38,6 @@ public:
 	
 	//Other class functions
 	void display();  
-
 	bool addCountry(Territory* t);
 	bool releaseMap();
 	bool validate();

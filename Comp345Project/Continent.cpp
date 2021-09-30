@@ -1,15 +1,20 @@
 #include <iostream>
 #include <vector>
-#include <string>
+#include <cstring>
 #include "Continent.h"
 
-Continent::Continent() {
+using namespace std;
 
-}
 Continent::Continent(int continentID, string continentName) {
 	Continent::continentID = continentID;
 	Continent::continentName = continentName;
 }
+
+Continent::Continent() {
+
+}
+
+
 void Continent::display() {
 	cout <<endl << "Continent No." << continentID << ": " << continentName << endl << "It contains ";
 	for (int x = 0; x < countryInside.size(); x++) {
