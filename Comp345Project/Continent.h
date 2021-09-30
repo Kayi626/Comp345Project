@@ -20,4 +20,5 @@ public:
 	string getName();
 	vector<Territory*> getCountryInside();
 
+
 };
