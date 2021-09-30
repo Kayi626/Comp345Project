@@ -9,7 +9,16 @@ void MapLoader::mapReader(const string& mapName) {
   int lineFlag;
   string line;
   ifstream mapFile;
-  mapFile.open(mapName.c_str());
+  mapFile.open(mapName.c_str(), ios::in);
+
+  if (!mapFile.is_open()) {
+    cout << "Invalid MapFile: " << mapPath << " can not find!" << endl;
+    exit(0);
+  } else if (mapFile.peek() == EOF) {
+    cout << "Invalid MapFile: there is nothing to read within " << mapPath<< endl;
+    exit(0);
+  }
+    
 
   while (getline(mapFile, line) && !mapFile.eof()) {
     if (line.empty() || line.at(0) == ';') {
