@@ -24,6 +24,9 @@
     <ClInclude Include="Continent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MapLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp">
@@ -38,5 +41,21 @@
     <ClCompile Include="MapDriver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MapLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="testcase.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LOTR2.map">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="bigeurope.map">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -141,13 +141,22 @@
   <ItemGroup>
     <ClInclude Include="Continent.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MapLoader.h" />
     <ClInclude Include="Territory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Continent.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapDriver.cpp" />
+    <ClCompile Include="MapLoader.cpp" />
     <ClCompile Include="Territory.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="testcase.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bigeurope.map" />
+    <None Include="LOTR2.map" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
