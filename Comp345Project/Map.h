@@ -17,9 +17,6 @@ private:
 	//For example, mapGrph[0][0] is Canada. ContinentGraph[0] is North America. Its vector<Territory> is supposed to contain tehe pointer to  mapGraph[0][0], which is Canada.
 	vector<Continent*> continentGraph;
 
-	//Helper function: help to create  continents and allocate countries into the corresponding continents
-	bool addContinent(Continent* c);
-
 	//Helper function: help to iterate nodes of a graph in the depth-first principle
 	void dfs(int i, vector<bool> visited);
 
@@ -43,6 +40,8 @@ private:
 
 	//Helper function: help to find the index of the continent with the same ID as that of the given ID
 	int continentMatched2(int continentID);
+	
+
 
 
 public:
@@ -53,6 +52,7 @@ public:
 	//Other class functions
 	void display();  
 	bool addCountry(Territory* t);
+	bool addContinent(Continent* c);
 	bool releaseMap();
 	bool validate();
 };

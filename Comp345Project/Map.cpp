@@ -163,27 +163,29 @@ bool Map::validate() {
 
 
 
-bool Map::addCountry(Territory* t) {
+bool Map::addCountry( Territory* t) {
 
 	vector<Territory*> newAdjacencyList;
 	int currentSize = mapGraph.size();
 
-    //Add a new vector<Territory> into mapGraph and its index is currentSize
-	mapGraph.push_back(newAdjacencyList);
+	//If country ID / continent ID is -1(uninitialized),no corresponding continent ID, and duplicate country ID's, the country will not be added
+	if ((t->getCountryID() == -1) || (getCountryIndex(t->getCountryID()) != -1) || !(continentMatched(t->getBelongedContinentID()))) {
+		return false;
+	}
+	
     
 	//Add the argument territory into the vector<Territory>
 	try {
+		//Add a new vector<Territory> into mapGraph and its index is currentSize
+		mapGraph.push_back(newAdjacencyList);
 		mapGraph[currentSize].push_back(t);
         
-		//To allocate the given country to the corresponding continent
+		
 		Territory temp = *(t);
 		int tempID = temp.getBelongedContinentID();
-		int indexOfConti;
-		//Continent ID is invalid. It will return false. No country will be added to any continent
-		if ((indexOfConti = continentMatched2(tempID)) == -1)
-			return false;
-		else
-			continentGraph[indexOfConti]->getCountryInside().push_back(t);
+
+		//To allocate the given country to the corresponding continent
+		continentGraph[continentMatched2(tempID)]->getCountryInside().push_back(t);
 
 		return true;
 	}
@@ -194,7 +196,12 @@ bool Map::addCountry(Territory* t) {
 	}
 
 }
-bool Map::addContinent(Continent* conti1) {
+bool Map::addContinent( Continent* conti1) {
+	
+	//If there are duplicate continent ID's, the continent wont be added
+	if (continentMatched(conti1->getID())) {
+		return false;
+	}
 	try {
 		//Add a continent into continentGraph
 		for (Continent* conti2 : continentGraph) {

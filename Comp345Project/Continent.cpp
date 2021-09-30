@@ -5,14 +5,19 @@
 
 using namespace std;
 
-Continent::Continent(int continentID, string continentName) {
+Continent::Continent(int continentID, string continentName, int bonus,string color) {
 	Continent::continentID = continentID;
 	Continent::continentName = continentName;
+	Continent::continentColor = color;
+	Continent::continentBonus = bonus;
 }
 
 Continent::Continent() {
-	continentID = 0;
+	continentID = -1;
 	continentName = "";
+	string continentColor="";
+	int continentBonus=0;
+	vector<Territory*> countryInside(10);
 }
 
 
@@ -33,4 +38,11 @@ string Continent::getName() {
 }
 vector<Territory*> Continent::getCountryInside() {
 	return Continent::countryInside;
+}
+
+string Continent::getColor() {
+	return continentColor;
+}
+int Continent::getBonus() {
+	return continentBonus;
 }

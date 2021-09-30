@@ -19,7 +19,7 @@ Territory::Territory(string countryName, int armyNumber,int countryID,int belong
 Territory::Territory() {
 	ctrAxisX = 0;
 	ctrAxisY = 0;
-	ctrID = 0;
+	ctrID = -1;
 	ctrName = "";
 }
 
