@@ -29,7 +29,22 @@ private:
 	// Helper function: help to obtain the index of a country given its ID
 	int getCountryIndex(int ID);
 
-	//Helper function: help to obtain the index of a coun
+	//Helper function: help to check whether each country of the continentGraph is included in mapGraph. If so, they for sure are connected
+	bool is_subgraphs();
+
+	//Helper function: help to check whether a given territory has the same address as any of territories of the mapGraph
+	bool countryMatched(const Territory& territory);
+
+	//Helper function: help to check whether each country belongs to one continent 
+	bool belongTo_OneContinent();
+
+	//Helper function: help to check whether the given belongedContinentID mathces any of continents of continentGraph
+	bool continentMatched(int continentID);
+
+	//Helper function: help to find the index of the continent with the same ID as that of the given ID
+	int continentMatched2(int continentID);
+
+
 public:
 	//Constructors
 	Map();
@@ -37,7 +52,6 @@ public:
 	
 	//Other class functions
 	void display();  
-
 	bool addCountry(Territory* t);
 	bool releaseMap();
 	bool validate();

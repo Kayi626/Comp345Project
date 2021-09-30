@@ -7,12 +7,15 @@ using namespace std;
 class Territory {
 
 private:
-	string countryName;
+	string ctrName;
 	int armyNumber;
-	int countryID;
+	int ctrID;
+	int contiBelong;
+	int ctrAxisX;
+	int ctrAxisY;
 public:
 	//Constructors
-	Territory(string countryName,int armyNumber,int countryID);
+	Territory(string countryName,int armyNumber,int countryID,int belongToWhichContinent,int ctrAxisX,int ctrAxisY);
 	Territory();
 
 	//Other functions
@@ -20,9 +23,15 @@ public:
 	 string getName();
 	 int getArmyNumber();
 	 int getCountryID();
+	 int getBelongedContinentID();
+	 int getCtrAxisX();
+	 int getCtrAxisY();
 	 //Mutators
 	 void setName(string countryName);
 	 void setArmyNumber(int armyNumber);
 	 void setCountryID(int countryID);
+	 void setBelongedContinentID(int belongToWhichContinent);
+	 void setCtrAxisX(int x);
+	 void setCtrAxisY(int y);
 
 };

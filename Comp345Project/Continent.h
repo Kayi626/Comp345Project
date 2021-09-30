@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include <string>
+#include <cstring>
 #include "Territory.h"
 
 using namespace std;
@@ -13,8 +13,11 @@ private:
 	string continentName;
 	vector<Territory*> countryInside;
 public:
-	Continent();
+	//Constructors
 	Continent(int continentID,string continentName);
+	Continent();
+
+	//Other class functions
 	void display();
 	int getID();
 	string getName();
