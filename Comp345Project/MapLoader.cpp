@@ -4,7 +4,7 @@
 #include "MapLoader.h"
 
 void MapLoader::mapReader(const string& mapName) {
-  cout << "---Loading Map---" << endl;
+  cout << endl << "---Loading Map File---" << endl<< endl;
   mapPath = mapName;
   int lineFlag;
   string line;
@@ -76,7 +76,7 @@ void MapLoader::mapReader(const string& mapName) {
     borderVec.push_back(borderLine);
   }
 
-  cout << "---Map Loaded---" << endl;
+  cout << endl << "---Map File Loaded---" << endl << endl;
 }
 
 void MapLoader::toString() {

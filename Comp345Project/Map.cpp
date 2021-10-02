@@ -52,7 +52,7 @@ void Map::dfs(int i, vector<bool> visited) {
 bool Map::is_connected() {
 
     //A bool vector with the same size as that of mapGraph
-	int size = mapGraph.size();
+	int size = static_cast<int> (mapGraph.size());
 	vector<bool> visited(size);
 	dfs(0, visited);
 
@@ -143,14 +143,16 @@ void Map::displayLink() {
 	int count = 1;
 	//Display all countries and their adjacent countries
 	for (vector<Territory*> v : mapGraph) {
-
 		for (int x = 0; x < v.size();x++) {
 			Territory temp = *(v[x]);
 			if (x == 0)
-				cout << "Country No." << count << ": " << temp.getName() << endl << "Its adjacent countries includes: ";
+				cout << "Country " << count << ": [" << temp.getName() << "] has adjacent countries: " << endl;
+			else if (x == v.size() - 1)
+			    cout << temp.getName() << endl;
 			else
-				cout << temp.getName()<<"  ";
+				cout << temp.getName()<<",  ";
 		}
+		count++;
 	    cout << endl;
 	}
 }
@@ -176,7 +178,7 @@ bool Map::validate() {
 bool Map::addCountry( Territory* t) {
 
 	vector<Territory*> newAdjacencyList;
-	int currentSize = mapGraph.size();
+	int currentSize = static_cast<int>(mapGraph.size());
 
 	//If country ID / continent ID is -1(uninitialized),no corresponding continent ID, and duplicate country ID's, the country will not be added
 	if ((t->getCountryID() == -1) || (getCountryIndex(t->getCountryID()) != -1) || !(continentMatched(t->getBelongedContinentID()))) {
@@ -196,7 +198,6 @@ bool Map::addCountry( Territory* t) {
 
 		//To allocate the given country to the corresponding continent
 		continentGraph[continentMatched2(tempID)]->getCountryInside().push_back(t);
-		cout << tempID;
 		return true;
 	}
 	catch (exception& e) {
@@ -227,7 +228,7 @@ bool Map::addContinent( Continent* conti1) {
 	}
 	catch (exception& e) {
 		cout << "Failed to add a continent into the map"<<e.what() << endl;
-
+		return false;
 	}
 }
 //Add an edge for two ajacent countries
