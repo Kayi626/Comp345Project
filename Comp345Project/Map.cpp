@@ -30,20 +30,20 @@ int Map::getCountryIndex(int ID) {
 	return index;
 }
 //Helper function: help to iterate nodes of a graph in the depth-first principle
-void Map::dfs(int i, vector<bool> visited) {
+void Map::dfs(int i, vector<bool>& visited) {
+	cout << "Index: " << i << endl;
 	visited[i] = true;
-	for (Territory* elt : mapGraph[i]) {
-		Territory temp = *(elt);
+	for (int x = 1; x < mapGraph[i].size();x++) {
+		Territory temp = *(mapGraph[i][x]);
 		//Obtain ID's of countries that are linked to maGraph[i][0]
-		int tempID = temp.getCountryID();
+		int tempID = temp.getCountryID();	
 		int index;
-		if ((index=getCountryIndex(tempID)) != -1) {
+		if (((index=getCountryIndex(tempID)) != -1) && (visited[index] !=true)) {
+
 			dfs(index,visited);
 		}
 		else {
-			//something that doesn't belong to the country list appears,so it causes errors
-			visited[i] = false;
-			break;
+			continue;
 		}
 	}
 }
@@ -64,11 +64,11 @@ bool Map::is_connected() {
 	return true;
 }
 
-bool Map::countryMatched(const Territory& territory) {
+bool Map::countryMatched(Territory* territory) {
 	bool matched = false;
 	for (int x = 0; x < mapGraph.size(); x++) {
-		Territory temp = *(mapGraph[x][0]);
-		matched = matched || (&territory == &temp);
+		Territory* temp = mapGraph[x][0];
+		matched = matched || (territory == temp);
 	}
 	return matched;
 }
@@ -80,7 +80,7 @@ bool Map::is_subgraphs() {
 		Continent temp = *(continentGraph[x]);
 		vector<Territory*> tempCountryInside = temp.getCountryInside();
 		for (int y = 0; y < tempCountryInside.size(); y++) {
-			is_subgraphs = is_subgraphs && countryMatched(*(tempCountryInside[y]));
+			is_subgraphs = is_subgraphs && countryMatched(tempCountryInside[y]);
 		}
 	}
 	return is_subgraphs;
@@ -167,7 +167,7 @@ void Map::displayAllContinents() {
 bool Map::validate() {
 	//First to check the entire graph is connected. Second to check if continents are subgraphs(if they are subgraphs, they are connected as well). Third to check if each country belongs to 1 continent
 
-	if (is_connected() && is_subgraphs() && belongTo_OneContinent()) 
+	if (is_connected() && is_subgraphs() && belongTo_OneContinent())
 		return true;
 	return false;
 

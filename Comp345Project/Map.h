@@ -18,7 +18,7 @@ private:
 	vector<Continent*> continentGraph;
 
 	//Helper function: help to iterate nodes of a graph in the depth-first principle
-	void dfs(int i, vector<bool> visited);
+	void dfs(int i, vector<bool>& visited);
 
 	//Helper function: help to check if the graph is connected
 	bool is_connected();
@@ -30,7 +30,7 @@ private:
 	bool is_subgraphs();
 
 	//Helper function: help to check whether a given territory has the same address as any of territories of the mapGraph
-	bool countryMatched(const Territory& territory);
+	bool countryMatched(Territory* territory);
 
 	//Helper function: help to check whether each country belongs to one continent 
 	bool belongTo_OneContinent();

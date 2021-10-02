@@ -19,6 +19,13 @@ int main() {
   
   //Display the data
   newMap->displayLink();
+
+  //Validate the map
+  if (newMap->validate())
+      cout << endl << "-------------Map is valid-------------------" << endl;
+  else
+      cout << endl << "-------------Map is invalid-------------------" << endl;
+
   //newMap->displayAllContinents();
   return 0;
 }
