@@ -32,4 +32,12 @@ class MapLoader {
 
   static bool checkUnique(vector<string> vec);
   void validate();
+
+  //Accessors
+  vector<vector<string>> getFileVec();
+  vector<vector<string>> getCtrVec();
+  vector<vector<string>> getCtiVec();
+  vector<vector<string>> getBorderVec();
+  
+  //Mutators
 };

@@ -167,4 +167,24 @@ bool MapLoader::checkUnique(vector<string> vec) {
   return wasUnique;
 }
 
+//Accessors
+vector<vector<string>> MapLoader::getFileVec() {
+
+    return fileVec;
+}
+vector<vector<string>> MapLoader::getCtrVec() {
+
+    return ctrVec;
+}
+vector<vector<string>> MapLoader::getCtiVec() {
+
+    return ctiVec;
+}
+vector<vector<string>> MapLoader::getBorderVec() {
+
+    return borderVec;
+}
+
+//Mutators
+
 MapLoader::MapLoader() = default;

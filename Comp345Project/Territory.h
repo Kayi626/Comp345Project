@@ -8,14 +8,15 @@ class Territory {
 
 private:
 	string ctrName;
-	int armyNumber;
 	int ctrID;
+	int armyNumber;
 	int contiBelong;
 	int ctrAxisX;
 	int ctrAxisY;
 public:
 	//Constructors
-	Territory(string countryName,int armyNumber,int countryID,int belongToWhichContinent,int ctrAxisX,int ctrAxisY);
+	Territory(string countryName,int countryID,int belongToWhichContinent,int ctrAxisX,int ctrAxisY);
+	Territory(const Territory& t);
 	Territory();
 
 	//Other functions
@@ -29,7 +30,7 @@ public:
 	 //Mutators
 	 void setName(string countryName);
 	 void setArmyNumber(int armyNumber);
-	 void setCountryID(int countryID);
+	 //void setCountryID(int countryID);
 	 void setBelongedContinentID(int belongToWhichContinent);
 	 void setCtrAxisX(int x);
 	 void setCtrAxisY(int y);

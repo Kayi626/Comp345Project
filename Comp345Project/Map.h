@@ -49,10 +49,16 @@ public:
 	Map();
 	Map(const vector<vector<Territory*>> countryList);
 	
+	//Accessor
+	vector<Continent*> getContinentGraph();
+	//Mutator
+
 	//Other class functions
-	void display();  
+	void displayLink();  
+	void displayAllContinents();
 	bool addCountry(Territory* t);
 	bool addContinent(Continent* c);
+	bool addEdge(int id1,int id2);
 	bool releaseMap();
 	bool validate();
 };

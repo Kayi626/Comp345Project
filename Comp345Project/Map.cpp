@@ -8,7 +8,7 @@ using namespace std;
 
 //Constructors
 Map::Map() {
-   
+	
 }
 
 //Copy constructor
@@ -130,17 +130,21 @@ int Map::continentMatched2(int continentID) {
 	return index;
 }
 
-
+//Accessors
+vector<Continent*> Map::getContinentGraph() {
+	return Map::continentGraph;
+}
 
 
 
 
 //Other class functions
-void Map::display() {
+void Map::displayLink() {
 	int count = 1;
 	//Display all countries and their adjacent countries
 	for (vector<Territory*> v : mapGraph) {
-		for (int x = 0; x < v.size()-1;x++) {
+
+		for (int x = 0; x < v.size();x++) {
 			Territory temp = *(v[x]);
 			if (x == 0)
 				cout << "Country No." << count << ": " << temp.getName() << endl << "Its adjacent countries includes: ";
@@ -148,6 +152,12 @@ void Map::display() {
 				cout << temp.getName()<<"  ";
 		}
 	    cout << endl;
+	}
+}
+
+void Map::displayAllContinents() {
+	for (Continent* c : continentGraph) {
+		c->display();
 	}
 }
 
@@ -186,7 +196,7 @@ bool Map::addCountry( Territory* t) {
 
 		//To allocate the given country to the corresponding continent
 		continentGraph[continentMatched2(tempID)]->getCountryInside().push_back(t);
-
+		cout << tempID;
 		return true;
 	}
 	catch (exception& e) {
@@ -219,6 +229,17 @@ bool Map::addContinent( Continent* conti1) {
 		cout << "Failed to add a continent into the map"<<e.what() << endl;
 
 	}
+}
+//Add an edge for two ajacent countries
+bool Map::addEdge(int id1, int id2) {
+	int index1, index2;
+
+	//If either of the ID arguments is invalid, it will return false.
+	if ((index1 = getCountryIndex(id1)) == -1 || (index2 = getCountryIndex(id2)) == -1) {
+		return false;
+	}
+	mapGraph[index1].push_back(mapGraph[index2][0]);
+	return true;
 }
 bool Map::releaseMap() {
 	try {
