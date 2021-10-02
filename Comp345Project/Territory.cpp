@@ -7,13 +7,14 @@
 using namespace std;
 
 //Constructors
-Territory::Territory(string countryName, int armyNumber,int countryID,int belongToWhichContinent,int x,int y) {
+Territory::Territory(string countryName,int countryID,int belongToWhichContinent,int x,int y) {
 	Territory::ctrName = countryName;
-	Territory::armyNumber = armyNumber;
+	Territory::armyNumber = 0;
 	Territory::ctrID = (countryID <0)? abs(countryID): countryID;
 	Territory::contiBelong = (belongToWhichContinent < 0)? abs(belongToWhichContinent) : belongToWhichContinent;
 	Territory::ctrAxisX = (x < 0) ? abs(x) : x;
 	Territory::ctrAxisY = (y < 0) ? abs(y) : y;
+	
 
 }
 Territory::Territory() {
@@ -21,6 +22,15 @@ Territory::Territory() {
 	ctrAxisY = 0;
 	ctrID = -1;
 	ctrName = "";
+}
+
+Territory::Territory(const Territory& t) {
+	this->ctrID = t.ctrID;
+	this->armyNumber = t.armyNumber;
+	this->contiBelong = t.contiBelong;
+	this->ctrAxisX = t.ctrAxisX;
+	this->ctrAxisY = t.ctrAxisY;
+	this->ctrName = t.ctrName;
 }
 
 //Accessors
@@ -62,10 +72,12 @@ void Territory::setArmyNumber(int armyNumber) {
 	Territory::armyNumber = armyNumber;
 
 }
+/*
 void Territory::setCountryID(int countryID) {
 	
 	Territory::ctrID = countryID;
 }
+*/
 
 void Territory::setBelongedContinentID(int belongToWhichContinent) {
     Territory::contiBelong =belongToWhichContinent;
