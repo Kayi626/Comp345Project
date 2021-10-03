@@ -20,6 +20,9 @@ private:
 	//Helper function: help to iterate nodes of a graph in the depth-first principle
 	void dfs(int i, vector<bool>& visited);
 
+	//Helper function: help to find the connectivity of continents
+	void ccs( vector<bool>& visited);
+
 	//Helper function: help to check if the graph is connected
 	bool is_connected();
 
