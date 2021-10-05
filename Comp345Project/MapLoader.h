@@ -40,4 +40,9 @@ class MapLoader {
   vector<vector<string>> getBorderVec();
   
   //Mutators
+
+  //Other class functions
+
+  static bool isStrInt(string str);
+   
 };

@@ -30,7 +30,7 @@ Territory::Territory(const Territory& t) {
 	this->contiBelong = t.contiBelong;
 	this->ctrAxisX = t.ctrAxisX;
 	this->ctrAxisY = t.ctrAxisY;
-	this->ctrName = t.ctrName;
+	this->ctrName = t.ctrName.c_str();
 }
 
 //Accessors

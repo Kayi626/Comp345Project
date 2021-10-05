@@ -25,8 +25,16 @@ Continent::Continent(const Continent& conti) {
 	this->continentName = conti.continentName;
 	this->continentColor = conti.continentColor;
 	this->continentID = conti.continentID;
-	this->countryInside = conti.countryInside;
+	vector<Territory*> tempInside = conti.countryInside;
+	//creat deep copy of countryInside
+	for (int x = 0; x < static_cast<int>(conti.countryInside.size()); x++) {
+		Territory* temp = tempInside[x];
+		this->countryInside.push_back(temp);
+	}
 }
+
+
+
 
 
 void Continent::display() {
