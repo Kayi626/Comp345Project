@@ -2,6 +2,7 @@
 // Created by Sulyvahn on 2021/9/28.
 //
 #include "MapLoader.h"
+#include <regex>
 
 void MapLoader::mapReader(const string& mapName) {
   cout << endl << "---Loading Map File---" << endl<< endl;
@@ -188,3 +189,9 @@ vector<vector<string>> MapLoader::getBorderVec() {
 //Mutators
 
 MapLoader::MapLoader() = default;
+
+
+bool MapLoader::isStrInt(string str) {
+    regex reg("^[0-9]+$");
+    return regex_match(str, reg);
+}

@@ -50,7 +50,7 @@ private:
 public:
 	//Constructors
 	Map();
-	Map(const vector<vector<Territory*>> countryList);
+	Map(const Map &map);
 	
 	//Accessor
 	vector<Continent*> getContinentGraph();
@@ -64,4 +64,5 @@ public:
 	bool addEdge(int id1,int id2);
 	bool releaseMap();
 	bool validate();
+	static Map* mapCreater(string s);
 };

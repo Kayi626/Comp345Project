@@ -19,6 +19,7 @@ public:
 	Continent(int continentID,string continentName,int bonus, string color);
 	Continent();
 	Continent(const Continent& conti);
+	
 
 	//Other class functions
 	void display();
@@ -27,6 +28,7 @@ public:
 	string getColor();
 	int getBonus();
 	vector<Territory*>& getCountryInside();
+
 
 
 };

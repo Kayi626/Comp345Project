@@ -2,18 +2,40 @@
 #include <cstring>
 #include <vector>
 #include "Map.h"
+#include "MapLoader.h"
 #include "Territory.h"
 
 using namespace std;
 
 //Constructors
 Map::Map() {
-	
+	//A list of vectors of countries; each vector is an adjency list of the vector's first element.
+	vector<vector<Territory*>> mapGraph(10);
+
+	//A list of vectors of countries,serving as subgraphs of the mapGrph, represents all continents. Each element' reference links to the reference of the corresponding element.
+	//For example, mapGrph[0][0] is Canada. ContinentGraph[0] is North America. Its vector<Territory> is supposed to contain tehe pointer to  mapGraph[0][0], which is Canada.
+	vector<Continent*> continentGraph(5);
 }
 
 //Copy constructor
-Map::Map(const vector<vector<Territory*>> mapGraph) {
-	
+Map::Map(const Map &map) {
+
+	//Copy mapgraph
+	for (int x = 0; x < static_cast<int>(map.mapGraph.size()); x++) {
+		
+		for (int y = 0; y < map.mapGraph[x].size(); y++) {
+
+			Territory* temp = map.mapGraph[x][y];
+			this->mapGraph[x].push_back(temp);
+		}
+	}
+
+	//Copy continentgraph
+	for (int x = 0; x < static_cast<int>(map.continentGraph.size()); x++) {
+
+		Continent* tempC = map.continentGraph[x];
+		this->continentGraph.push_back(tempC);
+	}
 }
 
 //Private helper function
@@ -289,28 +311,124 @@ bool Map::addEdge(int id1, int id2) {
 	mapGraph[index1].push_back(mapGraph[index2][0]);
 	return true;
 }
+
+//Release memory of a map object
 bool Map::releaseMap() {
 	try {
+
 		//Release the memory of the mapGraph
 		for (int x = 0; x < mapGraph.size(); x++) {
 			for (int y = 0; y < mapGraph[x].size(); y++) {
 				delete mapGraph[x][y];
-				mapGraph[x][y] = NULL;
+			
 			}
 		}
+
 		//Release the memory of the continentGraph
 		for (int x = 0; x < continentGraph.size(); x++) {
-			Continent t = *(continentGraph[x]);
+			Continent* tp = continentGraph[x];
+			Continent t = *(tp);
+			
 			vector<Territory*> temp = t.getCountryInside();
 			for (int y = 0; y < temp.size(); y++) {
 				delete temp[y];
-				temp[x] = NULL;
 			}
+
+			temp.clear();
+
+			delete tp;
+		    tp= nullptr;
 		}
+
+		//Clear two vector variables
+		mapGraph.clear();
+		continentGraph.clear();
+
+
 		return true;
 	}
 	catch (exception& e) {
 		cout << e.what() << endl;
 		return false;	
 	}
+}
+
+
+Map* Map::mapCreater(string mapPath) {
+	bool edgeAdded = true;
+	auto* mb_loader = new MapLoader();
+	mb_loader->mapReader(mapPath);
+	mb_loader->validate();
+
+	//Create a map object whose only two private variables are mapGraph and continentGraph
+	Map* newMap = new Map();
+	vector<vector<string>> temp1 = mb_loader->getCtiVec();
+	vector<vector<string>> temp2 = mb_loader->getCtrVec();
+	vector<vector<string>> temp3 = mb_loader->getBorderVec();
+	vector<vector<string>> temp4 = mb_loader->getFileVec();
+
+	//Fill the continentGraph (to build continents)
+	for (int x = 0; x < temp1.size(); x++) {
+		// check data type correct;
+		if (MapLoader::isStrInt(temp1[x][0]) || !MapLoader::isStrInt(temp1[x][1])) {
+			cerr << "Warning: some elements within Continent data has wrong type!" << endl;
+			delete newMap;
+			newMap = NULL;
+			exit(0);
+		}
+		Continent* temp = new Continent((x + 1), temp1[x][0], stoi(temp1[x][1]), temp1[x][2]);
+		newMap->addContinent(temp);
+	}
+
+	//Fill the mapGraph (to build countries and allocate them to the corresponding continents)
+	for (int x = 0; x < temp2.size(); x++) {
+		// check data type correct;
+		if (!MapLoader::isStrInt(temp2[x][0]) || MapLoader::isStrInt(temp2[x][1]) || !MapLoader::isStrInt(temp2[x][2]) || !MapLoader::isStrInt(temp2[x][3]) || !MapLoader::isStrInt(temp2[x][4])) {
+			cerr << "Warning: some elements within country data has wrong type!" << endl;
+			delete newMap;
+			newMap = NULL;
+			exit(0);
+		}
+		Territory* temp = new Territory(temp2[x][1], stoi(temp2[x][0]), stoi(temp2[x][2]), stoi(temp2[x][3]), stoi(temp2[x][4]));
+		if (newMap->addCountry(temp))
+			cout << temp2[x][1] << " added " << endl;
+		else
+			cout << temp2[x][1] << " NOT added, It might be because of duplicate territory ID's, non-exsiting continent ID, and missing territory ID's" << endl;
+	}
+
+	//Fill the adjacency list 
+	for (int x = 0; x < temp3.size(); x++) {
+		// check data type correct;
+		if (!MapLoader::isStrInt(temp3[x][0])) {
+			cerr << "Warning: some elements within border data has wrong type!" << endl;
+			delete newMap;
+			newMap = NULL;
+			exit(0);
+		}
+		//the ID of the target country
+		int temp = stoi(temp3[x][0]);
+
+		for (int y = 1; y < temp3[x].size(); y++) {
+			// check data type correct;
+			if (!MapLoader::isStrInt(temp3[x][y])) {
+				cerr << "Warning: some elements within border data has wrong type!" << endl;
+				delete newMap;
+				newMap = NULL;
+				exit(0);
+			}
+			if (!newMap->addEdge(temp, stoi(temp3[x][y]))) {
+				edgeAdded = false;
+			}
+		}
+	}
+	if (edgeAdded) {
+		cout << endl << "---Edge added---" << endl << endl;
+	}
+	else {
+		cerr << endl << "Failed to add the edge" << endl << endl;
+		delete newMap;
+		newMap = NULL;
+		exit(0);
+	}
+	return newMap;
 }
