@@ -4,6 +4,7 @@
 #include "MapLoader.h"
 #include <regex>
 
+//read through provided address and collect corresponding data
 void MapLoader::mapReader(const string& mapName) {
   cout << endl << "---Loading Map File---" << endl<< endl;
   mapPath = mapName;
@@ -80,6 +81,7 @@ void MapLoader::mapReader(const string& mapName) {
   cout << endl << "---Map File Loaded---" << endl << endl;
 }
 
+//print loaded data
 void MapLoader::toString() {
   // test result
   cout << endl << "borders" << endl;
@@ -100,6 +102,7 @@ void MapLoader::toString() {
   }
 }
 
+// A method to split string line by provided charater
 vector<string>& MapLoader::split(const string& s, char delim,
                                  vector<string>& elements) {
   stringstream ss(s);
@@ -117,6 +120,7 @@ vector<string> MapLoader::split(const string& text, char delim) {
   return elements;
 }
 
+//verify imported data
 void MapLoader::validate() {
   bool hasNoBorder = false;
   vector<string> ctrName;
@@ -161,6 +165,7 @@ void MapLoader::validate() {
   }
 }
 
+//check if there is a data among vector is not unique
 bool MapLoader::checkUnique(vector<string> vec) {
   sort(vec.begin(), vec.end());
   auto it = unique(vec.begin(), vec.end());
@@ -187,10 +192,9 @@ vector<vector<string>> MapLoader::getBorderVec() {
 }
 
 //Mutators
-
 MapLoader::MapLoader() = default;
 
-
+//check whether a data is int or string
 bool MapLoader::isStrInt(string str) {
     regex reg("^[0-9]+$");
     return regex_match(str, reg);
