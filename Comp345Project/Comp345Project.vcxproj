@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="Cards.h" />
     <ClInclude Include="Continent.h" />
+    <ClInclude Include="GameEngine.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapLoader.h" />
     <ClInclude Include="Territory.h" />
@@ -148,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="Cards.cpp" />
     <ClCompile Include="Continent.cpp" />
+    <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapDriver.cpp" />
     <ClCompile Include="MapLoader.cpp" />
