@@ -1,6 +1,7 @@
 #include "Continent.h"
 #include "Map.h"
 #include "Territory.h"
+#include "GameEngine.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -11,6 +12,7 @@ using namespace std;
 
 
 int main() {
+ /*Part1 Map Class
   Map* newMap = Map::mapCreater("LOTR2.map"); // bigeurope.map, LOTR2.map
   // mb_loader->toString();
   
@@ -26,7 +28,9 @@ int main() {
 
   //Handle memory leaks
   delete newMap;
-  newMap = nullptr;
+  newMap = nullptr;*/
+    GameEngine* ge = new GameEngine();
+    ge->gameFlow();
  
   return 0;
 }
