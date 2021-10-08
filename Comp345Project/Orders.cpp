@@ -3,6 +3,7 @@
 #include <cstring>
 #include <string>
 #include "Orders.h"
+#include "Map.h"
 
 using namespace std;
 

@@ -1,19 +1,14 @@
-#include "Continent.h"
-#include "Map.h"
-#include "Territory.h"
-#include "GameEngine.h"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <regex>
 #include <cstring>
-#include "Map.h"
 #include "Cards.h"
 #include "Orders.h"
-#include "Territory.h"
 #include "Player.h"
-#include "Continent.h"
+#include "Map.h"
+#include "GameEngine.h"
 
 using namespace std;
 
@@ -23,22 +18,22 @@ int main() {
 //Many programmers believe this will only make your code worse.
 
 #pragma region Map
-  //Map* newMap = Map::mapCreater("LOTR2.map"); // bigeurope.map, LOTR2.map
-  //// mb_loader->toString();
-  //
-  ////Display the data
-  //newMap->displayLink();
+  Map* newMap = Map::mapCreater("LOTR2.map"); // bigeurope.map, LOTR2.map
+  // mb_loader->toString();
+  
+  //Display the data
+  newMap->displayLink();
 
-  ////Validate the map
-  //if (newMap->validate())
-  //    cout << endl << "-------------Map is valid-------------------" << endl;
-  //else
-  //    cout << endl << "-------------Map is invalid-------------------" << endl;
-  ////newMap->displayAllContinents();
+  //Validate the map
+  if (newMap->validate())
+      cout << endl << "-------------Map is valid-------------------" << endl;
+  else
+      cout << endl << "-------------Map is invalid-------------------" << endl;
+  //newMap->displayAllContinents();
 
-  ////Handle memory leaks
-  //delete newMap;
-  //newMap = nullptr;
+  //Handle memory leaks
+  delete newMap;
+  newMap = nullptr;
 #pragma endregion Map
 #pragma region Player
 
@@ -271,8 +266,8 @@ int main() {
   //delete newDeck;
 #pragma endregion Card
 #pragma region GameEngine
-    GameEngine* ge = new GameEngine();
-    ge->gameFlow();
+    //GameEngine* ge = new GameEngine();
+    //ge->gameFlow();
 #pragma endregion GameEngine
 return 0;
 }
