@@ -36,7 +36,9 @@ void GameEngine::gameFlow() {
 	bool playStage = false;
 	bool run = true;
 	
-	cout << "---------------WELCOME TO WARZONE!---------------" << endl << "[Stage: Start] Please enter \"loadmap\" to validate the map: " << endl;
+	cout << "---------------WELCOME TO WARZONE!---------------" << endl; 
+    cout << endl << "[Stage: Start]" << endl;
+	cout << endl << "Please enter \"loadmap\" to load the map: " << endl << endl;
 
 	while (run) {
 
@@ -46,23 +48,26 @@ void GameEngine::gameFlow() {
 		if (map_loaded && lock) {
 			cout << endl << "---------------Map Loading Start---------------" << endl;
 			//Code to load map
-			cout << endl << "---------------Map Loading Done----------------" << endl<<"[Stage: Map_Loaded] Please enter \"validatemap\" to validate the map: "<<endl;
-			
+			cout << endl << "---------------Map Loading Done----------------" << endl; 
+			cout << endl <<"[Stage: Map_Loaded]" << endl; 
+			cout << endl << "1. enter \"validatemap\" to validate the map" << endl;
+            cout << endl << "2. enter \"loadmap\" to reload map: " << endl << endl;
 		}
 		else if (map_validated && lock) {
 			cout << endl << "---------------Map Validating Start---------------" << endl;
 			//Code to load map
-			cout << endl << "---------------Map Validating Done----------------" << endl << "[Stage: Map_Validated] Please enter \"addplayer\" to add players into the map " << endl;
-
+			cout << endl << "---------------Map Validating Done----------------" << endl;
+            cout << endl << "[Stage: Map_Validated]" << endl; 
+			cout << endl << "1. enter \"addplayer\" to add players into the map"<< endl << endl;
 		}
 		else if (players_added && lock) {
 			cout << endl << "---------------Adding Players Start---------------" << endl;
 			//Code to load map
-			cout << endl << "---------------Adding Players Done----------------" << endl << "[Stage: Player_Added] Please enter \"assigncountries\" to assign countries to each player " << endl;
-
+			cout << endl << "---------------Adding Players Done----------------" << endl;
+            cout << endl << "[Stage: Player_Added]" << endl;
+            cout << endl << "1. enter \"assigncountries\" to assign countries to each player" << endl;
+            cout << endl << "2. enter \"addplayer\" to add more player " << endl << endl;
 		}
-
-
 
 		cin >> input;
 		
@@ -105,14 +110,19 @@ void GameEngine::gameFlow() {
 		}
 		else {
 
-			if(start)
-			cout << endl << "---------------Invalid commands detected At [Start] stage---------------" << endl << endl << "[Stage: Start] Please enter \"loadmap\" to load the map: " << endl;
-			else if(map_loaded)
-			cout << endl << "---------------Invalid commands detected At [Map_Loaded] stage---------------" << endl << "[Stage: Map_Loaded] Please enter \"validatemap\" to validate the map: " << endl;
-			else if(map_validated)
-			cout << endl << "---------------Invalid commands detected At [Map_validated] stage---------------" << endl << "[Stage: Map_Validated] Please enter \"addplayer\" to add players into the map " << endl;
-			else if (players_added)
-			cout << endl << "---------------Invalid commands detected At [Players_Added] stage---------------" << endl << "[Stage: Player_Added] Please enter \"assigncountries\" to assign countries to each player " << endl;
+			if (start) {
+				cout << endl << "---------------Invalid commands detected At [Start] stage---------------" << endl;
+				cout << endl << "[Stage: Start] Please enter \"loadmap\" to load the map: " << endl << endl;
+			} else if(map_loaded){
+				cout << endl << "---------------Invalid commands detected At [Map_Loaded] stage---------------" << endl;
+				cout << endl << "[Stage: Map_Loaded] Please enter \"validatemap\" to validate the map: " << endl << endl;
+			} else if (map_validated) {
+				cout << endl << "---------------Invalid commands detected At [Map_validated] stage---------------" << endl;
+				cout << endl << "[Stage: Map_Validated] Please enter \"addplayer\" to add players into the map " << endl << endl;
+			} else if (players_added) {
+				cout << endl << "---------------Invalid commands detected At [Players_Added] stage---------------" << endl;
+				cout << endl << "[Stage: Player_Added] Please enter \"assigncountries\" to assign countries to each player " << endl << endl;
+			}
 			//No state transition
 			lock = false;
 			continue;	
@@ -126,25 +136,36 @@ void GameEngine::gameFlow() {
 			if (assign_reinforcement && lock2) {
 				cout << endl << "----------------Assigning Reinforcement Starts---------------" << endl;
 				//code to assign reinforcement
-				cout << endl << "---------------Assigning Reinforcement Done---------------" << endl <<"[Stage: Assign Reinforcement] Enter \"issueorder\" to issue orders for players: "<<endl;
+				cout << endl << "---------------Assigning Reinforcement Done---------------" << endl;
+				cout << endl <<"[Stage: Assign Reinforcement]" << endl;
+				cout << endl <<	"1. enter \"issueorder\" to issue orders for players: " << endl << endl;
 			}
 			else if(issue_orders && lock2) {
-				cout << endl << "---------------Issuing Orders Starts---------------";
+				cout << endl << "---------------Issuing Orders Starts---------------" << endl;
 				//code to issue orders
-				cout << endl << "---------------Issuing Orders Done-----------------" << endl << "[Stage: Issue Orders] Enter \"issueorder\" to issue orders for players OR \"endissueorder\" to end: " << endl;
+				cout << endl << "---------------Issuing Orders Done-----------------" << endl;
+                cout << endl << "[Stage: Issue Orders]" << endl;
+                cout << endl <<	"1. enter \"issueorder\" to issue orders for players" << endl;
+				cout << endl <<	"2. enter \"endissueorders\" to end: " << endl << endl;
 			}
 			else if (execute_orders && lock2) {
 				if (executed) {
-					cout << endl << "---------------Executing Orders Starts---------------";
-					//code to execute  orders
+					cout << endl << "---------------Executing Orders Starts---------------" << endl;
+					//code to execute orders
 					cout << endl << "---------------Executing Orders Done-----------------" << endl;
 				}
-				cout<<endl<< "[Stage: Execute Orders] Enter \"execorder\" to issue orders for players OR \"win\" to win the game: " << endl;
+				cout<< endl << "[Stage: Execute Orders]" << endl;
+                cout<< endl << "1. enter \"execorder\" to issue orders for players" << endl;
+			    cout<< endl << "2. enter \"endexecorders\" to issue orders for players" << endl;
+                cout<< endl << "3. enter \"win\" to win the game: " << endl << endl;
 			}
 			else if (win && lock2) {
-				cout << endl << "---------------Generating the Winner Starts---------------";
+				cout << endl << "---------------Generating the Winner Starts---------------" << endl;
 				//code for generating the winner
-				cout << endl << "---------------Generating the Winner Done---------------" << endl << "[Stage: Win] Enter \"play\" to replay the game OR \"end\" to end the game: " << endl;
+				cout << endl << "---------------Generating the Winner Done---------------" << endl;
+                cout << endl << "[Stage: Win]" << endl;
+				cout << endl <<	"1. enter \"play\" to replay the game: " << endl;
+				cout << endl <<	"1. enter \"end\" to end the game: " << endl << endl;
 			}
 	
 			
@@ -161,7 +182,7 @@ void GameEngine::gameFlow() {
 			}
 
 			//End issuing orders
-			 else if (issue_orders && input.compare("endissueorder") == 0) {
+			 else if (issue_orders && input.compare("endissueorders") == 0) {
 
 				issue_orders = false;
 				execute_orders = true;
@@ -181,7 +202,6 @@ void GameEngine::gameFlow() {
 			
 			//Execute orders(restart the play stage)
 			else if (execute_orders && input.compare("endexecorders") == 0) {
-
 				execute_orders = false;
 				assign_reinforcement = true;
 				lock2 = true;
@@ -202,6 +222,8 @@ void GameEngine::gameFlow() {
 
 				reset();
 				playStage = false;
+                cout << endl << "[Stage: Start]" << endl;
+				cout << endl << "Please enter \"loadmap\" to load the map: " << endl << endl;
 				break;
 
 			}
