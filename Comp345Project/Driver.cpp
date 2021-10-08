@@ -53,8 +53,43 @@ int main() {
 //     cout << "DEBUG: Create a player Object." << "\n";
 //     vector<vector<Territory*>> currentMapGraph = (newMap->getMapGraph());
 //     Player player1(2, "Comp345", &currentMapGraph);
-
+//     Hand* newHand = player1.getHandsOfCard();
     
+//     // create Deck
+//     Deck* newDeck = new Deck;
+
+//     newDeck->original_vec_deck();
+
+//     // print 25 cards and contains 5 types
+//     newDeck->print_vec_deck();
+
+//      // apply draw() method to get random card from deck, then add into hand
+//      cout << "** Assign 5 random cards into hand card **" << endl;
+
+//      for (int i = 0; i < 5; i++) {
+//        newHand->set_vec_hand_cards(newDeck->draw());
+//      }
+
+//      // print current cards
+//      newHand->print_vec_hand_cards();
+
+//      // print current size of deck
+//      newDeck->print_vec_size_of_deck();
+
+//      // test play cards order
+//      // erase method of the vector will auto remove the cards
+//      cout << ("* Testing to play the cards *") << endl;
+//      int size_hand = newHand->get_vec_hand_cards()->size();
+
+//      for (int i = 0; i < size_hand; i++) {
+//        newHand->play(newHand->get_vec_hand_cards()->at(0), newDeck);
+//      }
+
+//      // print the play value
+//      newHand->print_play_hand_card();
+//      // print the hand value
+//      newHand->print_vec_hand_cards();
+
 
 //     cout << "DEBUG: Adding terrtories ownership player" << "\n";
 //     player1.addTerrtories(currentMapGraph[1][0]);
@@ -108,8 +143,7 @@ int main() {
 //     cout << "Done!" << "\n";
 #pragma endregion Player
 #pragma region OrderList
-
-//     OrderList oList1(105);
+//   OrderList oList1(105);
 //     Territory t2("Canada", 1, 2, 3, 4);
 //     Territory t3("US", 5, 6, 7, 8);
 //     Territory t4("England", 9,10,11,12);
@@ -121,6 +155,13 @@ int main() {
 //     Orders* o5 = new BlockadeOrder(101, &t2);
 //     Orders* o6 = new AirliftOrder(101, 7, &t3, &t2);
 //     Orders* o7 = new NegotiateOrder(101,&t2);
+
+//     cout << "TESTING Stream operator" << endl;
+//     std::cout << "testing subclass: " << *(new DeployOrder(101, 5, &t2)) << endl;
+//     cout << "TESTING Stream operator , testing#2" << endl;
+//     std::cout << "o1 (but Orders object):" << *o1 << endl;
+//     std::cout << "o3 (Orders object):" << *o3 << endl;
+//     std::cout << "o4 (Orders object):" << *o4 << endl;
 
 //     oList1.put(o1);
 //     oList1.put(o2);
@@ -180,7 +221,6 @@ int main() {
 
 
 //     cout << "Done!" << "\n";
-    //     << "\n";
 #pragma endregion OrderList
 #pragma region Card
   //// create Deck
