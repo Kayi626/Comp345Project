@@ -32,7 +32,10 @@ public:
 	Player();
 	Player(int playerID,string playerName, vector<vector<Territory*>> *mapGraph);
 	//constructor will generate an empty 'ControlledTerrtories,HandOfCards,OrderList'.
-	
+
+	Player(const Player& p);
+	Player& operator = (const Player& p);
+
 	//Accessors
 	string getName();
 	int getPlayerID();
