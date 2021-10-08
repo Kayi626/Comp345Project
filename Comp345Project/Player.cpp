@@ -29,6 +29,31 @@ Player::Player(int playerID, string playerName, vector<vector<Territory*>> *mapG
 	// asign correct values to ControlledTerritories and ReachcableTerritories.
 }
 
+Player& Player::operator= (const Player& p) {
+	if (this == &p) {
+		return (Player&)p;
+	}
+	this->playerID = *new int(p.playerID);
+	this->playerName = *new string(p.playerName);
+	this->mapGraph = new vector<vector<Territory*>>(*(p.mapGraph));
+	this->controlledTerritories = *new vector<Territory*>(p.controlledTerritories);
+	this->reachcableTerritories = *new vector<Territory*>(p.reachcableTerritories);
+	this->playerHandOfCards = new Hand(*(p.playerHandOfCards));
+	this->playerOrderList = new OrderList(*(p.playerOrderList));
+	return *this;
+
+}
+Player::Player(const Player& p) {
+	this->playerID = *new int(p.playerID);
+	this->playerName = *new string(p.playerName);
+	this->mapGraph = new vector<vector<Territory*>>(*(p.mapGraph));
+	this->controlledTerritories = *new vector<Territory*>(p.controlledTerritories);
+	this->reachcableTerritories = *new vector<Territory*>(p.reachcableTerritories);
+	this->playerHandOfCards = new Hand(*(p.playerHandOfCards));
+	this->playerOrderList = new OrderList(*(p.playerOrderList));
+}
+
+
 string Player::getName() {
 	return this->playerName;
 }
@@ -116,6 +141,7 @@ void Player::issueOrder(int type, Territory* targetTerritory, int numberOfArmies
 			//0 - DeployOrder, 3 args
 			Orders* order = new DeployOrder(this->getPlayerID(), numberOfArmies, targetTerritory);
 			this->getOrderList()->put(order);
+			break;
 		}
 		case 1: {
 			//1 - AdvanceOrder, 4 args
@@ -132,7 +158,7 @@ void Player::issueOrder(int type, Territory* targetTerritory, int numberOfArmies
 					}
 					else if (isHoldByPlayer) {
 						if (temp.getName().compare(targetTerritory->getName()) == 0) {
-							bool isAdjacent = true;
+							isAdjacent = true;
 						}
 					}
 				}
@@ -140,6 +166,7 @@ void Player::issueOrder(int type, Territory* targetTerritory, int numberOfArmies
 
 			Orders* order = new AdvanceOrder(this->getPlayerID(), numberOfArmies, fromTerritory, targetTerritory,isAdjacent);
 			this->getOrderList()->put(order);
+			break;
 		}
 		case 2: {
 			//2 - BombOrder, 2 args
@@ -151,25 +178,27 @@ void Player::issueOrder(int type, Territory* targetTerritory, int numberOfArmies
 			}
 			Orders* order = new BombOrder(this->getPlayerID(),targetTerritory,isAdjacent);
 			this->getOrderList()->put(order);
+			break;
 		}
 		case 3: {
 			//3 - BlockadeOrder, 2 args
 			Orders* order = new BlockadeOrder(this->getPlayerID(), targetTerritory);
 			this->getOrderList()->put(order);
+			break;
 		}
 		case 4: {
 			//4 - AirliftOrder, 4 args
 			Orders* order = new AirliftOrder(this->getPlayerID(), numberOfArmies, fromTerritory, targetTerritory);
 			this->getOrderList()->put(order);
+			break;
 		}
 		case 5: {
 			//5 - NegotiateOrder, 1 args
 			Orders* order = new NegotiateOrder(this->getPlayerID(), targetTerritory);
 			this->getOrderList()->put(order);
+			break;
 		}
 	}
-
-	cout << "DEBUG: Triggered issueOrder method!" << "\n";
 
 }
 

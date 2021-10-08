@@ -32,7 +32,10 @@ public:
 	Player();
 	Player(int playerID,string playerName, vector<vector<Territory*>> *mapGraph);
 	//constructor will generate an empty 'ControlledTerrtories,HandOfCards,OrderList'.
-	
+
+	Player(const Player& p);
+	Player& operator = (const Player& p);
+
 	//Accessors
 	string getName();
 	int getPlayerID();
@@ -55,6 +58,7 @@ public:
 	//core function. will asign new values to ControlledTerritories and ReachcableTerritories
 
 	void printPlayerTerrtories();
+	//use 'cout' showing the result of toDefend() and toAttack()
 
 	void issueOrder(int type, Territory* targetTerritory,int numberOfArmies, Territory* fromTerritory);
 	/*creates an Orders objectand puts it in the player's list of orders.
@@ -65,6 +69,9 @@ public:
 	* 3-BlockadeOrder, 2 args
 	* 4-AirliftOrder, 4 args
 	* 5-NegotiateOrder, 2 args : when selecting target player, just let the player select one of his territory.
+	* 
+	* all 4 arg is required for every kinds of order. BUT if an order only requires 3 or less argument, the arguments left behind can be whatever.
+	* e.g. Bomborder - 3rd arg'number of armies' can be any integer. 4th argument 'from territory' can be any territory, you can just simply put the 2nd argument inside. it won't have any effect.
 	*/
 
 };
