@@ -11,8 +11,10 @@ using namespace std;
 class Orders {
 	private:
 		int orderID;
+		int playerID;
 	public:
 		Orders();
+		Orders(int playerID);
 		~Orders();
 		virtual std::unique_ptr<string> describingMessage();
 		//an message that describing the order. basicly a tostring method.
@@ -20,6 +22,7 @@ class Orders {
 		//execute the order. will validate first,but wont delete itself from order list.
 		virtual bool validate();
 		int* getOrderID();
+		int getPlayerID();
 		//return an unique order id.
 };
 
@@ -55,7 +58,7 @@ private:
 	int numberOfArmies;
 	Territory* targetTerritory;
 public:
-	DeployOrder(int numberOfArmies, Territory* targetTerritory);
+	DeployOrder(int playerID,int numberOfArmies, Territory* targetTerritory);
 	virtual std::unique_ptr<string> describingMessage();
 	virtual string execute();
 	virtual bool validate();
@@ -66,8 +69,9 @@ private:
 	int numberOfArmies;
 	Territory* fromTerritory;
 	Territory* targetTerritory;
+	bool isAdjacent;
 public:
-	AdvanceOrder(int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory);
+	AdvanceOrder(int playerID, int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory, bool isAdjacent);
 	virtual std::unique_ptr<string> describingMessage();
 	virtual string execute();
 	virtual bool validate();
@@ -76,8 +80,9 @@ public:
 class BombOrder : public Orders {
 private:
 	Territory* targetTerritory;
+	bool isAdjacent;
 public:
-	BombOrder(Territory* targetTerritory);
+	BombOrder(int playerID, Territory* targetTerritory,bool isAdjacent);
 	virtual std::unique_ptr<string> describingMessage();
 	virtual string execute();
 	virtual bool validate();
@@ -87,7 +92,7 @@ class BlockadeOrder : public Orders {
 private:
 	Territory* targetTerritory;
 public:
-	BlockadeOrder(Territory* targetTerritory);
+	BlockadeOrder(int playerID, Territory* targetTerritory);
 	virtual std::unique_ptr<string> describingMessage();
 	virtual string execute();
 	virtual bool validate();
@@ -99,7 +104,7 @@ private:
 	Territory* fromTerritory;
 	Territory* targetTerritory;
 public:
-	AirliftOrder(int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory);
+	AirliftOrder(int playerID, int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory);
 	virtual std::unique_ptr<string> describingMessage();
 	virtual string execute();
 	virtual bool validate();
@@ -107,8 +112,10 @@ public:
 
 
 class NegotiateOrder : public Orders {
+private:
+	Territory* targetTerritory;
 public:
-	NegotiateOrder();
+	NegotiateOrder(int playerID, Territory* targetTerritory);
 	virtual std::unique_ptr<string> describingMessage();
 	virtual string execute();
 	virtual bool validate();

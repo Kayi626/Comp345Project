@@ -14,7 +14,8 @@ Territory::Territory(string countryName,int countryID,int belongToWhichContinent
 	Territory::contiBelong = (belongToWhichContinent < 0)? abs(belongToWhichContinent) : belongToWhichContinent;
 	Territory::ctrAxisX = (x < 0) ? abs(x) : x;
 	Territory::ctrAxisY = (y < 0) ? abs(y) : y;
-	
+
+	controlledPlayerID = -1;
 
 }
 Territory::Territory() {
@@ -22,6 +23,7 @@ Territory::Territory() {
 	ctrAxisY = 0;
 	ctrID = -1;
 	ctrName = "";
+	controlledPlayerID = -1;
 }
 
 Territory::Territory(const Territory& t) {
@@ -31,6 +33,7 @@ Territory::Territory(const Territory& t) {
 	this->ctrAxisX = t.ctrAxisX;
 	this->ctrAxisY = t.ctrAxisY;
 	this->ctrName = t.ctrName.c_str();
+	this->controlledPlayerID = t.controlledPlayerID;
 }
 
 //Accessors
@@ -52,6 +55,10 @@ int Territory::getBelongedContinentID() {
 	return Territory::contiBelong;
 }
 
+int Territory::getcontrolledPlayerID() {
+	return Territory::controlledPlayerID;
+}
+
 int Territory::getCtrAxisX() {
 	return Territory::ctrAxisX;
 }
@@ -70,6 +77,11 @@ void Territory::setName(string countryName) {
 void Territory::setArmyNumber(int armyNumber) {
 
 	Territory::armyNumber = armyNumber;
+
+}
+void Territory::setControlledPlayerID(int newPlayerID) {
+
+	Territory::controlledPlayerID = newPlayerID;
 
 }
 /*

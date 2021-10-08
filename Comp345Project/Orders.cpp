@@ -13,11 +13,19 @@ Orders::Orders() {
 	this->orderID = globalOrderID;
 	globalOrderID++;
 }
+Orders::Orders(int playerID) {
+	this->playerID = playerID;
+	this->orderID = globalOrderID;
+	globalOrderID++;
+}
 Orders::~Orders() {
 }
 
 int* Orders::getOrderID() {
 	return &(Orders::orderID);
+}
+int Orders::getPlayerID() {
+	return Orders::playerID;
 }
 std::unique_ptr<string> Orders::describingMessage() {
 	std::unique_ptr<string> message = std::make_unique<string>("This is an empty order");
@@ -140,8 +148,8 @@ Orders* OrderList::popLast() {
 }
 
 
-DeployOrder::DeployOrder(int numberOfArmies, Territory* targetTerritory)
-	:Orders()
+DeployOrder::DeployOrder(int playerID, int numberOfArmies, Territory* targetTerritory)
+	:Orders(playerID)
 {
 	this->numberOfArmies = numberOfArmies;
 	this->targetTerritory = targetTerritory;
@@ -164,16 +172,16 @@ string DeployOrder::execute() {
 	return "You have successfuly deployed some armies.";
 }
 bool DeployOrder::validate() {
-	//TODO: this part leave for next assignment
-	return true;
+	return (this->getPlayerID() == targetTerritory->getcontrolledPlayerID());
 }
 
-AdvanceOrder::AdvanceOrder(int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory)
-	:Orders()
+AdvanceOrder::AdvanceOrder(int playerID, int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory, bool isAdjacent)
+	:Orders(playerID)
 {
 	this->numberOfArmies = numberOfArmies;
 	this->targetTerritory = targetTerritory;
 	this->fromTerritory = fromTerritory;
+	this->isAdjacent = isAdjacent;
 }
 std::unique_ptr<string> AdvanceOrder::describingMessage() {
 	string temp1 = "[ADVANCE] Move ";
@@ -196,14 +204,14 @@ string AdvanceOrder::execute() {
 	return "You have successfuly moved some army.";
 }
 bool AdvanceOrder::validate() {
-	//TODO: this part leave for next assignment
-	return true;
+	return (this->getPlayerID() == fromTerritory->getcontrolledPlayerID()&&isAdjacent);
 }
 
-BombOrder::BombOrder(Territory* targetTerritory)
-	:Orders()
+BombOrder::BombOrder(int playerID, Territory* targetTerritory,bool isAdjacent)
+	:Orders(playerID)
 {
 	this->targetTerritory = targetTerritory;
+	this->isAdjacent = isAdjacent;
 }
 std::unique_ptr<string> BombOrder::describingMessage() {
 	string temp1 = "[BOMB] Destroy half of the armies located on Territory: ";
@@ -219,12 +227,11 @@ string BombOrder::execute() {
 	return "You destroied half of the armies.";
 }
 bool BombOrder::validate() {
-	//TODO: this part leave for next assignment
-	return true;
+	return (this->getPlayerID() != targetTerritory->getcontrolledPlayerID() && isAdjacent);
 }
 
-BlockadeOrder::BlockadeOrder(Territory* targetTerritory)
-	:Orders()
+BlockadeOrder::BlockadeOrder(int playerID, Territory* targetTerritory)
+	:Orders(playerID)
 {
 	this->targetTerritory = targetTerritory;
 }
@@ -242,12 +249,11 @@ string BlockadeOrder::execute() {
 	return "You tripled the number of armies on a territry.";
 }
 bool BlockadeOrder::validate() {
-	//TODO: this part leave for next assignment
-	return true;
+	return (this->getPlayerID() == targetTerritory->getcontrolledPlayerID());
 }
 
-AirliftOrder::AirliftOrder(int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory)
-	:Orders()
+AirliftOrder::AirliftOrder(int playerID, int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory)
+	:Orders(playerID)
 {
 	this->numberOfArmies = numberOfArmies;
 	this->targetTerritory = targetTerritory;
@@ -274,16 +280,20 @@ string AirliftOrder::execute() {
 	return "You advanced some army to the target terrtories.";
 }
 bool AirliftOrder::validate() {
-	//TODO: this part leave for next assignment
-	return true;
+	return (this->getPlayerID() == fromTerritory->getcontrolledPlayerID()
+		&& fromTerritory->getArmyNumber() >=numberOfArmies);
 }
 
-NegotiateOrder::NegotiateOrder()
-	:Orders()
+NegotiateOrder::NegotiateOrder(int playerID, Territory* targetTerritory)
+	:Orders(playerID)
 {
+	this->targetTerritory = targetTerritory;
+
 }
 std::unique_ptr<string> NegotiateOrder::describingMessage() {
-	string temp1 = "[NEGOTIATE] Prevent attacks between the current player and another player unitl the end of the turn ";
+	string temp1 = "[NEGOTIATE] Prevent attacks between the current player and player with ID:";
+	string temp2 = to_string(this->targetTerritory->getcontrolledPlayerID());
+	temp1.append(temp2);
 	std::unique_ptr<string> message = std::make_unique<string>(temp1);
 	return message;
 }
@@ -295,6 +305,6 @@ string NegotiateOrder::execute() {
 	return "The attacks between two players is prevented.";
 }
 bool NegotiateOrder::validate() {
-	//TODO: this part leave for next assignment
-	return true;
+	//just need to validate if it's negotiate with itself.
+	return (!(this->getPlayerID() == this->targetTerritory->getcontrolledPlayerID()));
 }
