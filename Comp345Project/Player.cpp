@@ -3,7 +3,7 @@
 #include <cstring>
 #include <string>
 #include "Player.h"
-#include "Territory.h"
+#include "Map.h"
 #include "Orders.h"
 #include "Cards.h"
 

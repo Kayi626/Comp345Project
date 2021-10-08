@@ -3,11 +3,104 @@
 #include <iostream>
 #include <vector>
 
-#include "Continent.h"
-#include "Territory.h"
-
 using namespace std;
 
+class MapLoader {
+ private:
+  string mapPath;
+  vector<string> file;
+  vector<string> countries;
+  vector<string> continents;
+  vector<string> borders;
+  vector<vector<string>> fileVec;
+  vector<vector<string>> ctrVec;
+  vector<vector<string>> ctiVec;
+  vector<vector<string>> borderVec;
+
+ public:
+  MapLoader();
+
+  void mapReader(const string& mapName);
+  void toString();
+
+  static vector<string>& split(const string& text, char delim,
+                               vector<string>& element);
+  static vector<string> split(const string& text, char delim);
+
+  static bool checkUnique(vector<string> vec);
+  void validate();
+
+  // Accessors
+  vector<vector<string>> getFileVec();
+  vector<vector<string>> getCtrVec();
+  vector<vector<string>> getCtiVec();
+  vector<vector<string>> getBorderVec();
+
+  // Mutators
+
+  // Other class functions
+
+  static bool isStrInt(string str);
+};
+class Territory {
+ private:
+  string ctrName;
+  int ctrID;
+  int armyNumber;
+  int controlledPlayerID;
+  // the ID of player who's controlling this.
+  // default set to -1, which means it's a neutral territory.
+  int contiBelong;
+  int ctrAxisX;
+  int ctrAxisY;
+
+ public:
+  // Constructors
+  Territory(string countryName, int countryID, int belongToWhichContinent,
+            int ctrAxisX, int ctrAxisY);
+  Territory(const Territory& t);
+  Territory();
+
+  // Other functions
+  // Accessors
+  string getName();
+  int getArmyNumber();
+  int getCountryID();
+  int getBelongedContinentID();
+  int getcontrolledPlayerID();
+  int getCtrAxisX();
+  int getCtrAxisY();
+  // Mutators
+  void setName(string countryName);
+  void setArmyNumber(int armyNumber);
+  void setControlledPlayerID(int newPlayerID);
+  // void setCountryID(int countryID);
+  void setBelongedContinentID(int belongToWhichContinent);
+  void setCtrAxisX(int x);
+  void setCtrAxisY(int y);
+};
+class Continent {
+ private:
+  int continentID;
+  string continentName;
+  string continentColor;
+  int continentBonus;
+  vector<Territory*> countryInside;
+
+ public:
+  // Constructors
+  Continent(int continentID, string continentName, int bonus, string color);
+  Continent();
+  Continent(const Continent& conti);
+
+  // Other class functions
+  void display();
+  int getID();
+  string getName();
+  string getColor();
+  int getBonus();
+  vector<Territory*>& getCountryInside();
+};
 class Map {
  private:
   // A list of vectors of countries; each vector is an adjency list of the
