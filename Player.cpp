@@ -29,6 +29,31 @@ Player::Player(int playerID, string playerName, vector<vector<Territory*>> *mapG
 	// asign correct values to ControlledTerritories and ReachcableTerritories.
 }
 
+Player& Player::operator= (const Player& p) {
+	if (this == &p) {
+		return (Player&)p;
+	}
+	this->playerID = *new int(p.playerID);
+	this->playerName = *new string(p.playerName);
+	this->mapGraph = new vector<vector<Territory*>>(*(p.mapGraph));
+	this->controlledTerritories = *new vector<Territory*>(p.controlledTerritories);
+	this->reachcableTerritories = *new vector<Territory*>(p.reachcableTerritories);
+	this->playerHandOfCards = new Hand(*(p.playerHandOfCards));
+	this->playerOrderList = new OrderList(*(p.playerOrderList));
+	return *this;
+
+}
+Player::Player(const Player& p) {
+	this->playerID = *new int(p.playerID);
+	this->playerName = *new string(p.playerName);
+	this->mapGraph = new vector<vector<Territory*>>(*(p.mapGraph));
+	this->controlledTerritories = *new vector<Territory*>(p.controlledTerritories);
+	this->reachcableTerritories = *new vector<Territory*>(p.reachcableTerritories);
+	this->playerHandOfCards = new Hand(*(p.playerHandOfCards));
+	this->playerOrderList = new OrderList(*(p.playerOrderList));
+}
+
+
 string Player::getName() {
 	return this->playerName;
 }

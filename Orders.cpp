@@ -17,9 +17,34 @@ Orders::Orders(int playerID) {
 	this->playerID = playerID;
 	this->orderID = globalOrderID;
 	globalOrderID++;
+	//this will give a global unique order id to an order.
 }
 Orders::~Orders() {
 }
+Orders& Orders::operator= (const Orders& ord) {
+	if (this == &ord) {
+		return (Orders&)ord;
+	}
+	this->orderID = *new int(ord.orderID);
+	this->playerID = *new int(ord.playerID);
+	return *this;
+
+}
+Orders::Orders(const Orders& ord) {
+	this->orderID = *new int(ord.orderID);
+	this->playerID = *new int(ord.playerID);
+}
+
+ostream& operator<<(ostream& ost, const Orders& ord)
+{
+	ord.describe(ost);
+	return ost;
+
+}
+void Orders::describe(std::ostream& output) const {
+	cout << "The describe From the order base class." << endl;
+}
+
 
 int* Orders::getOrderID() {
 	return &(Orders::orderID);
@@ -47,6 +72,21 @@ OrderList::OrderList(int playerID) {
 	this->playerID = playerID;
 	vector<Orders*> ordersInside(10);
 }
+
+OrderList& OrderList::operator= (const OrderList& ordlist) {
+	if (this == &ordlist) {
+		return (OrderList&)ordlist;
+	}
+	this->playerID = *new int(ordlist.playerID);
+	this->ordersInside = *new vector<Orders*>(ordlist.ordersInside);
+	return *this;
+
+}
+OrderList::OrderList(const OrderList& ordlist) {
+	this->playerID = *new int(ordlist.playerID);
+	this->ordersInside = *new vector<Orders*>(ordlist.ordersInside);
+}
+
 void OrderList::put(Orders* orderInsert) {
 	ordersInside.push_back(orderInsert);
 }
@@ -59,6 +99,7 @@ bool OrderList::move(int orderID, int indexmoving) {
 				return true;
 			}
 			else if (indexmoving > 0) {
+				//if it's moving backwards
 				if (i + indexmoving + 1 > size) {
 					return false; //if it's out of range
 				}
@@ -76,6 +117,7 @@ bool OrderList::move(int orderID, int indexmoving) {
 				return true;
 			}
 			else if(indexmoving < 0) {
+				//if it's moving foward
 				if (i + indexmoving < 0) {
 
 					return false; //if it's out of range
@@ -111,7 +153,7 @@ bool OrderList::remove(int orderID) {
 			ordersInside.erase(std::next(ordersInside.begin(), i));
 			return true;
 		}
-	}
+	}//gothrough the list and remove the order if the input orderID match.
 	return false;
 }
 
@@ -122,7 +164,7 @@ void OrderList::displayAll() {
 		cout << ">>NO." << *(orders->getOrderID()) << " " << *(orders->describingMessage()) << endl;
 	}
 	cout << "There are: " << this->ordersInside.size() << " orders in list." << endl;
-}
+}//just display all the order. by their describing Message.
 
 inline int OrderList::getPlayerID() {
 	return OrderList::playerID;
@@ -137,11 +179,13 @@ Orders* OrderList::getLast() {
 }
 Orders* OrderList::popFirst() {
 	Orders* temp = ordersInside[0];
+	//use a pointer save the order. then erase it.
 	ordersInside.erase(std::next(ordersInside.begin(), 0));
 	return temp;
 }
 Orders* OrderList::popLast() {
 	Orders* temp = ordersInside.back();
+	//use a pointer save the order. then erase it.
 	ordersInside.pop_back();
 	return temp;
 
@@ -154,6 +198,33 @@ DeployOrder::DeployOrder(int playerID, int numberOfArmies, Territory* targetTerr
 	this->numberOfArmies = numberOfArmies;
 	this->targetTerritory = targetTerritory;
 }
+
+DeployOrder& DeployOrder::operator= (const DeployOrder& ord) {
+	if (this == &ord) {
+		return (DeployOrder&)ord;
+	}
+	Orders::operator=(ord);
+	this->numberOfArmies = *new int(ord.numberOfArmies);
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+	return *this;
+
+}
+DeployOrder::DeployOrder(const DeployOrder& ord) {
+	this->numberOfArmies = *new int(ord.numberOfArmies);
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+}
+
+
+void DeployOrder::describe(std::ostream& output) const {
+	string temp1 = "[DEPLOY] Place ";
+	string temp2 = to_string(this->numberOfArmies);
+	string temp3 = " armies on terrtire: ";
+	temp1.append(temp2);
+	temp1.append(temp3);
+	temp1.append(this->targetTerritory->getName());
+	cout << temp1;
+}
+
 std::unique_ptr<string> DeployOrder::describingMessage() {
 	string temp1 = "[DEPLOY] Place ";
 	string temp2 = to_string(this->numberOfArmies);
@@ -183,6 +254,37 @@ AdvanceOrder::AdvanceOrder(int playerID, int numberOfArmies, Territory* fromTerr
 	this->fromTerritory = fromTerritory;
 	this->isAdjacent = isAdjacent;
 
+}
+AdvanceOrder& AdvanceOrder::operator= (const AdvanceOrder& ord) {
+	if (this == &ord) {
+		return (AdvanceOrder&)ord;
+	}
+	Orders::operator=(ord);
+	this->numberOfArmies = *new int(ord.numberOfArmies);
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+	this->fromTerritory = new Territory(*(ord.fromTerritory));
+	this->isAdjacent = new bool(isAdjacent);
+	return *this;
+
+}
+AdvanceOrder::AdvanceOrder(const AdvanceOrder& ord) {
+	this->numberOfArmies = *new int(ord.numberOfArmies);
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+	this->fromTerritory = new Territory(*(ord.fromTerritory));
+	this->isAdjacent = new bool(isAdjacent);
+}
+
+void AdvanceOrder::describe(std::ostream& output) const {
+	string temp1 = "[ADVANCE] Move ";
+	string temp2 = to_string(this->numberOfArmies);
+	string temp3 = " armies from terrtire: ";
+	string temp4 = " to terrtire: ";
+	temp1.append(temp2);
+	temp1.append(temp3);
+	temp1.append(this->fromTerritory->getName());
+	temp1.append(temp4);
+	temp1.append(this->targetTerritory->getName());
+	cout << temp1;
 }
 std::unique_ptr<string> AdvanceOrder::describingMessage() {
 	string temp1 = "[ADVANCE] Move ";
@@ -221,6 +323,25 @@ BombOrder::BombOrder(int playerID, Territory* targetTerritory,bool isAdjacent)
 	this->targetTerritory = targetTerritory;
 	this->isAdjacent = isAdjacent;
 }
+BombOrder& BombOrder::operator= (const BombOrder& ord) {
+	if (this == &ord) {
+		return (BombOrder&)ord;
+	}
+	Orders::operator=(ord);
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+	this->isAdjacent = new bool(isAdjacent);
+	return *this;
+
+}
+BombOrder::BombOrder(const BombOrder& ord) {
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+	this->isAdjacent = new bool(isAdjacent);
+}
+void BombOrder::describe(std::ostream& output) const {
+	string temp1 = "[BOMB] Destroy half of the armies located on Territory: ";
+	temp1.append(this->targetTerritory->getName());
+	cout << temp1;
+}
 std::unique_ptr<string> BombOrder::describingMessage() {
 	string temp1 = "[BOMB] Destroy half of the armies located on Territory: ";
 	temp1.append(this->targetTerritory->getName());
@@ -242,6 +363,23 @@ BlockadeOrder::BlockadeOrder(int playerID, Territory* targetTerritory)
 	:Orders(playerID)
 {
 	this->targetTerritory = targetTerritory;
+}
+BlockadeOrder& BlockadeOrder::operator= (const BlockadeOrder& ord) {
+	if (this == &ord) {
+		return (BlockadeOrder&)ord;
+	}
+	Orders::operator=(ord);
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+	return *this;
+
+}
+BlockadeOrder::BlockadeOrder(const BlockadeOrder& ord) {
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+}
+void BlockadeOrder::describe(std::ostream& output) const {
+	string temp1 = "[BLOCKADE] Triple the number of armies & make it neutral on Territory: ";
+	temp1.append(this->targetTerritory->getName());
+	cout << temp1;
 }
 std::unique_ptr<string> BlockadeOrder::describingMessage() {
 	string temp1 = "[BLOCKADE] Triple the number of armies & make it neutral on Territory: ";
@@ -266,6 +404,35 @@ AirliftOrder::AirliftOrder(int playerID, int numberOfArmies, Territory* fromTerr
 	this->numberOfArmies = numberOfArmies;
 	this->targetTerritory = targetTerritory;
 	this->fromTerritory = fromTerritory;
+}
+AirliftOrder& AirliftOrder::operator= (const AirliftOrder& ord) {
+	if (this == &ord) {
+		return (AirliftOrder&)ord;
+	}
+	Orders::operator=(ord);
+	this->numberOfArmies = *new int(ord.numberOfArmies);
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+	this->fromTerritory = new Territory(*(ord.fromTerritory));
+	return *this;
+
+}
+AirliftOrder::AirliftOrder(const AirliftOrder& ord) {
+	this->numberOfArmies = *new int(ord.numberOfArmies);
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+	this->fromTerritory = new Territory(*(ord.fromTerritory));
+}
+
+void AirliftOrder::describe(std::ostream& output) const {
+	string temp1 = "[AIRLIFT] Advance ";
+	string temp2 = to_string(this->numberOfArmies);
+	string temp3 = " armies from terrtoire: ";
+	string temp4 = " to terrtoire: ";
+	temp1.append(temp2);
+	temp1.append(temp3);
+	temp1.append(this->fromTerritory->getName());
+	temp1.append(temp4);
+	temp1.append(this->targetTerritory->getName());
+	cout << temp1;
 }
 std::unique_ptr<string> AirliftOrder::describingMessage() {
 	string temp1 = "[AIRLIFT] Advance ";
@@ -297,6 +464,25 @@ NegotiateOrder::NegotiateOrder(int playerID, Territory* targetTerritory)
 {
 	this->targetTerritory = targetTerritory;
 
+}
+NegotiateOrder& NegotiateOrder::operator= (const NegotiateOrder& ord) {
+	if (this == &ord) {
+		return (NegotiateOrder&)ord;
+	}
+	Orders::operator=(ord);
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+	return *this;
+
+}
+NegotiateOrder::NegotiateOrder(const NegotiateOrder& ord) {
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+}
+
+void NegotiateOrder::describe(std::ostream& output) const {
+	string temp1 = "[NEGOTIATE] Prevent attacks between the current player and player with ID:";
+	string temp2 = to_string(this->targetTerritory->getcontrolledPlayerID());
+	temp1.append(temp2);
+	cout << temp1;
 }
 std::unique_ptr<string> NegotiateOrder::describingMessage() {
 	string temp1 = "[NEGOTIATE] Prevent attacks between the current player and player with ID:";
