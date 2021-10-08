@@ -198,7 +198,7 @@ void GameEngine::gameFlow() {
 			}
 				
             //Win(Re-play the game)
-			 else if (win && input.compare("play")) {
+			 else if (win && input.compare("play")==0) {
 
 				reset();
 				playStage = false;
