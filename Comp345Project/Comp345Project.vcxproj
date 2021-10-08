@@ -144,6 +144,8 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapLoader.h" />
+    <ClInclude Include="Orders.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Territory.h" />
   </ItemGroup>
   <ItemGroup>
@@ -151,8 +153,10 @@
     <ClCompile Include="Continent.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="MapDriver.cpp" />
+    <ClCompile Include="Driver.cpp" />
     <ClCompile Include="MapLoader.cpp" />
+    <ClCompile Include="Orders.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Territory.cpp" />
   </ItemGroup>
   <ItemGroup>
