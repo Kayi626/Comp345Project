@@ -389,11 +389,11 @@ void Map::ccs(vector<bool>& visited) {
   for (int x = 0; x < mapGraph.size(); x++) {
     // Obtain ID's of countries that are linked to maGraph[i][0]
     Territory comparedC = *(mapGraph[x][0]);
-    int tempID1 = comparedC.getBelongedContinentID();
+    unsigned int tempID1 = comparedC.getBelongedContinentID();
 
     for (int y = 1; y < mapGraph[x].size(); y++) {
       Territory temp = *(mapGraph[x][y]);
-      int tempID2 = temp.getBelongedContinentID();
+      unsigned int tempID2 = temp.getBelongedContinentID();
       // cout << "Index: " << ;
       // When at least a country from another continent connects to the current
       // country, it will break the loop

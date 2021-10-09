@@ -167,7 +167,7 @@ void OrderList::displayAll() {
 	cout << "There are: " << this->ordersInside.size() << " orders in list." << endl;
 }//just display all the order. by their describing Message.
 
-inline int OrderList::getPlayerID() {
+int OrderList::getPlayerID() {
 	return OrderList::playerID;
 }
 
