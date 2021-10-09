@@ -158,8 +158,9 @@ class Map {
   // Mutator
 
   // Other class functions
-  void displayLink();
-  void displayAllContinents();
+  void displayAllContinents(ostream& ost) const;
+  void displayLink(ostream& ost) const;
+  friend ostream& operator<<(std::ostream& ost, const Map& map);
   bool addCountry(Territory* t);
   bool addContinent(Continent* c);
   bool addEdge(int id1, int id2);

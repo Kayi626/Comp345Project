@@ -509,29 +509,38 @@ vector<Continent*> Map::getContinentGraph() { return Map::continentGraph; }
 vector<vector<Territory*>> Map::getMapGraph() { return Map::mapGraph; }
 
 // Other class functions
-void Map::displayLink() {
+void Map::displayLink(ostream& ost) const{
   int count = 1;
   // Display all countries and their adjacent countries
   for (vector<Territory*> v : mapGraph) {
     for (int x = 0; x < v.size(); x++) {
       Territory temp = *(v[x]);
       if (x == 0)
-        cout << "Country " << count << ": [" << temp.getName()
+        ost << "Country " << count << ": [" << temp.getName()
              << "] has adjacent countries: " << endl;
       else if (x == v.size() - 1)
-        cout << temp.getName() << endl;
+        ost << temp.getName() << endl;
       else
-        cout << temp.getName() << ",  ";
+        ost << temp.getName() << ",  ";
     }
     count++;
-    cout << endl;
+    ost << endl;
   }
 }
 
-void Map::displayAllContinents() {
+void Map::displayAllContinents(ostream& ost) const {
   for (Continent* c : continentGraph) {
     c->display();
   }
+}
+
+ostream& operator<<(std::ostream& ost, const Map& map) {
+  ost << endl << "---Displaying all countries and their adjacent countries---" << endl;
+  map.displayLink(ost);
+  ost << endl << "---Displaying all continent---" << endl;
+  map.displayAllContinents(ost);
+  ost << endl << "---End of Display---" << endl;
+  return ost;
 }
 
 // Validate whether the map is a connected graph/continents are connected
@@ -554,6 +563,7 @@ bool Map::validate() {
        << static_cast<string>(((stageCheck3) ? "[true]" : "[false]")) << endl;
   return stageCheck1 && stageCheck2 && stageCheck3;
 }
+
 
 bool Map::addCountry(Territory* t) {
   vector<Territory*> newAdjacencyList;
