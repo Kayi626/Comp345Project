@@ -158,6 +158,13 @@ bool OrderList::remove(int orderID) {
 	return false;
 }
 
+void OrderList::removeAll() {
+	for (int i = 0; i < ordersInside.size(); ++i) {
+			ordersInside.erase(std::next(ordersInside.begin(), i));		
+	}
+
+}
+
 
 void OrderList::displayAll() {
 	cout << "----- This is the orderlist hold by player with ID: " << this->playerID << " -----" << endl;

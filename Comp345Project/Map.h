@@ -61,6 +61,14 @@ class Territory {
   Territory(const Territory& t);
   Territory();
 
+  //Assignment Operator
+  Territory& operator=(const Territory& t);
+  //Stream Insertion Operator
+  friend ostream& operator<<(ostream& ost, const Territory& t);
+
+  //Destructor
+  ~Territory();
+
   // Other functions
   // Accessors
   string getName();
@@ -92,6 +100,14 @@ class Continent {
   Continent(int continentID, string continentName, int bonus, string color);
   Continent();
   Continent(const Continent& conti);
+
+  //Assignment Operator
+  Continent& operator=(const Continent& t);
+  //Stream Insertion Operator
+  friend ostream& operator<<(ostream& ost, const Continent& t);
+
+  //Destructor
+  ~Continent();
 
   // Other class functions
   void display();
@@ -151,6 +167,12 @@ class Map {
   // Constructors
   Map();
   Map(const Map& map);
+  //Assignment Operator
+  Map& operator=(const Map& map);
+  //Stream Insertion Operator
+  friend ostream& operator<<(std::ostream& ost, const Map& map);
+  //Destructor
+  ~Map();
 
   // Accessor
   vector<Continent*> getContinentGraph();
@@ -160,7 +182,6 @@ class Map {
   // Other class functions
   void displayAllContinents(ostream& ost) const;
   void displayLink(ostream& ost) const;
-  friend ostream& operator<<(std::ostream& ost, const Map& map);
   bool addCountry(Territory* t);
   bool addContinent(Continent* c);
   bool addEdge(int id1, int id2);

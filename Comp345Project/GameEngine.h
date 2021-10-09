@@ -21,11 +21,14 @@ public:
 	//constructors
 	GameEngine();
 	GameEngine(const GameEngine& ge);
+	//Assignment Operator
+	GameEngine& operator = (const GameEngine& ge);
+	//Stream Insertion Operator
+	friend ostream& operator << (ostream& ost, const GameEngine& ge);
+	~GameEngine();
 	//other class functions
 	void gameFlow();
 	void reset();
-	//Stream Insertion Operator
-	friend ostream& operator << (ostream& ost, const GameEngine& ge);
 	void checkState(std::ostream& output) const;
 
 	//Accessors

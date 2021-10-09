@@ -32,7 +32,9 @@ void Card::print_vec_card() {
 
 void Card::set_card_type_id(int id) { card_type = &vec_types_card.at(id); }
 
-Deck::Deck() {}
+Deck::Deck() {
+
+}
 
 Deck::~Deck() {
   // delete the pointer to the card

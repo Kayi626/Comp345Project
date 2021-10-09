@@ -53,6 +53,11 @@ Player::Player(const Player& p) {
 	this->playerOrderList = new OrderList(*(p.playerOrderList));
 }
 
+//Stream Input Operator
+ostream& operator << (ostream& ost, const Player& player) {
+	ost << "[Player ID]: " << player.playerID << "  [Player Name]: " << player.playerName<<endl;
+	return ost;
+}
 
 string Player::getName() {
 	return this->playerName;
@@ -80,7 +85,7 @@ void Player::setPlayerID(int newPlayerID) {
 	this->playerID= newPlayerID;
 }
 void Player::addTerrtories(Territory* newTerritory) {
-	cout << newTerritory->getName() << "\n";
+	cout << endl<<newTerritory->getName() << "\n";
 	newTerritory->setControlledPlayerID(playerID);
 	this->update();
 }
@@ -121,13 +126,13 @@ void Player::update() {
 
 void Player::printPlayerTerrtories() {
 
-	cout << "----- This is the Terrtories to be defended by player: " << this->playerName << " -----" << endl;
+	cout << "----- These are the Terrtories to be defended by player: " << this->playerName << " -----" << endl;
 	for (int i = 0; i < controlledTerritories.size();++i) {
 		Territory temp = *(controlledTerritories[i]);
 		cout << ">>Country: " << temp.getName() << " have armies: " << temp.getArmyNumber() << endl;
 	}
-	cout << "There are: " << this->controlledTerritories.size() << " captured by player." << endl;
-	cout << "----- This is the Terrtories to be Attacked by player: " << this->playerName << " -----" << endl;
+	cout << "There are totally: " << this->controlledTerritories.size() << " captured by player." << endl<<endl;
+	cout << "----- These are the Terrtories to be attacked by player: " << this->playerName << " -----" << endl;
 	for (int i = 0; i < reachcableTerritories.size(); ++i) {
 		Territory temp = *(reachcableTerritories[i]);
 		cout << ">>Country: " << temp.getName() << " have armies: " << temp.getArmyNumber() << endl;

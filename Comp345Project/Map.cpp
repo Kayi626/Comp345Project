@@ -224,6 +224,32 @@ Continent::Continent(const Continent& conti) {
   }
 }
 
+//Assignment Operator
+Continent& Continent::operator=(const Continent& t) {
+    if (this == &t) {
+        return *this;
+    }
+    this->continentName = t.continentName.c_str();
+    this->continentColor = t.continentColor;
+    this->continentID = t.continentID;
+    vector<Territory*> tempInside = t.countryInside;
+    // creat deep copy of countryInside
+    for (int x = 0; x < static_cast<int>(tempInside.size()); x++) {
+        Territory* temp = tempInside[x];
+        this->countryInside.push_back(temp);
+    }
+}
+//Stream Insertion Operator
+ostream& operator<<(ostream& ost, const Continent& t) {
+    ost << "[Continent ID]: " << t.continentID << "  [Continent Name]: " << t.continentName << "  [Continent Color]: " << t.continentColor << "  [Continent Bonus]: " << t.continentBonus << endl;
+    return ost;
+}
+
+//Destructor
+Continent::~Continent() {
+
+}
+
 void Continent::display() {
   cout << endl
        << "Continent " << continentID << ": " << continentName << endl
@@ -281,6 +307,33 @@ Territory::Territory(const Territory& t) {
   this->ctrAxisY = t.ctrAxisY;
   this->ctrName = t.ctrName.c_str();
   this->controlledPlayerID = t.controlledPlayerID;
+}
+
+//Assignment Operator
+Territory& Territory::operator=(const Territory& t) {
+    if (this == &t) {
+        return *this;
+    }
+    this->ctrID = t.ctrID;
+    this->armyNumber = t.armyNumber;
+    this->contiBelong = t.contiBelong;
+    this->ctrAxisX = t.ctrAxisX;
+    this->ctrAxisY = t.ctrAxisY;
+    this->ctrName = t.ctrName.c_str();
+    this->controlledPlayerID = t.controlledPlayerID;
+    
+    return *this;
+
+}
+//Stream Insertion Operator
+ostream& operator<<(ostream& ost, const Territory& t) {
+    ost << "[Territory ID]: " << t.ctrID << "  [Territory Name]: " << t.ctrName << "  [Territory BelongedContiID]: " << t.contiBelong << "  [Territory ArmyNumber]: " << t.armyNumber << "  [Territory X-Axis]: " << t.ctrAxisX << " [Territory Y-Axis]: " << t.ctrAxisY << "  [Territory ControledPlayer ID]: " << t.controlledPlayerID << endl;
+    return ost;
+}
+
+//Destructor
+Territory::~Territory() {
+
 }
 
 // Accessors
@@ -352,6 +405,43 @@ Map::Map(const Map& map) {
     Continent* tempC = map.continentGraph[x];
     this->continentGraph.push_back(tempC);
   }
+}
+
+//Assignment Operator
+Map& Map::operator=(const Map& map) {
+    if (this == &map) {
+        return *this;
+    }
+        // Copy mapgraph
+    for(int x = 0; x < static_cast<int>(map.mapGraph.size()); x++) {
+        for (int y = 0; y < map.mapGraph[x].size(); y++) {
+                Territory* temp = map.mapGraph[x][y];
+                this->mapGraph[x].push_back(temp);
+         }
+     }
+
+    // Copy continentgraph
+    for (int x = 0; x < static_cast<int>(map.continentGraph.size()); x++) {
+        Continent* tempC = map.continentGraph[x];
+        this->continentGraph.push_back(tempC);
+    }
+
+    return *this;
+
+}
+
+//Stream Insertion Operator
+ostream& operator<<(std::ostream& ost, const Map& map) {
+    ost << endl << "---Displaying all countries and their adjacent countries---" << endl;
+    map.displayLink(ost);
+    ost << endl << "---Displaying all continent---" << endl;
+    map.displayAllContinents(ost);
+    ost << endl << "---End of Display---" << endl;
+    return ost;
+}
+
+//Destructor
+Map::~Map() {
 }
 
 // Private helper function
@@ -534,14 +624,7 @@ void Map::displayAllContinents(ostream& ost) const {
   }
 }
 
-ostream& operator<<(std::ostream& ost, const Map& map) {
-  ost << endl << "---Displaying all countries and their adjacent countries---" << endl;
-  map.displayLink(ost);
-  ost << endl << "---Displaying all continent---" << endl;
-  map.displayAllContinents(ost);
-  ost << endl << "---End of Display---" << endl;
-  return ost;
-}
+
 
 // Validate whether the map is a connected graph/continents are connected
 // subgraphs/each country belongs to 1 and only 1 continent
@@ -554,7 +637,7 @@ bool Map::validate() {
   bool stageCheck3 = belongTo_OneContinent();
 
   // Dispay status info for each checkpoint
-  cout << "--------------Validating----------------------" << endl << endl;
+  cout << "--------------Validating-------------------------" << endl << endl;
   cout << "Map Graph is Connected: "
        << static_cast<string>(((stageCheck1) ? "[true]" : "[false]")) << endl;
   cout << "Continents are connected subrgaphs: "
