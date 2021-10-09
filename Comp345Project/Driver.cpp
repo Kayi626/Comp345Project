@@ -267,8 +267,8 @@ int main() {
 #pragma endregion Card
 #pragma region GameEngine
     //GameEngine* ge = new GameEngine();
-    //ge->gameFlow();
     //delete ge;
+    //ge = nullptr;
 #pragma endregion GameEngine
 return 0;
 }

@@ -24,6 +24,9 @@ public:
 	//other class functions
 	void gameFlow();
 	void reset();
+	//Stream Insertion Operator
+	friend ostream& operator << (ostream& ost, const GameEngine& ge);
+	void checkState(std::ostream& output) const;
 
 	//Accessors
 	bool getStart();

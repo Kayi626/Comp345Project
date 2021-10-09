@@ -1,4 +1,7 @@
 #include "GameEngine.h"
+#include "Player.h"
+#include "Orders.h"
+#include "Cards.h"
 #include <string>
 #include <iostream>
 using namespace std;
@@ -26,6 +29,33 @@ GameEngine::GameEngine(const GameEngine& ge) {
 }
 
 //Other class functions
+
+//Stream Insertion Operators
+ostream& operator << (ostream& ost, const GameEngine& ge) {
+	ge.checkState(ost);
+	return ost;
+}
+void GameEngine::checkState(std::ostream& output) const {
+
+	if (start)
+		output << "[Current State: Start]" << endl;
+	else if (map_loaded)
+		output << "[Current State: Map_Loaded]" << endl;
+	else if (map_validated)
+		output << "[Current State: Map_Validated]" << endl;
+	else if (players_added)
+		output << "[Current State: Players_Added]";
+	else if (assign_reinforcement)
+		output << "[Current State: Assign_Reinforcement]" << endl;
+	else if (issue_orders)
+		output << "[Current State: Issue Orders]" << endl;
+	else if (execute_orders)
+		output << "[Current State: Execute Orders]" << endl;
+	else if (win)
+		output << "[Current State: Win]" << endl;
+
+}
+
 void GameEngine::gameFlow() {
 
 	//define variables for logic control
