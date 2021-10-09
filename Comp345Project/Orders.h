@@ -52,6 +52,7 @@ public:
 	//return false: can't find the order / the moving is out of range.
 
 	bool remove(int orderID);  //remove an order
+	void removeAll();//remove all orders
 
 	void displayAll();//print the current orderlist. will show the details of every order.
 	int getPlayerID();//get the player that own this order list
@@ -63,6 +64,7 @@ public:
 	Orders* popFirst();
 	Orders* popLast();
 	//popFirst & popLast: will remove the order from the list after return its pointer.
+ 
 };
 
 class DeployOrder : public Orders {

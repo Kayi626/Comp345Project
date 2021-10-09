@@ -35,6 +35,8 @@ public:
 
 	Player(const Player& p);
 	Player& operator = (const Player& p);
+	//Stream Insertion Operator
+	friend ostream& operator << (ostream& ost, const Player& player);
 
 	//Accessors
 	string getName();

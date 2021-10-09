@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 using namespace std;
+
 //Constructor
 GameEngine::GameEngine() {
 	this->start = true;
@@ -18,14 +19,36 @@ GameEngine::GameEngine() {
 }
 
 GameEngine::GameEngine(const GameEngine& ge) {
-	this->start = ge.start;
-	this->map_loaded = ge.map_loaded;
-	this->map_validated = ge.map_validated;
-	this->players_added = ge.players_added;
-	this->assign_reinforcement = ge.assign_reinforcement;
-	this->issue_orders = ge.issue_orders;
-	this->execute_orders = ge.execute_orders;
-	this->win = ge.win;
+	this->start = *new bool(ge.start);
+	this->map_loaded = *new bool(ge.map_loaded);
+	this->map_validated = *new bool(ge.map_validated);
+	this->players_added = *new bool(ge.players_added);
+	this->assign_reinforcement = *new bool(ge.assign_reinforcement);
+	this->issue_orders = *new bool(ge.issue_orders);
+	this->execute_orders = *new bool(ge.execute_orders);
+	this->win = *new bool(ge.win);
+}
+
+//Assignment Operator
+GameEngine& GameEngine::operator= (const GameEngine& ge) {
+	if (this == &ge) {
+		return *this;
+	}
+	this->start = *new bool(ge.start);
+	this->map_loaded = *new bool(ge.map_loaded);
+	this->map_validated = *new bool(ge.map_validated);
+	this->players_added = *new bool(ge.players_added);
+	this->assign_reinforcement = *new bool(ge.assign_reinforcement);
+	this->issue_orders = *new bool(ge.issue_orders);
+	this->execute_orders = *new bool(ge.execute_orders);
+	this->win = *new bool(ge.win);
+
+	return *this;
+}
+
+//Destructor
+GameEngine::~GameEngine() {
+
 }
 
 //Other class functions
@@ -65,19 +88,38 @@ void GameEngine::gameFlow() {
 	bool executed = false;
 	bool playStage = false;
 	bool run = true;
-	
-	cout << "---------------WELCOME TO WARZONE!---------------" << endl; 
-    cout << endl << "[Stage: Start]" << endl;
-	cout << endl << "Please enter \"loadmap\" to load the map: " << endl << endl;
+	bool Reinforce_assigned = false;
 
+	//define objects of classes like Player,Cards,Orders,and Map
+	Map* newMap=new Map();
+	Deck* newDeck = new Deck;
+	newDeck->original_vec_deck();
+	int IDgenerator = 1;
+	vector<Player> playerList;
+	vector<vector<Territory*>> currentMapGraph;
+	int issueTime = 1;
+
+	
+	
+ 
 	while (run) {
 
 		//Navigate all states in the console
+		
 
 		//Display state information and prompt users to enter commands plus implementations
-		if (map_loaded && lock) {
+		if (start) {
+			cout <<endl<< "---------------WELCOME TO WARZONE!---------------" << endl;
+			cout << endl << "[Stage: Start]" << endl;
+			cout << endl << "Please enter \"loadmap\" to load the map: " << endl << endl;
+		}
+		else if (map_loaded && lock) {
 			cout << endl << "---------------Map Loading Start---------------" << endl;
 			//Code to load map
+			newMap=Map::mapCreater("LOTR2.map");
+			currentMapGraph = (newMap->getMapGraph());
+			cout << *(newMap);
+
 			cout << endl << "---------------Map Loading Done----------------" << endl; 
 			cout << endl << "[Stage: Map_Loaded]" << endl; 
 			cout << endl << "1. enter \"validatemap\" to validate the map" << endl;
@@ -86,6 +128,8 @@ void GameEngine::gameFlow() {
 		else if (map_validated && lock) {
 			cout << endl << "---------------Map Validating Start---------------" << endl;
 			//Code to load map
+			newMap->validate();
+
 			cout << endl << "---------------Map Validating Done----------------" << endl;
             cout << endl << "[Stage: Map_Validated]" << endl; 
 			cout << endl << "1. enter \"addplayer\" to add players into the map"<< endl << endl;
@@ -93,10 +137,27 @@ void GameEngine::gameFlow() {
 		else if (players_added && lock) {
 			cout << endl << "---------------Adding Players Start---------------" << endl;
 			//Code to load map
+			if (IDgenerator < 6) {
+				vector<vector<Territory*>> currentMapGraph = (newMap->getMapGraph());
+				Player player=*(new Player(IDgenerator, "Comp345-P" + to_string(IDgenerator), &currentMapGraph));
+				Hand* newHand = player.getHandsOfCard();
+				for (int i = 0; i < 5; i++) {
+					newHand->set_vec_hand_cards(newDeck->draw());
+				}
+				playerList.push_back(player);
+				cout << endl;
+				player.getHandsOfCard()->print_vec_hand_cards();
+				IDgenerator++;
+				cout << endl<< player;
+			}
+			else {
+				cout << endl<<"Exceed the maximum number of players!" << endl;
+			}
+
 			cout << endl << "---------------Adding Players Done----------------" << endl;
             cout << endl << "[Stage: Player_Added]" << endl;
             cout << endl << "1. enter \"assigncountries\" to assign countries to each player" << endl;
-            cout << endl << "2. enter \"addplayer\" to add more player " << endl << endl;
+            cout << endl << "2. enter \"addplayer\" to add more players " << endl << endl;
 		}
 
 		cin >> input;
@@ -166,6 +227,34 @@ void GameEngine::gameFlow() {
 			if (assign_reinforcement && lock2) {
 				cout << endl << "----------------Assigning Reinforcement Starts---------------" << endl;
 				//code to assign reinforcement
+				if (!Reinforce_assigned) {
+					for (int x = 0; x < playerList.size(); x++) {
+
+						playerList[x].addTerrtories(currentMapGraph[x][0]);
+						currentMapGraph[x][0]->setArmyNumber(5);
+						playerList[x].printPlayerTerrtories();
+						cout << playerList[x];
+
+					}
+				}
+				else {
+
+					//Remove orders from each player's order list
+					for (int x = 0; x < playerList.size(); x++) {
+						OrderList* ordL = playerList[x].getOrderList();
+						ordL->removeAll();
+						
+					}
+
+					for (int x = 0; x < playerList.size(); x++) {
+						currentMapGraph[x][0]->setArmyNumber(5);
+						playerList[x].printPlayerTerrtories();
+						cout << playerList[x];
+
+					}
+
+				}
+				
 				cout << endl << "---------------Assigning Reinforcement Done---------------" << endl;
 				cout << endl <<"[Stage: Assign Reinforcement]" << endl;
 				cout << endl <<	"1. enter \"issueorder\" to issue orders for players: " << endl << endl;
@@ -173,6 +262,13 @@ void GameEngine::gameFlow() {
 			else if(issue_orders && lock2) {
 				cout << endl << "---------------Issuing Orders Starts---------------" << endl;
 				//code to issue orders
+				for (int x = 0; x < playerList.size(); x++) {
+					playerList[x].issueOrder(issueTime%4, currentMapGraph[1+x][0], 2, currentMapGraph[x][0]);
+					playerList[x].getOrderList()->displayAll();
+				}
+				issueTime++;
+				
+
 				cout << endl << "---------------Issuing Orders Done-----------------" << endl;
                 cout << endl << "[Stage: Issue Orders]" << endl;
                 cout << endl <<	"1. enter \"issueorder\" to issue orders for players" << endl;
@@ -182,8 +278,17 @@ void GameEngine::gameFlow() {
 				if (executed) {
 					cout << endl << "---------------Executing Orders Starts---------------" << endl;
 					//code to execute orders
-					cout << endl << "---------------Executing Orders Done-----------------" << endl;
+					for (int x = 0; x < playerList.size(); x++) {
+						Orders* ord = playerList[x].getOrderList()->popFirst();
+						if (ord->validate()) {
+							cout << *ord << "----VALID ORDER EXECUTED----"<< endl;
+						}
+						else {
+							cout << *ord << "----INVALID ORDER NOT EXECUTED----" << endl;;
+						}
+					}
 				}
+
 				cout<< endl << "[Stage: Execute Orders]" << endl;
                 cout<< endl << "1. enter \"execorder\" to issue orders for players" << endl;
 			    cout<< endl << "2. enter \"endexecorders\" to issue orders for players" << endl;
@@ -206,6 +311,7 @@ void GameEngine::gameFlow() {
 			if ((assign_reinforcement || issue_orders) && input.compare("issueorder") == 0) {
 
 				assign_reinforcement = false;
+				Reinforce_assigned = true;
 				issue_orders = true;
 				lock2 = true;
 				continue;
@@ -252,8 +358,7 @@ void GameEngine::gameFlow() {
 
 				reset();
 				playStage = false;
-                cout << endl << "[Stage: Start]" << endl;
-				cout << endl << "Please enter \"loadmap\" to load the map: " << endl << endl;
+				Reinforce_assigned = false;
 				break;
 
 			}
