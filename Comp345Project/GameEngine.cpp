@@ -145,6 +145,8 @@ void GameEngine::gameFlow() {
 					newHand->set_vec_hand_cards(newDeck->draw());
 				}
 				playerList.push_back(player);
+				cout << endl;
+				player.getHandsOfCard()->print_vec_hand_cards();
 				IDgenerator++;
 				cout << endl<< player;
 			}

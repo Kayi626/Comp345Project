@@ -160,7 +160,7 @@ bool OrderList::remove(int orderID) {
 
 void OrderList::removeAll() {
 	for (int i = 0; i < ordersInside.size(); ++i) {
-			ordersInside.erase(std::next(ordersInside.begin(), i));		
+			ordersInside.clear();		
 	}
 
 }
