@@ -15,7 +15,7 @@ GameEngine::GameEngine() {
 }
 
 GameEngine::GameEngine(const GameEngine& ge) {
-	this-> start = ge.start;
+	this->start = ge.start;
 	this->map_loaded = ge.map_loaded;
 	this->map_validated = ge.map_validated;
 	this->players_added = ge.players_added;
@@ -49,7 +49,7 @@ void GameEngine::gameFlow() {
 			cout << endl << "---------------Map Loading Start---------------" << endl;
 			//Code to load map
 			cout << endl << "---------------Map Loading Done----------------" << endl; 
-			cout << endl <<"[Stage: Map_Loaded]" << endl; 
+			cout << endl << "[Stage: Map_Loaded]" << endl; 
 			cout << endl << "1. enter \"validatemap\" to validate the map" << endl;
             cout << endl << "2. enter \"loadmap\" to reload map: " << endl << endl;
 		}

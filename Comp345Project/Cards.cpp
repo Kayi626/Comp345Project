@@ -1,6 +1,6 @@
 #include "Cards.h"
 
-Card::Card() {}
+Card::Card()  = default;
 
 Card::~Card() {}
 
