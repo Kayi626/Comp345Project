@@ -18,8 +18,10 @@ int main() {
 //Many programmers believe this will only make your code worse.
 
 #pragma region Map
- /*
+ 
   Map* newMap = Map::mapCreater("LOTR2.map"); // bigeurope.map, LOTR2.map
+
+  cout << *newMap << endl;
 
   //Validate the map
   if (newMap->validate())
@@ -27,11 +29,10 @@ int main() {
   else
       cout << endl << "-------------Map is invalid-------------------" << endl;
 
-  cout << *newMap << endl;
   //Handle memory leaks
   delete newMap;
   newMap = nullptr;
-  */
+  
 #pragma endregion Map
 #pragma region Player
 
@@ -268,11 +269,12 @@ int main() {
   */
 #pragma endregion Card
 #pragma region GameEngine
-
+   /*
     GameEngine* ge = new GameEngine();
     ge -> gameFlow();  
     delete ge;
     ge = nullptr;
+    */
    
 #pragma endregion GameEngine
 return 0;

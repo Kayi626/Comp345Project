@@ -641,7 +641,7 @@ bool Map::validate() {
   cout << "Map Graph is Connected: "
        << static_cast<string>(((stageCheck1) ? "[true]" : "[false]")) << endl;
   cout << "Continents are connected subrgaphs: "
-       << static_cast<string>(((stageCheck2) ? "[true]" : "[false]")) << endl;
+       << static_cast<string>(((stageCheck2 && stageCheck1) ? "[true]" : "[false]")) << endl;
   cout << "Each country has oen continent: "
        << static_cast<string>(((stageCheck3) ? "[true]" : "[false]")) << endl;
   return stageCheck1 && stageCheck2 && stageCheck3;
