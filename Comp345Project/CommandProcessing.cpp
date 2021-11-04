@@ -20,8 +20,8 @@ CommandProcessor::CommandProcessor(const list<Command*>& lc) {
 }
 
 CommandProcessor::~CommandProcessor() {
-	for (list<Command*>::iterator it = this->lc.begin(); it != this->lc.end(); ++it) {
-		delete (*it);
+	for (Command* element:lc) {
+		delete element;
 	}
 }
 
