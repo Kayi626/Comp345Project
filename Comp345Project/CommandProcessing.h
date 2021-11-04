@@ -31,6 +31,7 @@ public:
 	list<Command*> lc;
 	CommandProcessor();
 	CommandProcessor(const list<Command*>& lc);
+	virtual ~CommandProcessor();
 	CommandProcessor& operator =(const CommandProcessor& comP);
 	virtual string getCommand();
     virtual bool validate(Command& com, string state);
@@ -64,10 +65,11 @@ public:
 	vector<string> readLineFromFile(string path);
 
 };
-
+//Filecommandprocessor is derived from commandprocessor
 class FileCommandProcessorAdapter : public CommandProcessor {
 public:
 	FileCommandProcessorAdapter();
+	~FileCommandProcessorAdapter();
 	vector<string> readCommand(string path);
 	void saveCommand(vector<string> com);
 private:

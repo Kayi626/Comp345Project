@@ -19,6 +19,12 @@ CommandProcessor::CommandProcessor(const list<Command*>& lc) {
 	}
 }
 
+CommandProcessor::~CommandProcessor() {
+	for (list<Command*>::iterator it = this->lc.begin(); it != this->lc.end(); ++it) {
+		delete (*it);
+	}
+}
+
 CommandProcessor& CommandProcessor::operator =(const CommandProcessor& comP) {
 	if (this == &comP)
 		return *this;
@@ -130,6 +136,10 @@ string Command::getEffect() {
 //**********************FileCommandProcessorAdapter*******************************
 
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(): flr(){}
+
+FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
+	delete flr;
+}
 
 vector<string> FileCommandProcessorAdapter::readCommand(string path) {
 	
