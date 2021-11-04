@@ -19,19 +19,20 @@ int main() {
 
 #pragma region Map
  
-  Map* newMap = Map::mapCreater("LOTR2.map"); // bigeurope.map, LOTR2.map
+  //Map* newMap = Map::mapCreater("LOTR2.map"); // bigeurope.map, LOTR2.map
 
-  cout << *newMap << endl;
+  //cout << *newMap << endl;
 
-  //Validate the map
-  if (newMap->validate())
-      cout << endl << "-------------Map is valid-------------------" << endl;
-  else
-      cout << endl << "-------------Map is invalid-------------------" << endl;
+  ////Validate the map
+  //if (newMap->validate())
+  //    cout << endl << "-------------Map is valid-------------------" << endl;
+  //else
+  //    cout << endl << "-------------Map is invalid-------------------" << endl;
 
-  //Handle memory leaks
-  delete newMap;
-  newMap = nullptr;
+  ////Handle memory leaks
+  //delete newMap;
+  //newMap = nullptr;
+  
   
 #pragma endregion Map
 #pragma region Player
@@ -217,56 +218,56 @@ int main() {
    //  cout << "Done!" << "\n";
 #pragma endregion OrderList
 #pragma region Card
-/*
-  // create Deck
-  Deck* newDeck = new Deck;
 
-  newDeck->original_vec_deck();
+  //// create Deck
+  //Deck* newDeck = new Deck;
 
-  // print 25 cards and contains 5 types
-  newDeck->print_vec_deck();
+  //newDeck->original_vec_deck();
 
-  Hand* newHand = new Hand;
+  //// print 25 cards and contains 5 types
+  //newDeck->print_vec_deck();
 
-  // print the size of deck
-  newDeck->print_vec_size_of_deck();
+  //Hand* newHand = new Hand;
 
-  // apply draw() method to get random card from deck, then add into hand
-  cout << "** Assign 5 random cards into hand card **" << endl;
+  //// print the size of deck
+  //newDeck->print_vec_size_of_deck();
 
-  for (int i = 0; i < 5; i++) {
-    newHand->set_vec_hand_cards(newDeck->draw());
-  }
+  //// apply draw() method to get random card from deck, then add into hand
+  //cout << "** Assign 5 random cards into hand card **" << endl;
 
-  // print current cards
-  newHand->print_vec_hand_cards();
+  //for (int i = 0; i < 5; i++) {
+  //  newHand->set_vec_hand_cards(newDeck->draw());
+  //}
 
-  // print current size of deck
-  newDeck->print_vec_size_of_deck();
+  //// print current cards
+  //newHand->print_vec_hand_cards();
 
-  // test play cards order
-  // erase method of the vector will auto remove the cards
-  cout << ("* Testing to play the cards *") << endl;
-  int size_hand = newHand->get_vec_hand_cards()->size();
+  //// print current size of deck
+  //newDeck->print_vec_size_of_deck();
 
-  for (int i = 0; i < size_hand; i++) {
-    newHand->play(newHand->get_vec_hand_cards()->at(0), newDeck);
-  }
+  //// test play cards order
+  //// erase method of the vector will auto remove the cards
+  //cout << ("* Testing to play the cards *") << endl;
+  //int size_hand = newHand->get_vec_hand_cards()->size();
 
-  // print the play value
-  newHand->print_play_hand_card();
-  // print the hand value
-  newHand->print_vec_hand_cards();
+  //for (int i = 0; i < size_hand; i++) {
+  //  newHand->play(newHand->get_vec_hand_cards()->at(0), newDeck);
+  //}
 
-  // test the size of the current deck
-  newDeck->print_vec_size_of_deck();
+  //// print the play value
+  //newHand->print_play_hand_card();
+  //// print the hand value
+  //newHand->print_vec_hand_cards();
 
-  // delete the pointer and data
-  delete newHand;
-  delete newDeck;
-  newHand = nullptr;
-  newDeck = nullptr;
-  */
+  //// test the size of the current deck
+  //newDeck->print_vec_size_of_deck();
+
+  //// delete the pointer and data
+  //delete newHand;
+  //delete newDeck;
+  //newHand = nullptr;
+  //newDeck = nullptr;
+  //
 #pragma endregion Card
 #pragma region GameEngine
    /*
@@ -275,6 +276,7 @@ int main() {
     delete ge;
     ge = nullptr;
     */
+    
    
 #pragma endregion GameEngine
 return 0;
