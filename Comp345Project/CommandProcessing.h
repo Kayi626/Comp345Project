@@ -33,23 +33,24 @@ public:
 	CommandProcessor(const list<Command*>& lc);
 	virtual ~CommandProcessor();
 	CommandProcessor& operator =(const CommandProcessor& comP);
-	virtual string getCommand();
+	virtual  Command& getCommand();
     virtual bool validate(Command& com, string state);
 	
 
 	//Used to extract names of either players or files
-	string extractName();
+	string extractName(Command& com);
 
 private:
 	string readCommand() {
 		string input;
-		std::cin >> input;
+		std:getline(std::cin,input);
 		return input;
 	}
-	void saveCommand(string com) {
+	Command& saveCommand(string com) {
 		//Add the newly allocated command object into the list of command
 		Command* tempCom = new Command(com, "");
 		lc.push_back(tempCom);
+		return *tempCom;
 	}
 
 
@@ -62,16 +63,23 @@ private:
 
 class FileLineReader {
 public:
-	vector<string> readLineFromFile(string path);
+	FileLineReader();
+	FileLineReader(string path);
+	FileLineReader(const FileLineReader& flr);
+	vector<string> readLineFromFile();
+private:
+	string filePath;
 
 };
 //Filecommandprocessor is derived from commandprocessor
 class FileCommandProcessorAdapter : public CommandProcessor {
 public:
 	FileCommandProcessorAdapter();
+	FileCommandProcessorAdapter(FileLineReader& flr);
 	~FileCommandProcessorAdapter();
-	vector<string> readCommand(string path);
-	void saveCommand(vector<string> com);
+	vector<string> readCommand();
+	void saveCommand();
+
 private:
 	FileLineReader* flr;
 };

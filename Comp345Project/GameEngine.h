@@ -5,6 +5,7 @@
 
 using namespace std;
 
+class CommandProcessor;
 class GameEngine {
 
 private:
@@ -30,6 +31,7 @@ public:
 	void gameFlow();
 	void reset();
 	void checkState(std::ostream& output) const;
+
 
 	//Accessors
 	bool getStart();

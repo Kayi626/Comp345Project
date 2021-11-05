@@ -85,7 +85,7 @@ void Player::setPlayerID(int newPlayerID) {
 	this->playerID= newPlayerID;
 }
 void Player::addTerrtories(Territory* newTerritory) {
-	cout << endl<<newTerritory->getName() << "\n";
+	std::cout << endl<<newTerritory->getName() << "\n";
 	newTerritory->setControlledPlayerID(playerID);
 	this->update();
 }
@@ -126,18 +126,18 @@ void Player::update() {
 
 void Player::printPlayerTerrtories() {
 
-	cout << "----- These are the Terrtories to be defended by player: " << this->playerName << " -----" << endl;
+	std::cout << "----- These are the Terrtories to be defended by player: " << this->playerName << " -----" << endl;
 	for (int i = 0; i < controlledTerritories.size();++i) {
 		Territory temp = *(controlledTerritories[i]);
-		cout << ">>Country: " << temp.getName() << " have armies: " << temp.getArmyNumber() << endl;
+		std::cout << ">>Country: " << temp.getName() << " have armies: " << temp.getArmyNumber() << endl;
 	}
-	cout << "There are totally: " << this->controlledTerritories.size() << " captured by player." << endl<<endl;
-	cout << "----- These are the Terrtories to be attacked by player: " << this->playerName << " -----" << endl;
+	std::cout << "There are totally: " << this->controlledTerritories.size() << " captured by player." << endl<<endl;
+	std::cout << "----- These are the Terrtories to be attacked by player: " << this->playerName << " -----" << endl;
 	for (int i = 0; i < reachcableTerritories.size(); ++i) {
 		Territory temp = *(reachcableTerritories[i]);
-		cout << ">>Country: " << temp.getName() << " have armies: " << temp.getArmyNumber() << endl;
+		std::cout << ">>Country: " << temp.getName() << " have armies: " << temp.getArmyNumber() << endl;
 	}
-	cout << "There are: " << this->reachcableTerritories.size() << " reachable by player." << endl;
+	std::cout << "There are: " << this->reachcableTerritories.size() << " reachable by player." << endl;
 }
 
 void Player::issueOrder(int type, Territory* targetTerritory, int numberOfArmies, Territory* fromTerritory) {

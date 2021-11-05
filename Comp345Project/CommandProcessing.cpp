@@ -12,6 +12,7 @@ CommandProcessor::CommandProcessor() {
 	lc = list<Command*>(10);
 }
 
+
 CommandProcessor::CommandProcessor(const list<Command*>& lc) {
 	
 	for (list<Command*>::iterator it = this->lc.begin(); it != this->lc.end(); ++it) {
@@ -36,31 +37,31 @@ CommandProcessor& CommandProcessor::operator =(const CommandProcessor& comP) {
 	return *this;
 }
 
-string CommandProcessor::getCommand() {
+Command& CommandProcessor::getCommand() {
 	string input = readCommand();
-	saveCommand(input);
-	return input;
+	
+	return saveCommand(input);
 }
 
 bool CommandProcessor::validate(Command& com, string state) {
 	bool status = true;
-	
-	if (std::regex_match(com.getCommand(), std::regex("loadmap <(.*)>")) && (state.compare("start") == 0 || state.compare("maploaded") == 0)) {
+	string input = com.getCommand();
+	if (std::regex_match(input,std::regex("loadmap <(.*)>")) && (state.compare("start") == 0 || state.compare("maploaded") == 0)) {
 		com.saveEffect("maploaded");
 	}
-	else if ((com.getCommand().compare("validatemap") == 0) && (state.compare("maploaded") == 0)) {
+	else if ((input.compare("validatemap")==0) && (state.compare("maploaded") == 0)) {
 		com.saveEffect("mapvalidated");
 	}
-	else if ((std::regex_match(com.getCommand(),std::regex("(addplayer <(.*)>"))) && (state.compare("mapvalidated") == 0 || state.compare("playersadded") == 0)) {
+	else if (std::regex_match(input, std::regex("addplayer <(.*)>")) && (state.compare("mapvalidated") == 0 || state.compare("playersadded") == 0)) {
 		com.saveEffect("playersadded");
 	}
-	else if ((com.getCommand().compare("gamestart") == 0) && (state.compare("playersadded") == 0)){
+	else if ((input.compare("gamestart") == 0) && (state.compare("playersadded") == 0)){
 		com.saveEffect("assignreinforcement");
 	}
-	else if ((com.getCommand().compare("replay") == 0) && (state.compare("win") == 0)) {
+	else if ((input.compare("replay") == 0) && (state.compare("win") == 0)) {
 		com.saveEffect("start");
 	}
-	else if ((com.getCommand().compare("quit") == 0) && (state.compare("win"))) {
+	else if ((input.compare("quit") == 0) && (state.compare("win"))) {
 		com.saveEffect("exit program");
 	}
 	else {
@@ -74,17 +75,17 @@ bool CommandProcessor::validate(Command& com, string state) {
 
 }
 
-string CommandProcessor::extractName() {
+string CommandProcessor::extractName(Command& com) {
 
-	const std::string s = this->getCommand();
+	const std::string s = com.getCommand();
 	//Two patterns(addplayer + loadmap). It will extract the substring from <>.
 	std::string string1 = "loadmap <";
 	std::string string2 = "addplayer <";
-	std::regex rgx("(" + string1 + "|" + string2 + ")(\\w+)>");
+	std::regex rgx("(" + string1 + "|" + string2 + ")(.*)>");
 	std::smatch match;
 
 	if (std::regex_search(s.begin(), s.end(), match, rgx))
-		return match[1];
+		return match[2];
 	else
 		return "";
 }
@@ -137,22 +138,28 @@ string Command::getEffect() {
 
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(): flr(){}
 
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader& target) {
+	flr = &target;
+}
+
 FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 	delete flr;
 }
 
-vector<string> FileCommandProcessorAdapter::readCommand(string path) {
+vector<string> FileCommandProcessorAdapter::readCommand() {
 	
-	return flr->readLineFromFile(path);
+	return flr->readLineFromFile();
 
 }
 
-void FileCommandProcessorAdapter::saveCommand(vector<string> com) {
+void FileCommandProcessorAdapter::saveCommand() {
+	vector<string> com = readCommand();
 	//Store the input strings in the command objects and push the objects into the list of commands
 	for (vector<string>::iterator it = com.begin(); it != com.end(); ++it) {
 		Command* tempCom = new Command(*it, "");
 		lc.push_back(tempCom);
 	}
+
 
 }
 
@@ -161,9 +168,19 @@ void FileCommandProcessorAdapter::saveCommand(vector<string> com) {
 
 
 //**************************FileReader********************************************
-vector<string> FileLineReader::readLineFromFile(string path) {
+FileLineReader::FileLineReader() {
+	filePath = "";
+}
+
+FileLineReader::FileLineReader(const FileLineReader& flr) {
+	this->filePath = string(flr.filePath);
+}
+FileLineReader::FileLineReader(string path):filePath(path) {
+}
+
+vector<string> FileLineReader::readLineFromFile() {
 	std::fstream in;
-	in.open(path, ios::out);
+	in.open(filePath, ios::out);
 	string line;
 	vector<string> vec(10);
 

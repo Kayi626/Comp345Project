@@ -13,7 +13,7 @@ using namespace std;
 #pragma region MapLoader
 // read through provided address and collect corresponding data
 void MapLoader::mapReader(const string& mapName) {
-  cout << endl << "---Loading Map File---" << endl << endl;
+  std::cout << endl << "---Loading Map File---" << endl << endl;
   mapPath = mapName;
   int lineFlag;
   string line;
@@ -21,10 +21,10 @@ void MapLoader::mapReader(const string& mapName) {
   mapFile.open(mapName.c_str(), ios::in);
 
   if (!mapFile.is_open()) {
-    cout << "Invalid MapFile: " << mapPath << " can not find!" << endl;
+    std::cout << "Invalid MapFile: " << mapPath << " can not find!" << endl;
     exit(0);
   } else if (mapFile.peek() == EOF) {
-    cout << "Invalid MapFile: there is nothing to read within " << mapPath
+    std::cout << "Invalid MapFile: there is nothing to read within " << mapPath
          << endl;
     exit(0);
   }
@@ -85,27 +85,27 @@ void MapLoader::mapReader(const string& mapName) {
     borderVec.push_back(borderLine);
   }
 
-  cout << endl << "---Map File Loaded---" << endl << endl;
+  std::cout << endl << "---Map File Loaded---" << endl << endl;
 }
 
 // print loaded data
 void MapLoader::toString() {
   // test result
-  cout << endl << "borders" << endl;
+  std::cout << endl << "borders" << endl;
   for (const string& element : borders) {
-    cout << element << endl;
+    std::cout << element << endl;
   }
-  cout << endl << "file" << endl;
+  std::cout << endl << "file" << endl;
   for (const string& element : file) {
-    cout << element << endl;
+    std::cout << element << endl;
   }
-  cout << endl << "continents" << endl;
+  std::cout << endl << "continents" << endl;
   for (const string& element : continents) {
-    cout << element << endl;
+    std::cout << element << endl;
   }
-  cout << endl << "countries" << endl;
+  std::cout << endl << "countries" << endl;
   for (const string& element : countries) {
-    cout << element << endl;
+    std::cout << element << endl;
   }
 }
 
@@ -251,17 +251,17 @@ Continent::~Continent() {
 }
 
 void Continent::display() {
-  cout << endl
+  std::cout << endl
        << "Continent " << continentID << ": " << continentName << endl
        << "Has Countries: ";
   if (countryInside.size() > 0) {
     for (int x = 0; x < countryInside.size(); x++) {
       Territory temp = *(countryInside[x]);
-      cout << "|" << temp.getName() << "|  ";
+      std::cout << "|" << temp.getName() << "|  ";
     }
   } else
-    cout << "It contains no countries.";
-  cout << endl << endl;
+    std::cout << "It contains no countries.";
+  std::cout << endl << endl;
 }
 int Continent::getID() { return Continent::continentID; }
 string Continent::getName() { return Continent::continentName; }
@@ -484,7 +484,7 @@ void Map::ccs(vector<bool>& visited) {
     for (int y = 1; y < mapGraph[x].size(); y++) {
       Territory temp = *(mapGraph[x][y]);
       unsigned int tempID2 = temp.getBelongedContinentID();
-      // cout << "Index: " << ;
+      // std::cout << "Index: " << ;
       // When at least a country from another continent connects to the current
       // country, it will break the loop
       if (visited[tempID1 - 1] != true && tempID1 != tempID2) {
@@ -637,12 +637,12 @@ bool Map::validate() {
   bool stageCheck3 = belongTo_OneContinent();
 
   // Dispay status info for each checkpoint
-  cout << "--------------Validating-------------------------" << endl << endl;
-  cout << "Map Graph is Connected: "
+  std::cout << "--------------Validating-------------------------" << endl << endl;
+  std::cout << "Map Graph is Connected: "
        << static_cast<string>(((stageCheck1) ? "[true]" : "[false]")) << endl;
-  cout << "Continents are connected subrgaphs: "
+  std::cout << "Continents are connected subrgaphs: "
        << static_cast<string>(((stageCheck2 && stageCheck1) ? "[true]" : "[false]")) << endl;
-  cout << "Each country has oen continent: "
+  std::cout << "Each country has oen continent: "
        << static_cast<string>(((stageCheck3) ? "[true]" : "[false]")) << endl;
   return stageCheck1 && stageCheck2 && stageCheck3;
 }
@@ -672,7 +672,7 @@ bool Map::addCountry(Territory* t) {
     continentGraph[continentMatched2(tempID)]->getCountryInside().push_back(t);
     return true;
   } catch (exception& e) {
-    cout << "Failed to add a country into the map! " << e.what() << endl;
+    std::cout << "Failed to add a country into the map! " << e.what() << endl;
     return false;
   }
 }
@@ -694,7 +694,7 @@ bool Map::addContinent(Continent* conti1) {
     continentGraph.push_back(conti1);
     return true;
   } catch (exception& e) {
-    cout << "Failed to add a continent into the map" << e.what() << endl;
+    std::cout << "Failed to add a continent into the map" << e.what() << endl;
     return false;
   }
 }
@@ -743,7 +743,7 @@ bool Map::releaseMap() {
 
     return true;
   } catch (exception& e) {
-    cout << e.what() << endl;
+    std::cout << e.what() << endl;
     return false;
   }
 }
@@ -795,9 +795,9 @@ Map* Map::mapCreater(string mapPath) {
         new Territory(temp2[x][1], stoi(temp2[x][0]), stoi(temp2[x][2]),
                       stoi(temp2[x][3]), stoi(temp2[x][4]));
     if (newMap->addCountry(temp))
-      cout << temp2[x][1] << " added " << endl;
+      std::cout << temp2[x][1] << " added " << endl;
     else
-      cout << temp2[x][1]
+      std::cout << temp2[x][1]
            << " NOT added, It might be because of duplicate territory ID's, "
               "non-exsiting continent ID, and missing territory ID's"
            << endl;
@@ -831,7 +831,7 @@ Map* Map::mapCreater(string mapPath) {
     }
   }
   if (edgeAdded) {
-    cout << endl << "---Edge added---" << endl << endl;
+    std::cout << endl << "---Edge added---" << endl << endl;
   } else {
     cerr << endl << "Failed to add the edge" << endl << endl;
     delete newMap;
