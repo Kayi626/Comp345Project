@@ -24,9 +24,9 @@ string* Card::get_card_type() { return card_type; }
 
 // for printing the card type
 void Card::print_vec_card() {
-  cout << "the array types of card are: " << endl;
+  std::cout << "the array types of card are: " << endl;
   for (int i = 0; i < vec_types_card.size(); i++) {
-    cout << vec_types_card.at(i) << endl;
+    std::cout << vec_types_card.at(i) << endl;
   }
 }
 
@@ -90,17 +90,17 @@ void Deck::original_vec_deck() {
       }
     }
   }
-  cout << ("*** Deck cards have been initilized ***") << endl;
+  std::cout << ("*** Deck cards have been initilized ***") << endl;
 }
 
 void Deck::print_vec_size_of_deck() {
-  cout << endl << ("*** The current vec_deck contains ") << vec_deck.size() <<(" cards ***") << endl;
+  std::cout << endl << ("*** The current vec_deck contains ") << vec_deck.size() <<(" cards ***") << endl;
 }
 
 void Deck::print_vec_deck() {
-   cout << endl << ("*** The current vec_deck contains ") << vec_deck.size() <<(" cards ***") << endl;
+   std::cout << endl << ("*** The current vec_deck contains ") << vec_deck.size() <<(" cards ***") << endl;
   for (int i = 0; i < vec_deck.size(); i++) {
-    cout << ("#") << i << (" card is ") << *vec_deck.at(i)->get_card_type() << endl;
+    std::cout << ("#") << i << (" card is ") << *vec_deck.at(i)->get_card_type() << endl;
   }
 }
 
@@ -148,23 +148,23 @@ void Hand::set_vec_hand_cards(Card* h_card) {
 
 void Hand::print_play_hand_card() {
   if (vec_play_cards.size() > 0) {
-    cout << ("Play cards order is: ") << endl;
+    std::cout << ("Play cards order is: ") << endl;
     for (int i = 0; i < vec_play_cards.size(); i++) {
-      cout << ("# ") << i << " is " << *vec_play_cards.at(i)->get_card_type()
+      std::cout << ("# ") << i << " is " << *vec_play_cards.at(i)->get_card_type()
            << endl;
     }
   }
 
   else {
-    cout << "** The play cards are empty **" << endl;
+    std::cout << "** The play cards are empty **" << endl;
   }
 }
 
 void Hand::print_vec_hand_cards() {
   if (vec_hand_cards.size() > 0) {
-    cout << ("The Hand cards have: ") << vec_hand_cards.size() << endl;
+    std::cout << ("The Hand cards have: ") << vec_hand_cards.size() << endl;
     for (int i = 0; i < vec_hand_cards.size(); i++) {
-      cout << ("# ") << i << (" is ") << *vec_hand_cards.at(i)->get_card_type()
+      std::cout << ("# ") << i << (" is ") << *vec_hand_cards.at(i)->get_card_type()
            << endl;
     }
   }
@@ -199,7 +199,7 @@ void Hand::remove_played_card_of_hand_cards(Card* r_card) {
   for (int i = 0; i < vec_hand_cards.size(); i++) {
     if (*vec_hand_cards.at(i)->get_card_type() == *r_card->get_card_type()) {
       vec_hand_cards.erase(vec_hand_cards.begin() + i);
-      cout << ("Deleting the card: ") << *r_card->get_card_type() << endl;
+      std::cout << ("Deleting the card: ") << *r_card->get_card_type() << endl;
       return;
     }
   }
@@ -207,5 +207,5 @@ void Hand::remove_played_card_of_hand_cards(Card* r_card) {
 
 void Hand::clear_play_cards() {
   vec_play_cards.clear();
-  cout << "Played cards are cleared." << endl;
+  std::cout << "Played cards are cleared." << endl;
 }

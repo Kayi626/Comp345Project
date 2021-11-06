@@ -60,7 +60,7 @@ public:
 	//core function. will asign new values to ControlledTerritories and ReachcableTerritories
 
 	void printPlayerTerrtories();
-	//use 'cout' showing the result of toDefend() and toAttack()
+	//use 'std::cout' showing the result of toDefend() and toAttack()
 
 	void issueOrder(int type, Territory* targetTerritory,int numberOfArmies, Territory* fromTerritory);
 	/*creates an Orders objectand puts it in the player's list of orders.

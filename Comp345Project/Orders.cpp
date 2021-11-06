@@ -43,7 +43,7 @@ ostream& operator<<(ostream& ost, const Orders& ord)
 
 }
 void Orders::describe(std::ostream& output) const {
-	cout << "The describe From the order base class." << endl;
+	std::cout << "The describe From the order base class." << endl;
 }
 
 
@@ -167,11 +167,11 @@ void OrderList::removeAll() {
 
 
 void OrderList::displayAll() {
-	cout << "----- This is the orderlist hold by player with ID: " << this->playerID << " -----" << endl;
+	std::cout << "----- This is the orderlist hold by player with ID: " << this->playerID << " -----" << endl;
 	for (Orders* orders : ordersInside) {
-		cout << ">>NO." << *(orders->getOrderID()) << " " << *(orders->describingMessage()) << endl;
+		std::cout << ">>NO." << *(orders->getOrderID()) << " " << *(orders->describingMessage()) << endl;
 	}
-	cout << "There are: " << this->ordersInside.size() << " orders in list." << endl;
+	std::cout << "There are: " << this->ordersInside.size() << " orders in list." << endl;
 }//just display all the order. by their describing Message.
 
 int OrderList::getPlayerID() {
@@ -230,7 +230,7 @@ void DeployOrder::describe(std::ostream& output) const {
 	temp1.append(temp2);
 	temp1.append(temp3);
 	temp1.append(this->targetTerritory->getName());
-	cout << temp1;
+	std::cout << temp1;
 }
 
 std::unique_ptr<string> DeployOrder::describingMessage() {
@@ -292,7 +292,7 @@ void AdvanceOrder::describe(std::ostream& output) const {
 	temp1.append(this->fromTerritory->getName());
 	temp1.append(temp4);
 	temp1.append(this->targetTerritory->getName());
-	cout << temp1;
+	std::cout << temp1;
 }
 std::unique_ptr<string> AdvanceOrder::describingMessage() {
 	string temp1 = "[ADVANCE] Move ";
@@ -316,10 +316,10 @@ string AdvanceOrder::execute() {
 }
 bool AdvanceOrder::validate() {
 
-	cout << "DEBUG: this->getPlayerID() == fromTerritory->getcontrolledPlayerID(): " << (this->getPlayerID() == fromTerritory->getcontrolledPlayerID()) << "\n";
-	cout << "DEBUG: isAdjacent: " << isAdjacent << "\n";
-	cout << "DEBUG: getArmyNumber()>= numberOfArmies " << (fromTerritory->getArmyNumber() >= numberOfArmies) << "\n";
-	cout << "DEBUG: fromTerritory->getArmyNumber() " << fromTerritory->getArmyNumber() << "\n";
+	std::cout << "DEBUG: this->getPlayerID() == fromTerritory->getcontrolledPlayerID(): " << (this->getPlayerID() == fromTerritory->getcontrolledPlayerID()) << "\n";
+	std::cout << "DEBUG: isAdjacent: " << isAdjacent << "\n";
+	std::cout << "DEBUG: getArmyNumber()>= numberOfArmies " << (fromTerritory->getArmyNumber() >= numberOfArmies) << "\n";
+	std::cout << "DEBUG: fromTerritory->getArmyNumber() " << fromTerritory->getArmyNumber() << "\n";
 	return (this->getPlayerID() == fromTerritory->getcontrolledPlayerID()
 		&&isAdjacent
 		&&fromTerritory->getArmyNumber()>= numberOfArmies);
@@ -348,7 +348,7 @@ BombOrder::BombOrder(const BombOrder& ord) {
 void BombOrder::describe(std::ostream& output) const {
 	string temp1 = "[BOMB] Destroy half of the armies located on Territory: ";
 	temp1.append(this->targetTerritory->getName());
-	cout << temp1;
+	std::cout << temp1;
 }
 std::unique_ptr<string> BombOrder::describingMessage() {
 	string temp1 = "[BOMB] Destroy half of the armies located on Territory: ";
@@ -387,7 +387,7 @@ BlockadeOrder::BlockadeOrder(const BlockadeOrder& ord) {
 void BlockadeOrder::describe(std::ostream& output) const {
 	string temp1 = "[BLOCKADE] Triple the number of armies & make it neutral on Territory: ";
 	temp1.append(this->targetTerritory->getName());
-	cout << temp1;
+	std::cout << temp1;
 }
 std::unique_ptr<string> BlockadeOrder::describingMessage() {
 	string temp1 = "[BLOCKADE] Triple the number of armies & make it neutral on Territory: ";
@@ -440,7 +440,7 @@ void AirliftOrder::describe(std::ostream& output) const {
 	temp1.append(this->fromTerritory->getName());
 	temp1.append(temp4);
 	temp1.append(this->targetTerritory->getName());
-	cout << temp1;
+	std::cout << temp1;
 }
 std::unique_ptr<string> AirliftOrder::describingMessage() {
 	string temp1 = "[AIRLIFT] Advance ";
@@ -490,7 +490,7 @@ void NegotiateOrder::describe(std::ostream& output) const {
 	string temp1 = "[NEGOTIATE] Prevent attacks between the current player and player with ID:";
 	string temp2 = to_string(this->targetTerritory->getcontrolledPlayerID());
 	temp1.append(temp2);
-	cout << temp1;
+	std::cout << temp1;
 }
 std::unique_ptr<string> NegotiateOrder::describingMessage() {
 	string temp1 = "[NEGOTIATE] Prevent attacks between the current player and player with ID:";

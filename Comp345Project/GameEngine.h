@@ -5,6 +5,7 @@
 
 using namespace std;
 
+class CommandProcessor;
 class GameEngine {
 
 private:
@@ -27,9 +28,10 @@ public:
 	friend ostream& operator << (ostream& ost, const GameEngine& ge);
 	~GameEngine();
 	//other class functions
-	void gameFlow();
+	void gameFlow(CommandProcessor& comP);
 	void reset();
 	void checkState(std::ostream& output) const;
+
 
 	//Accessors
 	bool getStart();
