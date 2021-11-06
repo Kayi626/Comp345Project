@@ -37,23 +37,33 @@ CommandProcessor& CommandProcessor::operator =(const CommandProcessor& comP) {
 	return *this;
 }
 
-Command& CommandProcessor::getCommand() {
+Command* CommandProcessor::getCommand() {
 	string input = readCommand();
-	
-	return saveCommand(input);
+	Command* com = saveCommand(input);
+	return com;
 }
 
+ostream& operator<<(ostream& ost, const CommandProcessor& comP){
+	int counter = 1;
+	for (Command* com : comP.lc) {
+		ost << counter << ". " << *com << endl;
+	}
+	return ost;
+}
+
+//Validate the current command given a state and record the effect into the command object
 bool CommandProcessor::validate(Command& com, string state) {
 	bool status = true;
 	string input = com.getCommand();
+	CommandProcessor comP=CommandProcessor();
 	if (std::regex_match(input,std::regex("loadmap <(.*)>")) && (state.compare("start") == 0 || state.compare("maploaded") == 0)) {
-		com.saveEffect("maploaded");
+		com.saveEffect("maploaded: "+comP.extractName(com));
 	}
 	else if ((input.compare("validatemap")==0) && (state.compare("maploaded") == 0)) {
 		com.saveEffect("mapvalidated");
 	}
 	else if (std::regex_match(input, std::regex("addplayer <(.*)>")) && (state.compare("mapvalidated") == 0 || state.compare("playersadded") == 0)) {
-		com.saveEffect("playersadded");
+		com.saveEffect("playersadded: "+comP.extractName(com));
 	}
 	else if ((input.compare("gamestart") == 0) && (state.compare("playersadded") == 0)){
 		com.saveEffect("assignreinforcement");
@@ -75,6 +85,7 @@ bool CommandProcessor::validate(Command& com, string state) {
 
 }
 
+//Used to extract the string in <>
 string CommandProcessor::extractName(Command& com) {
 
 	const std::string s = com.getCommand();
@@ -89,6 +100,14 @@ string CommandProcessor::extractName(Command& com) {
 	else
 		return "";
 }
+
+void CommandProcessor::clearMemory() {
+
+	for (Command* com : lc) {
+		delete com;
+	}
+}
+
 //*********************************************************************************
 
 //************************************Command**************************************
@@ -138,30 +157,56 @@ string Command::getEffect() {
 
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(): flr(){}
 
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader& target) {
-	flr = &target;
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* target) {
+	flr = target;
 }
 
 FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
-	delete flr;
 }
 
-vector<string> FileCommandProcessorAdapter::readCommand() {
+string FileCommandProcessorAdapter::readCommand() {
 	
 	return flr->readLineFromFile();
 
 }
 
-void FileCommandProcessorAdapter::saveCommand() {
-	vector<string> com = readCommand();
+Command* FileCommandProcessorAdapter::saveCommand() {
+	string com = readCommand();
+	//No commands read from the . txt file
 	//Store the input strings in the command objects and push the objects into the list of commands
-	for (vector<string>::iterator it = com.begin(); it != com.end(); ++it) {
-		Command* tempCom = new Command(*it, "");
-		lc.push_back(tempCom);
-	}
+	Command* tempCom = new Command(com, "");
+	lc.push_back(tempCom);
+	return tempCom;
+}
 
+Command* FileCommandProcessorAdapter::getCommand() {
+	
+	return  saveCommand();
+}
+
+vector<string> FileCommandProcessorAdapter::readAllCommands() {
+	vector<string> vec(5);
+	string line;
+	line = flr->readLineFromFile();
+	if (line.compare("") != 0) {
+		vec.push_back(line);
+	}
+	while (!flr->input.eof()) {
+		line = flr->readLineFromFile();	
+		vec.push_back(line);
+	}
+	return vec;
 
 }
+list<Command*> FileCommandProcessorAdapter::saveAllCommands() {
+	vector<string> vec = readAllCommands();
+	for (string s : vec) {
+		lc.push_back(new Command(s,""));
+	}
+	return lc;
+}
+
+
 
 
 //********************************************************************************
@@ -176,22 +221,22 @@ FileLineReader::FileLineReader(const FileLineReader& flr) {
 	this->filePath = string(flr.filePath);
 }
 FileLineReader::FileLineReader(string path):filePath(path) {
+	input.open(path, ios::in);
+	if (!input.is_open())
+		throw std::exception("file not found");
+}
+FileLineReader::~FileLineReader() {
+	input.close();
 }
 
-vector<string> FileLineReader::readLineFromFile() {
-	std::fstream in;
-	in.open(filePath, ios::out);
-	string line;
-	vector<string> vec(10);
-
+string FileLineReader::readLineFromFile() {
+	string line="";
 	//Read lines from the input file
-	in >> line;
-	while (!in.eof()) {
-		vec.push_back(line);
-		in >> line;
+	if (!input.eof()) {
+		getline(input,line);
 	}
 
-	return vec;
+	return line;
 
 }
 //********************************************************************************

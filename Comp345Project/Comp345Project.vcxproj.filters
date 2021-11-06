@@ -61,6 +61,9 @@
     <Text Include="testcase.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="commands.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="LOTR2.map">

@@ -13,13 +13,14 @@
 
 using namespace std;
 
+string extractLineArgumentCommand(string str);
 
-int main() {
-//note: pragma region should only be used in driver for Demo!
-//Many programmers believe this will only make your code worse.
+int main(int argc, char* argv[]) {
+    //note: pragma region should only be used in driver for Demo!
+    //Many programmers believe this will only make your code worse.
 
 #pragma region Map
- 
+
   //Map* newMap = Map::mapCreater("LOTR2.map"); // bigeurope.map, LOTR2.map
 
   //std::cout << *newMap << endl;
@@ -33,8 +34,8 @@ int main() {
   ////Handle memory leaks
   //delete newMap;
   //newMap = nullptr;
-  
-  
+
+
 #pragma endregion Map
 #pragma region Player
 
@@ -43,7 +44,7 @@ int main() {
     //     std::cout << "ERROR: the map we are loading didn't pass the validate process." << "\n";
     //     return 0;
     // }
-   
+
     //std::cout << *newMap << endl;
 
     // std::cout << "DEBUG: Create a player Object." << "\n";
@@ -271,17 +272,66 @@ int main() {
   //
 #pragma endregion Card
 #pragma region GameEngine
-    
-    GameEngine* ge = new GameEngine();
-    //CommandProcessor comP = CommandProcessor();
-    ge -> gameFlow();  
-    delete ge;
-    ge = nullptr;
-    
+    if (argc == 1) {
+        cout << "Error: No command line argument has been entered! The program exits." << endl << endl;
+        exit(0);
+    }
+    cout <<"Command Line Argument: "<<argv[1] << endl;
+    //Console inputs
+    if(std::regex_match(argv[1], std::regex("-console\\s*"))){
+        GameEngine* ge = new GameEngine();
+        CommandProcessor* comP = new CommandProcessor();
+
+        //GameLoop 
+        ge->gameFlow(*comP);
+
+        //De-allocation
+        delete ge;
+        delete comP;
+        ge = nullptr;
+        comP = nullptr;
+    }
+    //File inputs(Important: In command line argument, double quotes are needed in "-file <filename>".
+    else if(std::regex_match(argv[1], std::regex("-file\\s+<(.*)>"))) {
+        
+        GameEngine* ge = new GameEngine();
+        FileLineReader* flr = new FileLineReader(extractLineArgumentCommand(argv[1]));
+        FileCommandProcessorAdapter * fcomP = new FileCommandProcessorAdapter(flr);
+      
+        //Game Loop (Important: If any invalid commands are received by the loop, it will prompt users to enter inputs by console)
+        ge->gameFlow(*fcomP);
+
+        //De-allocation
+        delete ge;
+        delete fcomP;
+        delete flr;
+        ge = nullptr;
+        fcomP = nullptr;
+        flr = nullptr;
+        
+        
+    }
+
+    else {
+        cout << "Invalid Command Line Arguments. Please try again. The program exits" << endl;
+        exit(0);
+    }
     
    
 #pragma endregion GameEngine
 return 0;
+}
+
+//Used to extract commands from command Line Argument(Get the filename from <>)
+string extractLineArgumentCommand(string str) {
+    //Two patterns(addplayer + loadmap). It will extract the substring from <>.
+    const std::string s = str;
+    std::regex rgx("(-file\\s+<)(.*)(>)");
+    std::smatch match;
+    if (std::regex_search(s.begin(), s.end(), match, rgx))
+        return match[2];
+    else
+        return "";
 }
 
 

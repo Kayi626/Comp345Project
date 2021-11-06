@@ -156,6 +156,7 @@
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="commands.txt" />
     <Text Include="testcase.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,2 @@
+loadmap <LOTR2.map>
+validate
