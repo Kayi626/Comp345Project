@@ -181,15 +181,17 @@ void GameEngine::gameFlow(CommandProcessor& comP) {
 		//IMPORTANT: accept commands not only from console but also from a saved file(Mode has been determined through command line argument)
 
 		Command* com1 = comP.getCommand();
-		com = *com1;
 
-		//Use default console inputs
-		if (com.getCommand().compare("")==0) {	
+		//Use default console inputs if the returned command object is null(Empty command file or the end of the file has been reached)
+		if (com1 == nullptr) {
 			cout << "[IMPORTANT:Run out of commands of the saved .txt file. Initialize a default console for inputs!]" << endl;
 			com = *(defaultcomP.getCommand());
 		}
-	     	
-
+		else {
+			com = *com1;
+		}
+		
+	     
 		//Start up starts; Start Stage + Map Loaded Stage
 		if ((comP.validate(com, "start") || comP.validate(com, "maploaded")) && com.getEffect().compare("mapvalidated") != 0) {
 

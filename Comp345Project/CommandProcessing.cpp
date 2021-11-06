@@ -170,12 +170,17 @@ string FileCommandProcessorAdapter::readCommand() {
 
 }
 
+//It returns a command object with the command extracted from the saved file. If the flr object of FileCommandProcessorAdapter reaches 
+//the end of the file or the saved file is empty, it will return a nullptr.
 Command* FileCommandProcessorAdapter::saveCommand() {
 	string com = readCommand();
+	Command* tempCom =nullptr;
 	//No commands read from the . txt file
 	//Store the input strings in the command objects and push the objects into the list of commands
-	Command* tempCom = new Command(com, "");
-	lc.push_back(tempCom);
+	if (com.compare("") != 0) {
+		tempCom= new Command(com, "");
+		lc.push_back(tempCom);
+	}
 	return tempCom;
 }
 
