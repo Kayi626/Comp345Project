@@ -297,7 +297,8 @@ int main(int argc, char* argv[]) {
         GameEngine* ge = new GameEngine();
         FileLineReader* flr = new FileLineReader(extractLineArgumentCommand(argv[1]));
         FileCommandProcessorAdapter * fcomP = new FileCommandProcessorAdapter(flr);
-      
+ 
+        
         //Game Loop (Important: If any invalid commands are received by the loop, it will prompt users to enter inputs by console)
         ge->gameFlow(*fcomP);
 
