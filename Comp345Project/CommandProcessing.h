@@ -33,6 +33,7 @@ public:
 	list<Command*> lc;
 	CommandProcessor();
 	CommandProcessor(const list<Command*>& lc);
+	CommandProcessor(const CommandProcessor& comP);
 	virtual ~CommandProcessor();
 	CommandProcessor& operator =(const CommandProcessor& comP);
 	virtual  Command* getCommand();
@@ -90,6 +91,7 @@ class FileCommandProcessorAdapter : public CommandProcessor {
 public:
 	FileCommandProcessorAdapter();
 	FileCommandProcessorAdapter(FileLineReader* flr);
+	FileCommandProcessorAdapter(const FileCommandProcessorAdapter& fcomP);
 	~FileCommandProcessorAdapter();
 	string readCommand();
 	vector<string> readAllCommands();

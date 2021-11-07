@@ -9,7 +9,7 @@ using namespace std;
 
 //*******************************CommandProcessor***********************************
 CommandProcessor::CommandProcessor() {
-	lc = list<Command*>(10);
+	lc = list<Command*>();
 }
 
 
@@ -18,6 +18,15 @@ CommandProcessor::CommandProcessor(const list<Command*>& lc) {
 	for (list<Command*>::iterator it = this->lc.begin(); it != this->lc.end(); ++it) {
 		this->lc.push_back(new Command(**it));
 	}
+}
+
+CommandProcessor::CommandProcessor(const CommandProcessor& comP) {
+	list<Command*> tempL = comP.lc;
+	for (list<Command*>::iterator it = tempL.begin(); it != tempL.end(); ++it) {
+		Command* tempCom = new Command(**it);
+		lc.push_back(tempCom);
+	}
+	
 }
 
 CommandProcessor::~CommandProcessor() {
@@ -29,7 +38,8 @@ CommandProcessor::~CommandProcessor() {
 CommandProcessor& CommandProcessor::operator =(const CommandProcessor& comP) {
 	if (this == &comP)
 		return *this;
-	for (list<Command*>::iterator it = lc.begin(); it != lc.end(); ++it) {
+	list<Command*> tempL = comP.lc;
+	for (list<Command*>::iterator it = tempL.begin(); it != tempL.end(); ++it) {
 		Command* tempCom = new Command(**it);
 		lc.push_back(tempCom);
 	}
@@ -43,8 +53,15 @@ Command* CommandProcessor::getCommand() {
 	return com;
 }
 
+ostream& operator<<(ostream& ost, const Command& com) {
+
+	ost << "Command: " << com.command << "; Effect: " << com.effect << endl;
+	return ost;
+
+}
 ostream& operator<<(ostream& ost, const CommandProcessor& comP){
 	int counter = 1;
+	ost << endl <<comP.lc.front()->getCommand();
 	for (Command* com : comP.lc) {
 		ost << counter << ". " << *com << endl;
 	}
@@ -136,12 +153,7 @@ Command& Command::operator =(const Command& com) {
 	return *this;
 }
 
-ostream& operator<<(ostream& ost, const Command& com) {
 
-	ost << "Command: " << com.command << "; Effect: " << com.effect << endl;
-	return ost;
-
-}
 
 string Command::getCommand() {
 	return command;
@@ -161,6 +173,11 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* target)
 	flr = target;
 }
 
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter& fcomP): CommandProcessor(fcomP){
+
+	flr = new FileLineReader(*(fcomP.flr));
+
+}
 FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 }
 
@@ -170,12 +187,17 @@ string FileCommandProcessorAdapter::readCommand() {
 
 }
 
+//It returns a command object with the command extracted from the saved file. If the flr object of FileCommandProcessorAdapter reaches 
+//the end of the file or the saved file is empty, it will return a nullptr.
 Command* FileCommandProcessorAdapter::saveCommand() {
 	string com = readCommand();
+	Command* tempCom =nullptr;
 	//No commands read from the . txt file
 	//Store the input strings in the command objects and push the objects into the list of commands
-	Command* tempCom = new Command(com, "");
-	lc.push_back(tempCom);
+	if (com.compare("") != 0) {
+		tempCom= new Command(com, "");
+		lc.push_back(tempCom);
+	}
 	return tempCom;
 }
 
