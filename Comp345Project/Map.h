@@ -188,4 +188,7 @@ class Map {
   bool releaseMap();
   bool validate();
   static Map* mapCreater(string s);
+
+  Territory* getTerrtoryById(int IDInput);
+
 };

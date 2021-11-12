@@ -5,6 +5,9 @@
 #include "CommandProcessing.h"
 #include <string>
 #include <regex>
+#include <random>
+#include <ctime>
+#include <vector>
 #include <iostream>
 using namespace std;
 
@@ -12,25 +15,33 @@ using namespace std;
 
 //Constructor
 GameEngine::GameEngine() {
-	this->start = true;
-	this->map_loaded = false;
-	this->map_validated=false;
-	this->players_added=false;
-	this->assign_reinforcement=false;
-	this->issue_orders=false;
-	this->execute_orders=false;
-	this->win=false;
+	this->isStartup = true;
+	this->debugMode = false;
+	this->currentStage = 0;
+	this->cmdProcessor = new CommandProcessor();
+	this->map = new Map();
+	this->deck = new Deck();
+	this->initialPlayerTerritoriesAmount = 4;
+}
+GameEngine::GameEngine(CommandProcessor* inputCmdProcessor,int iniTerrAmount,bool isDebugMode) {
+	this->isStartup = true;
+	this->currentStage = 0;
+	this->debugMode = isDebugMode;
+	this->cmdProcessor = inputCmdProcessor;
+	this->map = new Map();
+	this->deck = new Deck();
+	this->initialPlayerTerritoriesAmount = iniTerrAmount;
 }
 
 GameEngine::GameEngine(const GameEngine& ge) {
-	this->start = *new bool(ge.start);
-	this->map_loaded = *new bool(ge.map_loaded);
-	this->map_validated = *new bool(ge.map_validated);
-	this->players_added = *new bool(ge.players_added);
-	this->assign_reinforcement = *new bool(ge.assign_reinforcement);
-	this->issue_orders = *new bool(ge.issue_orders);
-	this->execute_orders = *new bool(ge.execute_orders);
-	this->win = *new bool(ge.win);
+	this->isStartup = *new bool(ge.isStartup);
+	this->debugMode = *new bool(ge.debugMode);
+	this->currentStage = *new int(ge.currentStage);
+	this->initialPlayerTerritoriesAmount = *new int(ge.initialPlayerTerritoriesAmount);
+	this->cmdProcessor = new CommandProcessor(*(ge.cmdProcessor));
+	this->map = new Map(*(ge.map));
+	this->deck = new Deck(*(ge.deck));
+	this->playerList = ge.playerList;
 }
 
 //Assignment Operator
@@ -38,14 +49,14 @@ GameEngine& GameEngine::operator= (const GameEngine& ge) {
 	if (this == &ge) {
 		return *this;
 	}
-	this->start = *new bool(ge.start);
-	this->map_loaded = *new bool(ge.map_loaded);
-	this->map_validated = *new bool(ge.map_validated);
-	this->players_added = *new bool(ge.players_added);
-	this->assign_reinforcement = *new bool(ge.assign_reinforcement);
-	this->issue_orders = *new bool(ge.issue_orders);
-	this->execute_orders = *new bool(ge.execute_orders);
-	this->win = *new bool(ge.win);
+	this->isStartup = *new bool(ge.isStartup);
+	this->debugMode = *new bool(ge.debugMode);
+	this->currentStage = *new int(ge.currentStage);
+	this->initialPlayerTerritoriesAmount = *new int(ge.initialPlayerTerritoriesAmount);
+	this->cmdProcessor = new CommandProcessor(*(ge.cmdProcessor));
+	this->map = new Map(*(ge.map));
+	this->deck = new Deck(*(ge.deck));
+	this->playerList = ge.playerList;
 
 	return *this;
 }
@@ -59,428 +70,550 @@ GameEngine::~GameEngine() {
 
 //Stream Insertion Operators
 ostream& operator << (ostream& ost, const GameEngine& ge) {
-	ge.checkState(ost);
+	ge.showState(ost);
 	return ost;
 }
-void GameEngine::checkState(std::ostream& output) const {
-
-	if (start)
-		output << "[Current State: Start]" << endl;
-	else if (map_loaded)
-		output << "[Current State: Map_Loaded]" << endl;
-	else if (map_validated)
-		output << "[Current State: Map_Validated]" << endl;
-	else if (players_added)
-		output << "[Current State: Players_Added]";
-	else if (assign_reinforcement)
-		output << "[Current State: Assign_Reinforcement]" << endl;
-	else if (issue_orders)
-		output << "[Current State: Issue Orders]" << endl;
-	else if (execute_orders)
-		output << "[Current State: Execute Orders]" << endl;
-	else if (win)
-		output << "[Current State: Win]" << endl;
+void GameEngine::showState(std::ostream& output) const {
+	switch (currentStage)
+	{
+	case 0:
+		//output << "[Current Game State: NONE, default, before entering start phase]" << endl;
+		break;
+	case 1:
+		output << "[Current Game State: Start up, start]" << endl;
+		break;
+	case 2:
+		output << "[Current Game State: Start up, map loaded]" << endl;
+		break;
+	case 3:
+		output << "[Current Game State: Start up, map validated]" << endl;
+		break;
+	case 4:
+		output << "[Current Game State: Start up, players added]" << endl;
+		break;
+	case 5:
+		output << "[Current Game State: Play, assign reinforcement]" << endl;
+		break;
+	case 6:
+		output << "[Current Game State: Play, issue orders]" << endl;
+		break;
+	case 7:
+		output << "[Current Game State: Play, execute orders]" << endl;
+		break;
+	case 8:
+		output << "[Current Game State: Play, win]" << endl;
+		break;
+	default:
+		output << "[Current Game State: ERROR - This should never happened. go check variable 'currentStage'.]" << endl;
+		break;
+	}
 
 }
+void GameEngine::showState(){
+	switch (currentStage)
+	{
+	case 0:
+		//cout << "[Current Game State: NONE, default, before entering start phase]" << endl;
+		break;
+	case 1:
+		cout << "[Current Game State: Start up, start]" << endl;
+		break;
+	case 2:
+		cout << "[Current Game State: Start up, map loaded]" << endl;
+		break;
+	case 3:
+		cout << "[Current Game State: Start up, map validated]" << endl;
+		break;
+	case 4:
+		cout << "[Current Game State: Start up, players added]" << endl;
+		break;
+	case 5:
+		cout << "[Current Game State: Play, assign reinforcement]" << endl;
+		break;
+	case 6:
+		cout << "[Current Game State: Play, issue orders]" << endl;
+		break;
+	case 7:
+		cout << "[Current Game State: Play, execute orders]" << endl;
+		break;
+	case 8:
+		cout << "[Current Game State: Play, win]" << endl;
+		break;
+	default:
+		cout << "[Current Game State: ERROR - This should never happened. go check variable 'currentStage'.]" << endl;
+		break;
+	}
+}
 
-//define other global variables like file path
-string mapfilepath = "";
-string playername = "";
-void GameEngine::gameFlow(CommandProcessor& comP) {
+void GameEngine::startup() {
+	vector<vector<Territory*>> connectedGraph ;
+	int playerCount = 1;
+	int theStartingPlayer = 0;
+	if (currentStage == 0 && isStartup == true) {
+		currentStage = 1;
+	}
 
-	//define variables for logic control
-	string input;
-	bool lock = false;
-	bool lock2 = true;
-	bool lock3 = true;
-	bool lock4 = true;
-	bool executed = false;
-	bool playStage = false;
-	bool run = true;
-	bool Reinforce_assigned = false;
 
-	//define objects of classes like Player,Cards,Orders,and Map
-	Map* newMap=new Map();
-	Deck* newDeck = new Deck;
-	newDeck->original_vec_deck();
-	int IDgenerator = 1;
-	vector<Player> playerList;
-	vector<vector<Territory*>> currentMapGraph;
-	int issueTime = 1;
-
-	//Two targets interface linked to Gameengine
-	vector<string> commandVec(10);
-	Command com;
-	CommandProcessor defaultcomP =CommandProcessor();
-
-	//cout << *(comP.getCommand()) << endl;
-
-	//Main loop 
-	while (true) {
-
-		//************************************I only adjusted the start-up phase***************************************************
-		//*****************************************************8Start-Up Phase******************************************************
-		// You can make a new StartUpPhase() method
-		//Navigate all states in the console
-		//Display state information and prompt users to enter commands plus implementations
-		if (start) {
-			if (lock3)
-				std::cout << endl << "---------------WELCOME TO WARZONE!---------------" << endl;
-			std::cout << endl << "[Stage: Start]" << endl;
-			std::cout << endl << "Please enter \"loadmap <mapfilepath>\" to load the map: " << endl << endl;
+	//keep looping until the actual game start.
+	while (isStartup) {
+		cout << "================================================================================¨[" << endl;
+		showState();
+		//check the current game state by a switch statement. displays the message refers to that stage.
+		switch (currentStage)
+		{
+		case 1:
+			//Start Phase
+			std::cout << "1. enter \"loadmap <mapfilepath>\" to load the map. " << endl ;
+			break;
+		case 2:
+			//map loaded Phase
+			std::cout << "1. enter \"validatemap\" to validate the map" << endl;
+			std::cout << "2. enter \"loadmap <mapfilepath>\" to reload the map " << endl;
+			break;
+		case 3:
+			//map validated Phase
+			std::cout << "1. enter \"addplayer <playername>\" to add players into the map" << endl;
+			break;
+		case 4:
+			//players added Phase
+			std::cout << "1. enter \"gamestart\" to assign countries to each player" << endl;
+			std::cout << "2. enter \"addplayer <playername>\" to add more players" << endl;
+			break;
+		default:
+			cout << "ERROR: Invaid state during startup()." << endl;
+			break;
 		}
-		else if (map_loaded && lock) {
-			std::cout << endl << "---------------Map Loading Start---------------" << endl;
-			//Code to load map
 
-			newMap = Map::mapCreater(mapfilepath);
-			currentMapGraph = (newMap->getMapGraph());
-			std::cout << *(newMap);
-
-			std::cout << endl << "---------------Map Loading Done----------------" << endl;
-			std::cout << endl << "[Stage: Map_Loaded]" << endl;
-			std::cout << endl << "1. enter \"validatemap\" to validate the map" << endl;
-			std::cout << endl << "2. enter \"loadmap <mapfilepath>\" to reload map: " << endl << endl;
-		}
-		else if (map_validated && lock) {
-			std::cout << endl << "---------------Map Validating Start---------------" << endl;
-			//Code to load map
-			newMap->validate();
-
-			std::cout << endl << "---------------Map Validating Done----------------" << endl;
-			std::cout << endl << "[Stage: Map_Validated]" << endl;
-			std::cout << endl << "1. enter \"addplayer <playername>\" to add players into the map" << endl << endl;
-		}
-		else if (players_added && lock) {
-			std::cout << endl << "---------------Adding Players Start---------------" << endl;
-			//Code to load map
-			if (IDgenerator < 6) {
-				vector<vector<Territory*>> currentMapGraph = (newMap->getMapGraph());
-				Player player = *(new Player(IDgenerator, playername, &currentMapGraph));
-				Hand* newHand = player.getHandsOfCard();
-				for (int i = 0; i < 5; i++) {
-					newHand->set_vec_hand_cards(newDeck->draw());
-				}
-				playerList.push_back(player);
-				std::cout << endl;
-				player.getHandsOfCard()->print_vec_hand_cards();
-				IDgenerator++;
-				std::cout << endl << player;
+		Command* command = NULL;
+		bool commandIsNotValid = true;
+		while (commandIsNotValid) {
+			//read a command .
+			command = cmdProcessor->getCommand();
+			commandIsNotValid = !(cmdProcessor->validate(*command, currentStage));
+			if (commandIsNotValid) {
+				cout << "Invaild Command! please re-enter the command: " << endl;
 			}
-			else {
-				std::cout << endl << "Exceed the maximum number of players!" << endl;
-			}
-
-			std::cout << endl << "---------------Adding Players Done----------------" << endl;
-			std::cout << endl << "[Stage: Player_Added]" << endl;
-			std::cout << endl << "1. enter \"gamestart\" to assign countries to each player" << endl;
-			std::cout << endl << "2. enter \"addplayer <playername>\" to add more players " << endl << endl;
 		}
 
-		//Get command inputs
-		//IMPORTANT: accept commands not only from console but also from a saved file(Mode has been determined through command line argument)
-
-		Command* com1 = comP.getCommand();
-
-		//Use default console inputs if the returned command object is null(Empty command file or the end of the file has been reached)
-		if (com1 == nullptr) {
-			cout << "[IMPORTANT:Run out of commands of the saved .txt file. Initialize a default console for inputs!]" << endl;
-			com = *(defaultcomP.getCommand());
-		}
-		else {
-			com = *com1;
-		}
-		
-	     
-		//Start up starts; Start Stage + Map Loaded Stage
-		if ((comP.validate(com, "start") || comP.validate(com, "maploaded")) && com.getEffect().compare("mapvalidated") != 0) {
-
-			//Catch the path of map file
-			mapfilepath = comP.extractName(com);
-			start = false;
-			map_loaded = true;
-			lock = true;
-
-			cout << endl << com << endl;
-			continue;
-		}
-
-		//Map Validated Stage
-		else if (comP.validate(com, "maploaded")) {
-
-			map_loaded = false;
-			map_validated = true;
-			lock = true;
-
-			cout << endl << com << endl;
-			continue;
-		}
-
-		//Add players Stage
-		else if ((comP.validate(com, "playersadded") || comP.validate(com, "mapvalidated")) && com.getEffect().compare("assignreinforcement") != 0) {
-
-			playername = comP.extractName(com);
-			players_added = true;
-			map_validated = false;
-			lock = true;
-
-			cout << endl << com << endl;
-			continue;
-
-		}
-
-		//assign reinforcement state
-		else if (comP.validate(com, "playersadded")) {
-
-			players_added = false;
-			assign_reinforcement = true;
-			playStage = true;
-
-		}
-		else {
-
-			if (start) {
-				std::cout << endl << "---------------Invalid commands detected At [Start] stage---------------" << endl;
-				//std::cout << endl << "[Stage: Start] Please enter \"loadmap\" to load the map: " << endl << endl;
-				lock3 = false;
-			}
-			else if (map_loaded) {
-				std::cout << endl << "---------------Invalid commands detected At [Map_Loaded] stage---------------" << endl;
-				std::cout << endl << "[Stage: Map_Loaded] Please enter \"validatemap\" to validate the map: " << endl << endl;
-			}
-			else if (map_validated) {
-				std::cout << endl << "---------------Invalid commands detected At [Map_validated] stage---------------" << endl;
-				std::cout << endl << "[Stage: Map_Validated] Please enter \"addplayer <playername>\" to add players into the map " << endl << endl;
-			}
-			else if (players_added) {
-				std::cout << endl << "---------------Invalid commands detected At [Players_Added] stage---------------" << endl;
-				std::cout << endl << "[Stage: Player_Added] Please enter \"gamestart\" to assign countries to each player " << endl << endl;
-			}
-			//No state transition
-			lock = false;
-			continue;
-
-		}
-
-		//*****************************************************************************************************************************************
-		// Havent adjusted the play stage
-		//Play stage starts
-		while (playStage) {
-
-			//Display state information and prompt users to enter commands
-			if (assign_reinforcement && lock2) {
-				std::cout << endl << "----------------Assigning Reinforcement Starts---------------" << endl;
-				//code to assign reinforcement
-				if (!Reinforce_assigned) {
-					for (int x = 0; x < playerList.size(); x++) {
-
-						playerList[x].addTerrtories(currentMapGraph[x][0]);
-						currentMapGraph[x][0]->setArmyNumber(5);
-						playerList[x].printPlayerTerrtories();
-						std::cout << playerList[x];
-
-					}
+		//execute the command refers to different stage.
+		cout << endl << "Executing command:  "<< command->getOriginalCommand()<< endl;
+		vector<string> args = command->getArgs();
+		switch (currentStage)
+		{
+		case 1:
+			//Start Phase
+			map = Map::mapCreater(args[1]);
+			currentStage = 2;
+			std::cout << "The map: " << args[1] << " is successfully loaded!" << endl;
+			break;
+		case 2: {
+			//map loaded Phase
+			if (args[0].compare("validatemap") == 0) {
+				if (map->validate()) {
+					//successfully validated.
+					currentStage = 3;
+					connectedGraph = (map->getMapGraph());
+					std::cout << "The map is valid!" << endl;
 				}
 				else {
-
-					//Remove orders from each player's order list
-					for (int x = 0; x < playerList.size(); x++) {
-						OrderList* ordL = playerList[x].getOrderList();
-						ordL->removeAll();
-
-					}
-
-					for (int x = 0; x < playerList.size(); x++) {
-						currentMapGraph[x][0]->setArmyNumber(5);
-						playerList[x].printPlayerTerrtories();
-						std::cout << playerList[x];
-
-					}
-
+					//the map is not validate
+					std::cout << "The map is not valid! please use command: loadmap <mapfile>   to load a different map!" << endl;
 				}
-
-				std::cout << endl << "---------------Assigning Reinforcement Done---------------" << endl;
-				std::cout << endl << "[Stage: Assign Reinforcement]" << endl;
-				std::cout << endl << "1. enter \"issueorder\" to issue orders for players: " << endl << endl;
 			}
-			else if (issue_orders && lock2) {
-				std::cout << endl << "---------------Issuing Orders Starts---------------" << endl;
-				//code to issue orders
-				for (int x = 0; x < playerList.size(); x++) {
-					playerList[x].issueOrder(issueTime % 4, currentMapGraph[1 + x][0], 2, currentMapGraph[x][0]);
-					playerList[x].getOrderList()->displayAll();
-				}
-				issueTime++;
-
-
-				std::cout << endl << "---------------Issuing Orders Done-----------------" << endl;
-				std::cout << endl << "[Stage: Issue Orders]" << endl;
-				std::cout << endl << "1. enter \"issueorder\" to issue orders for players" << endl;
-				std::cout << endl << "2. enter \"endissueorders\" to end: " << endl << endl;
-			}
-			else if (execute_orders && lock2) {
-				if (executed) {
-					std::cout << endl << "---------------Executing Orders Starts---------------" << endl;
-					//code to execute orders
-					for (int x = 0; x < playerList.size(); x++) {
-						Orders* ord = playerList[x].getOrderList()->popFirst();
-						if (ord->validate()) {
-							std::cout << *ord << "----VALID ORDER EXECUTED----" << endl;
-						}
-						else {
-							std::cout << *ord << "----INVALID ORDER NOT EXECUTED----" << endl;;
-						}
-					}
-				}
-
-				std::cout << endl << "[Stage: Execute Orders]" << endl;
-				std::cout << endl << "1. enter \"execorder\" to issue orders for players" << endl;
-				std::cout << endl << "2. enter \"endexecorders\" to issue orders for players" << endl;
-				std::cout << endl << "3. enter \"win\" to win the game: " << endl << endl;
-			}
-			else if (win && lock2) {
-				std::cout << endl << "---------------Generating the Winner Starts---------------" << endl;
-				//code for generating the winner
-				std::cout << endl << "---------------Generating the Winner Done---------------" << endl;
-				std::cout << endl << "[Stage: Win]" << endl;
-				std::cout << endl << "1. enter \"replay\" to replay the game: " << endl;
-				std::cout << endl << "1. enter \"quit\" to end the game: " << endl << endl;
-			}
-
-
-			//Get command inputs
-			com = *(comP.getCommand());
-
-
-			cout << input << endl;
-
-			//Issue orders
-			if ((assign_reinforcement || issue_orders) && input.compare("issueorder") == 0) {
-
-				assign_reinforcement = false;
-				Reinforce_assigned = true;
-				issue_orders = true;
-				lock2 = true;
-				continue;
-			}
-
-			//End issuing orders
-			else if (issue_orders && input.compare("endissueorders") == 0) {
-
-				issue_orders = false;
-				execute_orders = true;
-				lock2 = true;
-				continue;
-			}
-
-
-			//Execute orders(win the game)
-			else if (execute_orders && input.compare("win") == 0) {
-
-				execute_orders = false;
-				win = true;
-				lock2 = true;
-				continue;
-			}
-
-			//Execute orders(restart the play stage)
-			else if (execute_orders && input.compare("endexecorders") == 0) {
-				execute_orders = false;
-				assign_reinforcement = true;
-				lock2 = true;
-				continue;
-
-			}
-
-			//continue to execute orders
-			else if (execute_orders && input.compare("execorder") == 0) {
-
-				executed = true;
-				continue;
-
-			}
-
-			//Win(Re-play the game)
-			else if (comP.validate(com, "win") && com.getEffect().compare("start") == 0) {
-
-				reset();
-				playStage = false;
-				Reinforce_assigned = false;
-				break;
-
-			}
-
-
-			//Win(End the game)
-			else if (comP.validate(com, "win") && com.getEffect().compare("exist program") == 0) {
-
-				run = false;
-				break;
-
-			}
-
-			//Invalid inputs
 			else {
-
-				if (assign_reinforcement)
-					std::cout << endl << "---------------Invalid commands detected at [Assign reinforcement] state---------------" << endl << "[Stage: Assign Reinforcement] Enter \"issueorder\" to issue orders for players: " << endl;
-				else if (issue_orders)
-					std::cout << endl << "---------------Invalid commands detected at [Issue Orders] state---------------" << endl << "[Stage: Issue Orders] Enter \"issueorder\" to issue orders for players OR \"endissueorder\" to end: " << endl;
-				else if (execute_orders)
-					std::cout << endl << "---------------Invalid commands detected at [Execute Orders] state---------------" << endl << "[Stage: Execute Orders] Enter \"execorder\" to execute orders for players OR \"win\" to win the game: " << endl;
-				else if (win)
-					std::cout << endl << "---------------Invalid commands detected at [Win] state---------------" << endl << "[Stage: Win] Enter \"play\" to replay the game OR \"end\" to end the game: " << endl;
-				lock2 = false;
-				continue;
-
+				//dont need to varifly if the 1st argument is 'only validatemap/loadmap'. this process is dnoe in cmdProcessor.validte();
+				map = Map::mapCreater(args[1]);
+				std::cout << "The map: " << args[1] << " is successfully loaded!" << endl;
 			}
-
-
 		}
+			break;
+		case 3: {
+			//map validated Phase
+			currentStage = 4;
+			Player* p1 = new Player(playerCount, args[1], &connectedGraph);
+			playerList.push_back(p1);
+			
+			playerCount++;
+			std::cout << "Player: " << args[1] << " is successfully added!" << endl;
+		}
+			break;
+		case 4: {
+			//players added Phase
+			if (args[0].compare("addplayer") == 0) {
+				Player* p1 = new Player(playerCount, args[1], &connectedGraph);
+				playerList.push_back(p1);
+
+				playerCount++;
+				std::cout << "Player: " << args[1] << " is successfully added!" << endl;
+			}   
+			else if (args[0].compare("start") == 0) {
+				//game start!
+				//distribute terrtories to the players - base on the initial number of terrtories. 
+				if (connectedGraph.size() < initialPlayerTerritoriesAmount * playerList.size()) {
+					std::cout << "ERROR: there's no enough terrtories for player's initial distribution!" << endl;
+					exit(0);
+				}
+				int terrIndexCounter = 0;
+
+				for (int j = 0; j<playerList.size(); j++)
+				{
+					Player p1 = *(playerList[j]);
+
+					//give 50 initial arimies to each player
+					p1.setReinforcementpool(50);
+
+					//let each player draw 2 initial cards
+					p1.getHandsOfCard()->set_vec_hand_cards(deck->draw());
+					p1.getHandsOfCard()->set_vec_hand_cards(deck->draw());
+
+					for (int i = 0; i < initialPlayerTerritoriesAmount; i++)
+					{
+						//add terrtories to each players. 
+						p1.addTerrtories(connectedGraph[terrIndexCounter][0]);
+						//p1.printPlayerTerrtories();
+						terrIndexCounter++;
+					}
+				}
+				//select the first player randomly (will skip this process if it's debug mode - then the first player will always be player #1 )
+				if (!debugMode) {
+					int max = playerList.size();
+					std::srand(std::time(nullptr));
+					theStartingPlayer = rand() % max;
+				}
+
+				//switch the game to the play phase:
+				currentStage = 5;
+				isStartup = false;
+			}
+		}
+			break;
+		default:
+			cout << "ERROR: Invaid state during startup()." << endl;
+			break;
+		}
+
+		cout <<"================================================================================¨a" << endl << endl << endl;
+
 
 
 	}
-	
 
-	std::cout << endl << "---------------Game OVer. Thank you for playing the warzone!---------------";
+
+	mainGameLoop(theStartingPlayer);
+
+}
+
+void GameEngine::mainGameLoop(int startingPlayer) {
+
+	int totalPlayer = playerList.size();
+
+	cout << "¨X===============================================================================¨[" << endl;
+	cout << "¨d~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¨g" << endl;
+	cout << "¨d                            WarZone: Game started                              ¨g" << endl;
+	cout << "¨d~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¨g" << endl;
+	cout << "¨^===============================================================================¨a" << endl;
+
+
+	//keep looping until the actual game start.
+	while (!isStartup) {
+		cout << "================================================================================¨[" << endl;
+		//check the current game state by a switch statement. displays the message refers to that stage.
+		switch (currentStage)
+		{
+		case 5:
+			showState();
+			//assign reinforcement Phase
+			break;
+		case 6: {
+			//issue orders Phase
+			if (!(playerList[startingPlayer]->gethasEndThisIssueOrderTurn())) {
+				playerList[startingPlayer]->getOrderList()->displayAll();
+				std::cout << endl;
+				playerList[startingPlayer]->printPlayerTerrtories();
+				std::cout << endl;
+				//show the terrtories player own / can attack
+				showState();
+				std::cout << "# " << playerList[startingPlayer]->getPlayerID() << " Player: [" << playerList[startingPlayer]->getName() << "] it's your turn to issue an order!" << endl;
+				std::cout << "~=~ Order and their ordertype ID:   ~=~ " << endl;
+				std::cout << "~=~ 0 - DeployOrder, 3 args         ~=~ " << endl;
+				std::cout << "~=~ 1 - AdvanceOrder, 4 args        ~=~ " << endl;
+				std::cout << "~=~ 2 - BombOrder, 2 args           ~=~ " << endl;
+				std::cout << "~=~ 3 - BlockadeOrder, 2 args       ~=~ " << endl;
+				std::cout << "~=~ 4 - AirliftOrder, 4 args        ~=~ " << endl;
+				std::cout << "~=~ 5 - NegotiateOrder, 3 args      ~=~ " << endl;
+				std::cout << "1. enter \"issueorder <ordertype ID> [TargetTerrtoryID] [numberOfArmies] [FromTerrtoryID]\" " << endl;
+				std::cout << "to add an order into your order list " << endl;
+				std::cout << "2. enter \"endissueorder\" to stop your turns of order issueing" << endl;
+			}
+		}
+			break;
+		case 7:
+			showState();
+			//execute orders Phase
+			break;
+		case 8:
+			//win Phase
+			std::cout << "1. enter \"quit\" to stop the game." << endl;
+			std::cout << "2. enter \"replay\" to replay the game." << endl;
+			break;
+		default:
+			cout << "ERROR: Invaid state during mainGameLoop()." << endl;
+			break;
+		}
+
+
+		switch (currentStage)
+		{
+		case 5: {
+			//assign reinforcement Phase
+			reinforcementPhase();
+			break;
+		}
+		case 6: {
+			//issue orders Phase
+
+			//if all the player has decide to end his turn, switch to next phase:
+			bool allPlayerEndIssueingOrder = true;
+			for (int i = 0; i < playerList.size(); i++)
+			{
+				if (!(playerList[i]->gethasEndThisIssueOrderTurn())) {
+					allPlayerEndIssueingOrder = false;
+				}
+			}
+			if (allPlayerEndIssueingOrder) {
+				currentStage = 7;
+				for (int i = 0; i < playerList.size(); i++)
+				{
+					playerList[i]->sethasEndThisIssueOrderTurn(false);
+				}
+			}
+
+			if (playerList[startingPlayer]->gethasEndThisIssueOrderTurn()||currentStage==7) {
+				//if this player have set to end this turn of issuing order
+				startingPlayer = switchCurrentPlayer(startingPlayer);
+			
+			}else {
+				//if this player havn't set to end this turn of issuing order
+				startingPlayer = issueOrderPhase(startingPlayer);
+			}
+
+
+
+
+			break;
+		}
+		case 7: 
+			//execute orders Phase
+			cout << "Executing orders... " << endl;
+			executreOrderPhase(startingPlayer);
+			break;
+		
+		//case 8: {
+		//	//win Phase
+		//	break;
+		//}
+		default:
+			cout << "ERROR: Invaid state during mainGameLoop()." << endl;
+			break;
+		}
+
+		cout << "================================================================================¨a" << endl << endl << endl;
+
+
+
+	}
 
 }
 
 //Reset state status
 void GameEngine::reset() {
-	this->start = true;
-	this->map_loaded = false;
-	this->map_validated = false;
-	this->players_added = false;
-	this->assign_reinforcement = false;
-	this->issue_orders = false;
-	this->execute_orders = false;
-	this->win = false;
+	this->isStartup = true;
+	this->currentStage = 0;
+
+	delete cmdProcessor;
+	delete map;
+	cmdProcessor = nullptr;
+	map = nullptr;
+
+	for (int i = 0; i < playerList.size(); i++)
+	{
+		delete playerList[i];
+		playerList[i] = nullptr;
+	}
 }
+
+int GameEngine::switchCurrentPlayer(int current) {
+	int size = playerList.size();
+	int result = current + 1;
+	if (result == size) {
+		result = 0;
+	}
+	return result;
+
+}
+
 
 //Accessors
-bool GameEngine::getStart() {
-	return start;
+int GameEngine::getCurrentGameStage() {
+	return currentStage;
 }
-bool GameEngine::getMap_Loaded() {
-	return map_loaded;
-}
-bool GameEngine::getMap_Validated() {
-	return map_validated;
-}
-bool GameEngine::getPlayers_Added() {
-	return players_added;
-}
-bool GameEngine::getAssign_Reinforcement() {
-	return assign_reinforcement;
-}
-bool GameEngine::getIssue_Orders() {
-	return issue_orders;
-}
-bool GameEngine::getExecute_Orders() {
-	return execute_orders;
-}
-bool GameEngine::getWin() {
-	return win;
+bool GameEngine::getIsStartup() {
+	return isStartup;
 }
 
+void GameEngine::reinforcementPhase() {
+	cout << "given every player different amount of arimies in to their reinforcement pool..." << endl;
+	for (int i = 0; i < playerList.size(); i++)
+	{
+		int amount = 0;
+		playerList[i]->update();
+		amount = ((playerList[i]->toDefend()).size()) / 3;
+		//add armies to player base on the amount of terrtory he controll.
+		for (int j = 0; j < map->getContinentGraph().size(); j++)
+		{
+			int isAllControlledByPlayer = true;
+			for (int k = 0; k < ((map->getContinentGraph())[j]->getCountryInside()).size(); k++)
+			{
+				if (((map->getContinentGraph())[j]->getCountryInside())[k]->getcontrolledPlayerID() != playerList[i]->getPlayerID()) {
+					isAllControlledByPlayer = false;
+				}
+			};
+			if (isAllControlledByPlayer) {
+				//if this continment is all controlled by player, give them bonus
+				int bonus = map->getContinentGraph()[j]->getBonus();
+				cout << "Player:  " << playerList[i]->getName() << " controlled the entire " << map->getContinentGraph()[j]->getName() << " ! He get a bonus arimes of: " << bonus << endl;
+				amount += bonus;
+			}
+		}
+		if (amount < 3) {
+			amount = 3;
+			//the minimal number of reinforcement armies per turn for any player is 3
+		}
+		cout << "Player:  " << playerList[i]->getName() << " received a reinforcement of:  " << amount << " armies! " << endl;
+		playerList[i]->addReinforcementpool(amount);
+
+	}
+	currentStage = 6;
+	//change stage
+}
+
+
+
+int GameEngine::issueOrderPhase(int startingPlayer) {
+	int theCurrentPlayer = startingPlayer;
+	Command* command = NULL;
+	bool commandIsNotValid = true;
+	while (commandIsNotValid) {
+		//read a command .
+		command = cmdProcessor->getCommand();
+		commandIsNotValid = !(cmdProcessor->validate(*command, currentStage));
+		if (commandIsNotValid) {
+			cout << "Invaild Command! please re-enter the command: " << endl;
+		}
+	}
+
+	//execute the command refers to different stage.
+	cout << endl << "Executing command:  " << command->getOriginalCommand() << endl;
+	vector<string> args = command->getArgs();
+
+
+	if (args[0].compare("endissueorder") == 0) {
+		playerList[startingPlayer]->sethasEndThisIssueOrderTurn(true);
+		theCurrentPlayer = switchCurrentPlayer(startingPlayer);
+	}
+	else if (args[0].compare("issueorder") == 0) {
+		string type = args[1];
+		if (type.compare("0") == 0) {
+			//order type: Deploy order
+			playerList[startingPlayer]->issueOrder(0,
+				map->getTerrtoryById(atoi(args[2].c_str())),
+				atoi(args[3].c_str()),
+				NULL);
+			cout << "You successfully placed an order!  " << endl;
+			theCurrentPlayer = switchCurrentPlayer(startingPlayer);
+		}
+		else if (type.compare("1") == 0) {
+			//order type: Advance Order
+			playerList[startingPlayer]->issueOrder(1,
+				map->getTerrtoryById(atoi(args[2].c_str())),
+				atoi(args[3].c_str()),
+				map->getTerrtoryById(atoi(args[4].c_str())));
+			cout << "You successfully placed an order!  " << endl;
+			theCurrentPlayer = switchCurrentPlayer(startingPlayer);
+		}
+		else if (type.compare("2") == 0) {
+			//order type: Bomb Order
+			playerList[startingPlayer]->issueOrder(2,
+				map->getTerrtoryById(atoi(args[2].c_str())),
+				0,
+				NULL);
+			cout << "You successfully placed an order!  " << endl;
+			theCurrentPlayer = switchCurrentPlayer(startingPlayer);
+
+		}
+		else if (type.compare("3") == 0) {
+			//order type: Blockade Order
+			playerList[startingPlayer]->issueOrder(3,
+				map->getTerrtoryById(atoi(args[2].c_str())),
+				0,
+				NULL);
+			cout << "You successfully placed an order!  " << endl;
+			theCurrentPlayer = switchCurrentPlayer(startingPlayer);
+
+		}
+		else if (type.compare("4") == 0) {
+			//order type: Airlist Order
+			playerList[startingPlayer]->issueOrder(4,
+				map->getTerrtoryById(atoi(args[2].c_str())),
+				atoi(args[3].c_str()),
+				map->getTerrtoryById(atoi(args[4].c_str())));
+			cout << "You successfully placed an order!  " << endl;
+			theCurrentPlayer = switchCurrentPlayer(startingPlayer);
+
+		}
+		else if (type.compare("5") == 0) {
+			//order type: Negotiate Order
+			playerList[startingPlayer]->issueOrder(5,
+				map->getTerrtoryById(atoi(args[2].c_str())),
+				NULL,
+				map->getTerrtoryById(atoi(args[4].c_str())));
+			cout << "You successfully placed an order!  " << endl;
+			theCurrentPlayer = switchCurrentPlayer(startingPlayer);
+
+		}
+	}
+	return theCurrentPlayer;
+}
+
+
+void GameEngine::executreOrderPhase(int startingPlayer) {
+	int currentPlayer = startingPlayer;
+	//first execute all the deploy orders
+	for (int i = 0; i < playerList.size(); i++) {
+		for (int j = 0; j < playerList[i]->getOrderList()->getAllOrders().size(); j++)
+		{
+			if ((playerList[i]->getOrderList()->getAllOrders())[j]->isDeployOrder) {
+
+				(playerList[i]->getOrderList()->getAllOrders())[j]->execute();
+				int* targetOrderID = ((playerList[i]->getOrderList()->getAllOrders())[j]->getOrderID());
+				playerList[i]->getOrderList()->remove(*targetOrderID);
+				//execute the deploy order we find and remove them from the list.
+			}
+		}
+	}
+	
+	//then execute all the orders in the list with round-robin fashion
+	bool isEmpty = false;
+	while (!isEmpty) {
+		isEmpty = true;
+		for (int i = 0; i < playerList.size(); i++) {
+			int size =( playerList[currentPlayer]->getOrderList()->getAllOrders().size());
+			if (size != 0) {
+				isEmpty = false;
+				playerList[currentPlayer]->getOrderList()->popLast()->execute();
+			}
+			currentPlayer = switchCurrentPlayer(currentPlayer);
+		}
+	}
+	currentStage = 5;
+}

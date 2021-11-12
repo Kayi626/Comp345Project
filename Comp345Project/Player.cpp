@@ -13,14 +13,18 @@ Player::Player() {
 
 	this->playerID = -1;
 	this->playerName = "NONAME";
+	this->reinforcementpool = 30;
+	this->hasEndThisIssueOrderTurn = false;
 }
 Player::Player(int playerID, string playerName, vector<vector<Territory*>> *mapGraph) {
 	this->playerID = playerID;
+	this->reinforcementpool = 30;
+	this->hasEndThisIssueOrderTurn = false;
 	this->playerName = playerName;
 	this->mapGraph = mapGraph;
 
-	vector<Territory*> controlledTerritories(10);
-	vector<Territory*> reachcableTerritories(10);
+	vector<Territory*> controlledTerritories(1000);
+	vector<Territory*> reachcableTerritories(1000);
 
 	this->playerHandOfCards = new Hand();
 	this->playerOrderList = new OrderList(playerID);
@@ -34,8 +38,10 @@ Player& Player::operator= (const Player& p) {
 		return (Player&)p;
 	}
 	this->playerID = *new int(p.playerID);
+	this->reinforcementpool = *new int(p.reinforcementpool);
+	this->hasEndThisIssueOrderTurn = *new bool(p.hasEndThisIssueOrderTurn);
 	this->playerName = *new string(p.playerName);
-	this->mapGraph = new vector<vector<Territory*>>(*(p.mapGraph));
+	this->mapGraph = p.mapGraph;
 	this->controlledTerritories = *new vector<Territory*>(p.controlledTerritories);
 	this->reachcableTerritories = *new vector<Territory*>(p.reachcableTerritories);
 	this->playerHandOfCards = new Hand(*(p.playerHandOfCards));
@@ -45,8 +51,10 @@ Player& Player::operator= (const Player& p) {
 }
 Player::Player(const Player& p) {
 	this->playerID = *new int(p.playerID);
+	this->reinforcementpool = *new int(p.reinforcementpool);
+	this->hasEndThisIssueOrderTurn = *new bool(p.hasEndThisIssueOrderTurn);
 	this->playerName = *new string(p.playerName);
-	this->mapGraph = new vector<vector<Territory*>>(*(p.mapGraph));
+	this->mapGraph = p.mapGraph;
 	this->controlledTerritories = *new vector<Territory*>(p.controlledTerritories);
 	this->reachcableTerritories = *new vector<Territory*>(p.reachcableTerritories);
 	this->playerHandOfCards = new Hand(*(p.playerHandOfCards));
@@ -78,6 +86,22 @@ vector<Territory*> Player::toAttack() {
 	return this->reachcableTerritories;
 }
 
+
+bool Player::gethasEndThisIssueOrderTurn() {
+	return this->hasEndThisIssueOrderTurn;
+}
+void Player::sethasEndThisIssueOrderTurn(bool input) {
+	this->hasEndThisIssueOrderTurn = input;
+}
+void Player::addReinforcementpool(int amount) {
+	this->reinforcementpool += amount;
+}
+void Player::setReinforcementpool(int amount) {
+	this->reinforcementpool = amount;
+}
+int Player::getReinforcementpool() {
+	return this->reinforcementpool;
+}
 void Player::setName(string playerName) {
 	this->playerName = playerName;
 }
@@ -85,11 +109,13 @@ void Player::setPlayerID(int newPlayerID) {
 	this->playerID= newPlayerID;
 }
 void Player::addTerrtories(Territory* newTerritory) {
-	std::cout << endl<<newTerritory->getName() << "\n";
 	newTerritory->setControlledPlayerID(playerID);
+
 	this->update();
 }
 void Player::update() {
+
+
 	controlledTerritories.clear();
 	reachcableTerritories.clear();
 
@@ -129,13 +155,13 @@ void Player::printPlayerTerrtories() {
 	std::cout << "----- These are the Terrtories to be defended by player: " << this->playerName << " -----" << endl;
 	for (int i = 0; i < controlledTerritories.size();++i) {
 		Territory temp = *(controlledTerritories[i]);
-		std::cout << ">>Country: " << temp.getName() << " have armies: " << temp.getArmyNumber() << endl;
+		std::cout << "ID: " <<temp.getCountryID()<< " Territory: " << temp.getName() << " have armies: " << temp.getArmyNumber() << endl;
 	}
-	std::cout << "There are totally: " << this->controlledTerritories.size() << " captured by player." << endl<<endl;
+	std::cout << "There are totally: " << this->controlledTerritories.size() << " captured by player." << endl;
 	std::cout << "----- These are the Terrtories to be attacked by player: " << this->playerName << " -----" << endl;
 	for (int i = 0; i < reachcableTerritories.size(); ++i) {
 		Territory temp = *(reachcableTerritories[i]);
-		std::cout << ">>Country: " << temp.getName() << " have armies: " << temp.getArmyNumber() << endl;
+		std::cout << "ID: " << temp.getCountryID() << " Territory: "<< temp.getName() << " have armies: " << temp.getArmyNumber() << endl;
 	}
 	std::cout << "There are: " << this->reachcableTerritories.size() << " reachable by player." << endl;
 }
@@ -170,6 +196,7 @@ void Player::issueOrder(int type, Territory* targetTerritory, int numberOfArmies
 			} // check if the target terrtory and from territory is adjacent
 
 			Orders* order = new AdvanceOrder(this->getPlayerID(), numberOfArmies, fromTerritory, targetTerritory,isAdjacent);
+
 			this->getOrderList()->put(order);
 			break;
 		}

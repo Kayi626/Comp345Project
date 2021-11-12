@@ -19,10 +19,14 @@ private:
 	Hand* playerHandOfCards;
 	OrderList* playerOrderList;
 
+	bool hasEndThisIssueOrderTurn;
+	int reinforcementpool;
 	int playerID;
 	string playerName;
 	vector<vector<Territory*>>* mapGraph;
 	//The mapGraph that this player is in.
+
+
 
 	bool addToControlledWithNoRepeatition(Territory* t);
 	bool addToReachableWithNoRepeatition(Territory* t);
@@ -51,6 +55,12 @@ public:
 	
 
 	 //Mutators
+	void sethasEndThisIssueOrderTurn(bool input);
+	bool gethasEndThisIssueOrderTurn();
+
+	void addReinforcementpool(int amount);
+	void setReinforcementpool(int amount);
+	int getReinforcementpool();
 	void setName(string playerName);
 	void setPlayerID(int newPlayerID);
 	void addTerrtories(Territory* newTerritory);
@@ -70,7 +80,7 @@ public:
 	* 2-BombOrder, 2 args
 	* 3-BlockadeOrder, 2 args
 	* 4-AirliftOrder, 4 args
-	* 5-NegotiateOrder, 2 args : when selecting target player, just let the player select one of his territory.
+	* 5-NegotiateOrder, 4 args : when selecting target player, just let the player select one of his territory.
 	* 
 	* all 4 arg is required for every kinds of order. BUT if an order only requires 3 or less argument, the arguments left behind can be whatever.
 	* e.g. Bomborder - 3rd arg'number of armies' can be any integer. 4th argument 'from territory' can be any territory, you can just simply put the 2nd argument inside. it won't have any effect.

@@ -12,11 +12,14 @@ extern int globalOrderID = 1;
 
 Orders::Orders() {
 	this->orderID = globalOrderID;
+	this->isDeployOrder  = false;
 	globalOrderID++;
 }
 Orders::Orders(int playerID) {
 	this->playerID = playerID;
+	this->isDeployOrder = false;
 	this->orderID = globalOrderID;
+
 	globalOrderID++;
 	//this will give a global unique order id to an order.
 }
@@ -28,12 +31,14 @@ Orders& Orders::operator= (const Orders& ord) {
 	}
 	this->orderID = *new int(ord.orderID);
 	this->playerID = *new int(ord.playerID);
+	this->isDeployOrder = *new bool(ord.isDeployOrder);
 	return *this;
 
 }
 Orders::Orders(const Orders& ord) {
 	this->orderID = *new int(ord.orderID);
 	this->playerID = *new int(ord.playerID);
+	this->isDeployOrder = *new bool(ord.isDeployOrder);
 }
 
 ostream& operator<<(ostream& ost, const Orders& ord)
@@ -67,11 +72,11 @@ bool Orders::validate() {
 
 OrderList::OrderList() {
 	this->playerID = -1;
-	vector<Orders*> ordersInside(10);
+	vector<Orders*> ordersInside(100);
 }
 OrderList::OrderList(int playerID) {
 	this->playerID = playerID;
-	vector<Orders*> ordersInside(10);
+	vector<Orders*> ordersInside(100);
 }
 
 OrderList& OrderList::operator= (const OrderList& ordlist) {
@@ -167,10 +172,11 @@ void OrderList::removeAll() {
 
 
 void OrderList::displayAll() {
-	std::cout << "----- This is the orderlist hold by player with ID: " << this->playerID << " -----" << endl;
+	std::cout << "----- This is the orderlist hold by player with ID: " << this->playerID << "         -----" << endl;
 	for (Orders* orders : ordersInside) {
 		std::cout << ">>NO." << *(orders->getOrderID()) << " " << *(orders->describingMessage()) << endl;
 	}
+
 	std::cout << "There are: " << this->ordersInside.size() << " orders in list." << endl;
 }//just display all the order. by their describing Message.
 
@@ -198,6 +204,10 @@ Orders* OrderList::popLast() {
 	return temp;
 
 }
+vector<Orders*>  OrderList::getAllOrders(){
+	return ordersInside;
+}
+
 
 
 DeployOrder::DeployOrder(int playerID, int numberOfArmies, Territory* targetTerritory)
@@ -205,6 +215,7 @@ DeployOrder::DeployOrder(int playerID, int numberOfArmies, Territory* targetTerr
 {
 	this->numberOfArmies = numberOfArmies;
 	this->targetTerritory = targetTerritory;
+	this->isDeployOrder = true;
 }
 
 DeployOrder& DeployOrder::operator= (const DeployOrder& ord) {
@@ -236,6 +247,7 @@ void DeployOrder::describe(std::ostream& output) const {
 std::unique_ptr<string> DeployOrder::describingMessage() {
 	string temp1 = "[DEPLOY] Place ";
 	string temp2 = to_string(this->numberOfArmies);
+
 	string temp3 = " armies on terrtire: ";
 	temp1.append(temp2);
 	temp1.append(temp3);
