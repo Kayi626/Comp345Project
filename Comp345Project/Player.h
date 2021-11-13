@@ -33,8 +33,9 @@ private:
 	//add to the verctor list by checking territory's Name. won't add two same territory to a vector.
 	//return false if there's already exit a territory with same country id
 public:
+	void attachToPlayerOrderList(list<Observer *> &);
 	Player();
-	Player(int playerID,string playerName, vector<vector<Territory*>> *mapGraph);
+	Player(int playerID, string playerName, vector<vector<Territory*>> *mapGraph);
 	//constructor will generate an empty 'ControlledTerrtories,HandOfCards,OrderList'.
 
 	Player(const Player& p);

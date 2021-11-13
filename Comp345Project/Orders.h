@@ -4,15 +4,17 @@
 #include <vector>
 #include <string>
 #include "Map.h"
+#include "LoggingObserver.h"
 
 using namespace std;
 
 
-class Orders {
+class Orders: public ILoggable, public Subject {
 	private:
 		int orderID;
 		int playerID;
 	public:
+		virtual string stringToLog();
 		Orders();
 		~Orders();
 		Orders(int playerID);
@@ -29,26 +31,28 @@ class Orders {
 		virtual string execute();
 		//execute the order. will validate first,but wont delete itself from order list.
 		virtual bool validate();
-		int* getOrderID();
+		int getOrderID();
 		//return an unique order id.
 		int getPlayerID();
 		//return the player'id who holds this order..
 
-		bool isDeployOrder;
+		//bool isDeployOrder;
 };
 
-class OrderList {
+class OrderList: public ILoggable, public Subject {
 private:
 	int playerID;//ID of the player hold this orderlist
 	vector<Orders*> ordersInside;
 	//all the order inside of this vector list.
 public:
+	string stringToLog();
 	OrderList();
 	OrderList(int playerID);
 	OrderList(const OrderList& ordlist);
 	OrderList& operator = (const OrderList& ordlist);
+	~OrderList();
 
-	void put(Orders* orderInsert); //add an order into the list
+	void addOrder(Orders* orderInsert); //add an order into the list
 	bool move(int orderID,int indexmoving);  //move an order around the orderlist
 	//0 = do nothing. 3 = move it 3 place backward. -2 = move it 2 place forward.
 	//return false: can't find the order / the moving is out of range.
@@ -59,7 +63,7 @@ public:
 	void displayAll();//print the current orderlist. will show the details of every order.
 	int getPlayerID();//get the player that own this order list
 
-	Orders* getFirst();		
+	Orders* getFirst();
 	Orders* getLast();
 	//getFirst & getLast: just return a pointer to the First/Last order in the list.
 

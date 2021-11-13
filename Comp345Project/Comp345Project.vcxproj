@@ -142,6 +142,7 @@
     <ClInclude Include="Cards.h" />
     <ClInclude Include="CommandProcessing.h" />
     <ClInclude Include="GameEngine.h" />
+    <ClInclude Include="LoggingObserver.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Orders.h" />
     <ClInclude Include="Player.h" />
@@ -150,6 +151,7 @@
     <ClCompile Include="Cards.cpp" />
     <ClCompile Include="CommandProcessing.cpp" />
     <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="LoggingObserver.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Driver.cpp" />
     <ClCompile Include="Orders.cpp" />

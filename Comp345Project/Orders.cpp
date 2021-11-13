@@ -12,51 +12,43 @@ extern int globalOrderID = 1;
 
 Orders::Orders() {
 	this->orderID = globalOrderID;
-	this->isDeployOrder  = false;
 	globalOrderID++;
 }
 Orders::Orders(int playerID) {
 	this->playerID = playerID;
-	this->isDeployOrder = false;
 	this->orderID = globalOrderID;
 
 	globalOrderID++;
 	//this will give a global unique order id to an order.
 }
-Orders::~Orders() {
-}
+Orders::~Orders() {}
 Orders& Orders::operator= (const Orders& ord) {
 	if (this == &ord) {
 		return (Orders&)ord;
 	}
-	this->orderID = *new int(ord.orderID);
-	this->playerID = *new int(ord.playerID);
-	this->isDeployOrder = *new bool(ord.isDeployOrder);
+	this->orderID = ord.orderID;
+	this->playerID = ord.playerID;
 	return *this;
-
 }
 Orders::Orders(const Orders& ord) {
-	this->orderID = *new int(ord.orderID);
-	this->playerID = *new int(ord.playerID);
-	this->isDeployOrder = *new bool(ord.isDeployOrder);
+	this->orderID = ord.orderID;
+	this->playerID = ord.playerID;
 }
 
-ostream& operator<<(ostream& ost, const Orders& ord)
-{
+ostream& operator<<(ostream& ost, const Orders& ord) {
 	ord.describe(ost);
 	return ost;
-
 }
 void Orders::describe(std::ostream& output) const {
 	std::cout << "The describe From the order base class." << endl;
 }
 
 
-int* Orders::getOrderID() {
-	return &(Orders::orderID);
+int Orders::getOrderID() {
+	return this->orderID;
 }
 int Orders::getPlayerID() {
-	return Orders::playerID;
+	return this->playerID;
 }
 std::unique_ptr<string> Orders::describingMessage() {
 	std::unique_ptr<string> message = std::make_unique<string>("This is an empty order");
@@ -70,36 +62,59 @@ bool Orders::validate() {
 	return false;
 }
 
+std::string Orders::stringToLog() { return "Order Executed: "; };
+
+
+
+
+
+
+
 OrderList::OrderList() {
 	this->playerID = -1;
-	vector<Orders*> ordersInside(100);
 }
 OrderList::OrderList(int playerID) {
 	this->playerID = playerID;
-	vector<Orders*> ordersInside(100);
 }
 
 OrderList& OrderList::operator= (const OrderList& ordlist) {
 	if (this == &ordlist) {
 		return (OrderList&)ordlist;
 	}
-	this->playerID = *new int(ordlist.playerID);
-	this->ordersInside = *new vector<Orders*>(ordlist.ordersInside);
+	this->playerID = ordlist.playerID;
+	this->removeAll();
+	for (auto ord : ordlist.ordersInside) {
+		Orders *p = new Orders(*ord);
+		for (auto &obs : this->observers)
+			p->attach(obs);
+		this->ordersInside.push_back(p);
+	}
 	return *this;
-
 }
 OrderList::OrderList(const OrderList& ordlist) {
-	this->playerID = *new int(ordlist.playerID);
-	this->ordersInside = *new vector<Orders*>(ordlist.ordersInside);
+	this->playerID = ordlist.playerID;
+	this->removeAll();
+	for (auto ord : ordlist.ordersInside) {
+		Orders *p = new Orders(*ord);
+		for (auto &obs : this->observers)
+			p->attach(obs);
+		this->ordersInside.push_back(p);
+	}
+}
+OrderList::~OrderList() {
+	this->removeAll();
 }
 
-void OrderList::put(Orders* orderInsert) {
+void OrderList::addOrder(Orders* orderInsert) {
+	for (auto &obs : this->observers)
+		orderInsert->attach(obs);
 	ordersInside.push_back(orderInsert);
+	notify(this);
 }
 bool OrderList::move(int orderID, int indexmoving) {
 	int size = ordersInside.size();
 	for (int i = 0; i < size; ++i) {
-		if (*(ordersInside[i]->getOrderID()) == orderID) {
+		if (ordersInside[i]->getOrderID() == orderID) {
 			if (indexmoving == 0) {
 				//donothing
 				return true;
@@ -155,8 +170,11 @@ bool OrderList::move(int orderID, int indexmoving) {
 }
 bool OrderList::remove(int orderID) {
 	for (int i = 0; i < ordersInside.size(); ++i) {
-		if (*(ordersInside[i]->getOrderID()) == orderID) {
+		auto ord = this->ordersInside[i];
+		//if (*(ordersInside[i]->getOrderID()) == orderID) {
+		if (ord->getOrderID() == orderID) {
 			ordersInside.erase(std::next(ordersInside.begin(), i));
+			delete ord;
 			return true;
 		}
 	}//gothrough the list and remove the order if the input orderID match.
@@ -164,17 +182,17 @@ bool OrderList::remove(int orderID) {
 }
 
 void OrderList::removeAll() {
-	for (int i = 0; i < ordersInside.size(); ++i) {
-			ordersInside.clear();		
-	}
-
+	for (auto &ord : this->ordersInside)
+		delete ord;
+	ordersInside.clear();
 }
 
 
 void OrderList::displayAll() {
 	std::cout << "----- This is the orderlist hold by player with ID: " << this->playerID << "         -----" << endl;
 	for (Orders* orders : ordersInside) {
-		std::cout << ">>NO." << *(orders->getOrderID()) << " " << *(orders->describingMessage()) << endl;
+		if (!orders) continue;
+		std::cout << ">>NO." << orders->getOrderID() << " " << *(orders->describingMessage()) << endl;
 	}
 
 	std::cout << "There are: " << this->ordersInside.size() << " orders in list." << endl;
@@ -202,11 +220,18 @@ Orders* OrderList::popLast() {
 	//use a pointer save the order. then erase it.
 	ordersInside.pop_back();
 	return temp;
-
 }
-vector<Orders*>  OrderList::getAllOrders(){
+vector<Orders*> OrderList::getAllOrders(){
 	return ordersInside;
 }
+
+std::string OrderList::stringToLog() { return "Order Issued: "; };
+
+
+
+
+
+
 
 
 
@@ -215,7 +240,6 @@ DeployOrder::DeployOrder(int playerID, int numberOfArmies, Territory* targetTerr
 {
 	this->numberOfArmies = numberOfArmies;
 	this->targetTerritory = targetTerritory;
-	this->isDeployOrder = true;
 }
 
 DeployOrder& DeployOrder::operator= (const DeployOrder& ord) {
@@ -223,13 +247,13 @@ DeployOrder& DeployOrder::operator= (const DeployOrder& ord) {
 		return (DeployOrder&)ord;
 	}
 	Orders::operator=(ord);
-	this->numberOfArmies = *new int(ord.numberOfArmies);
+	this->numberOfArmies = ord.numberOfArmies;
 	this->targetTerritory = new Territory(*(ord.targetTerritory));
 	return *this;
 
 }
 DeployOrder::DeployOrder(const DeployOrder& ord) {
-	this->numberOfArmies = *new int(ord.numberOfArmies);
+	this->numberOfArmies = ord.numberOfArmies;
 	this->targetTerritory = new Territory(*(ord.targetTerritory));
 }
 
@@ -257,7 +281,8 @@ std::unique_ptr<string> DeployOrder::describingMessage() {
 }
 
 string DeployOrder::execute() {
-	if(!validate())return "ERROR";
+	notify(this);
+	if(!validate()) return "ERROR";
 
 
 	//TODO: this part leave for next assignment
@@ -282,7 +307,7 @@ AdvanceOrder& AdvanceOrder::operator= (const AdvanceOrder& ord) {
 		return (AdvanceOrder&)ord;
 	}
 	Orders::operator=(ord);
-	this->numberOfArmies = *new int(ord.numberOfArmies);
+	this->numberOfArmies = ord.numberOfArmies;
 	this->targetTerritory = new Territory(*(ord.targetTerritory));
 	this->fromTerritory = new Territory(*(ord.fromTerritory));
 	this->isAdjacent = new bool(isAdjacent);
@@ -290,7 +315,7 @@ AdvanceOrder& AdvanceOrder::operator= (const AdvanceOrder& ord) {
 
 }
 AdvanceOrder::AdvanceOrder(const AdvanceOrder& ord) {
-	this->numberOfArmies = *new int(ord.numberOfArmies);
+	this->numberOfArmies = ord.numberOfArmies;
 	this->targetTerritory = new Territory(*(ord.targetTerritory));
 	this->fromTerritory = new Territory(*(ord.fromTerritory));
 	this->isAdjacent = new bool(isAdjacent);
@@ -433,14 +458,14 @@ AirliftOrder& AirliftOrder::operator= (const AirliftOrder& ord) {
 		return (AirliftOrder&)ord;
 	}
 	Orders::operator=(ord);
-	this->numberOfArmies = *new int(ord.numberOfArmies);
+	this->numberOfArmies = ord.numberOfArmies;
 	this->targetTerritory = new Territory(*(ord.targetTerritory));
 	this->fromTerritory = new Territory(*(ord.fromTerritory));
 	return *this;
 
 }
 AirliftOrder::AirliftOrder(const AirliftOrder& ord) {
-	this->numberOfArmies = *new int(ord.numberOfArmies);
+	this->numberOfArmies = ord.numberOfArmies;
 	this->targetTerritory = new Territory(*(ord.targetTerritory));
 	this->fromTerritory = new Territory(*(ord.fromTerritory));
 }

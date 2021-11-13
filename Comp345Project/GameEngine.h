@@ -8,13 +8,18 @@
 #include "Orders.h"
 #include "Map.h"
 #include "Player.h"
+#include "LoggingObserver.h"
 
 using namespace std;
 
 class CommandProcessor;
-class GameEngine {
-
+class GameEngine: public ILoggable, public Subject {
 private:
+	void init();
+	void init(const GameEngine &);
+	void destory();
+	string stringToLog();
+	LogObserver* logger;
 
 	CommandProcessor* cmdProcessor;
 	Map* map;

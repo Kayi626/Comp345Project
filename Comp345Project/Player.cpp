@@ -24,11 +24,12 @@ Player::Player(int playerID, string playerName, vector<vector<Territory*>> *mapG
 	this->playerName = playerName;
 	this->mapGraph = mapGraph;
 
-	vector<Territory*> controlledTerritories(1000);
-	vector<Territory*> reachcableTerritories(1000);
+	this->controlledTerritories = vector<Territory*>(1000);
+	this->reachcableTerritories = vector<Territory*>(1000);
 
 	this->playerHandOfCards = new Hand();
 	this->playerOrderList = new OrderList(playerID);
+	//this->playerOrderList->attach()
 
 	this->update();
 	// asign correct values to ControlledTerritories and ReachcableTerritories.
@@ -38,28 +39,34 @@ Player& Player::operator= (const Player& p) {
 	if (this == &p) {
 		return (Player&)p;
 	}
-	this->playerID = *new int(p.playerID);
-	this->reinforcementpool = *new int(p.reinforcementpool);
-	this->hasEndThisIssueOrderTurn = *new bool(p.hasEndThisIssueOrderTurn);
-	this->playerName = *new string(p.playerName);
+	this->playerID = p.playerID;
+	this->reinforcementpool = p.reinforcementpool;
+	this->hasEndThisIssueOrderTurn = p.hasEndThisIssueOrderTurn;
+	this->playerName = string(p.playerName);
 	this->mapGraph = p.mapGraph;
-	this->controlledTerritories = *new vector<Territory*>(p.controlledTerritories);
-	this->reachcableTerritories = *new vector<Territory*>(p.reachcableTerritories);
+	this->controlledTerritories = vector<Territory*>(p.controlledTerritories);
+	this->reachcableTerritories = vector<Territory*>(p.reachcableTerritories);
 	this->playerHandOfCards = new Hand(*(p.playerHandOfCards));
 	this->playerOrderList = new OrderList(*(p.playerOrderList));
 	return *this;
 
 }
 Player::Player(const Player& p) {
-	this->playerID = *new int(p.playerID);
-	this->reinforcementpool = *new int(p.reinforcementpool);
-	this->hasEndThisIssueOrderTurn = *new bool(p.hasEndThisIssueOrderTurn);
-	this->playerName = *new string(p.playerName);
+	this->playerID = p.playerID;
+	this->reinforcementpool = p.reinforcementpool;
+	this->hasEndThisIssueOrderTurn = p.hasEndThisIssueOrderTurn;
+	this->playerName = string(p.playerName);
 	this->mapGraph = p.mapGraph;
-	this->controlledTerritories = *new vector<Territory*>(p.controlledTerritories);
-	this->reachcableTerritories = *new vector<Territory*>(p.reachcableTerritories);
+	this->controlledTerritories = vector<Territory*>(p.controlledTerritories);
+	this->reachcableTerritories = vector<Territory*>(p.reachcableTerritories);
 	this->playerHandOfCards = new Hand(*(p.playerHandOfCards));
 	this->playerOrderList = new OrderList(*(p.playerOrderList));
+}
+
+void Player::attachToPlayerOrderList(list<Observer*> &observers) {
+	for (auto obs : observers) {
+		this->playerOrderList->attach(obs);
+	}
 }
 
 //Stream Input Operator
@@ -116,7 +123,6 @@ void Player::addTerrtories(Territory* newTerritory) {
 }
 void Player::update() {
 
-
 	controlledTerritories.clear();
 	reachcableTerritories.clear();
 
@@ -156,7 +162,7 @@ void Player::printPlayerTerrtories() {
 	std::cout << "----- These are the Terrtories to be defended by player: " << this->playerName << " -----" << endl;
 	for (int i = 0; i < controlledTerritories.size();++i) {
 		Territory temp = *(controlledTerritories[i]);
-		std::cout << "ID: " <<temp.getCountryID()<< " Territory: " << temp.getName() << " have armies: " << temp.getArmyNumber() << endl;
+		std::cout << "ID: " << temp.getCountryID()<< " Territory: " << temp.getName() << " have armies: " << temp.getArmyNumber() << endl;
 	}
 	std::cout << "There are totally: " << this->controlledTerritories.size() << " captured by player." << endl;
 	std::cout << "----- These are the Terrtories to be attacked by player: " << this->playerName << " -----" << endl;
@@ -172,7 +178,7 @@ void Player::issueOrder(int type, Territory* targetTerritory, int numberOfArmies
 		case 0: {
 			//0 - DeployOrder, 3 args
 			Orders* order = new DeployOrder(this->getPlayerID(), numberOfArmies, targetTerritory);
-			this->getOrderList()->put(order);
+			this->playerOrderList->addOrder(order);
 			break;
 		}
 		case 1: {
@@ -198,7 +204,7 @@ void Player::issueOrder(int type, Territory* targetTerritory, int numberOfArmies
 
 			Orders* order = new AdvanceOrder(this->getPlayerID(), numberOfArmies, fromTerritory, targetTerritory,isAdjacent);
 
-			this->getOrderList()->put(order);
+			this->playerOrderList->addOrder(order);
 			break;
 		}
 		case 2: {
@@ -210,25 +216,25 @@ void Player::issueOrder(int type, Territory* targetTerritory, int numberOfArmies
 				}
 			}
 			Orders* order = new BombOrder(this->getPlayerID(),targetTerritory,isAdjacent);
-			this->getOrderList()->put(order);
+			this->playerOrderList->addOrder(order);
 			break;
 		}
 		case 3: {
 			//3 - BlockadeOrder, 2 args
 			Orders* order = new BlockadeOrder(this->getPlayerID(), targetTerritory);
-			this->getOrderList()->put(order);
+			this->playerOrderList->addOrder(order);
 			break;
 		}
 		case 4: {
 			//4 - AirliftOrder, 4 args
 			Orders* order = new AirliftOrder(this->getPlayerID(), numberOfArmies, fromTerritory, targetTerritory);
-			this->getOrderList()->put(order);
+			this->playerOrderList->addOrder(order);
 			break;
 		}
 		case 5: {
 			//5 - NegotiateOrder, 1 args
 			Orders* order = new NegotiateOrder(this->getPlayerID(), targetTerritory);
-			this->getOrderList()->put(order);
+			this->playerOrderList->addOrder(order);
 			break;
 		}
 	}
