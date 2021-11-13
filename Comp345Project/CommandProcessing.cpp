@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <list>
+#include <vector>
 #include <regex>
 using namespace std;
 
@@ -11,7 +12,6 @@ using namespace std;
 CommandProcessor::CommandProcessor() {
 	lc = list<Command*>();
 }
-
 
 CommandProcessor::CommandProcessor(const list<Command*>& lc) {
 	
@@ -47,21 +47,15 @@ CommandProcessor& CommandProcessor::operator =(const CommandProcessor& comP) {
 	return *this;
 }
 
-Command* CommandProcessor::getCommand() {
-	string input = readCommand();
-	Command* com = saveCommand(input);
-	return com;
-}
-
 ostream& operator<<(ostream& ost, const Command& com) {
 
-	ost << "Command: " << com.command << "; Effect: " << com.effect << endl;
+	ost << "Command: " << com.originCommand << "; Effect: " << com.effect << endl;
 	return ost;
 
 }
 ostream& operator<<(ostream& ost, const CommandProcessor& comP){
 	int counter = 1;
-	ost << endl <<comP.lc.front()->getCommand();
+	ost << endl <<comP.lc.front()->getOriginalCommand();
 	for (Command* com : comP.lc) {
 		ost << counter << ". " << *com << endl;
 	}
@@ -69,61 +63,71 @@ ostream& operator<<(ostream& ost, const CommandProcessor& comP){
 }
 
 //Validate the current command given a state and record the effect into the command object
-bool CommandProcessor::validate(Command& com, string state) {
+bool CommandProcessor::validate(Command& com, int state) {
 	bool status = true;
-	string input = com.getCommand();
-	CommandProcessor comP=CommandProcessor();
-	if (std::regex_match(input,std::regex("loadmap <(.*)>")) && (state.compare("start") == 0 || state.compare("maploaded") == 0)) {
-		com.saveEffect("maploaded: "+comP.extractName(com));
+	string FirstArg = (com.getArgs())[0];
+	switch (state)
+	{
+	case 1: {
+		return (FirstArg.compare("loadmap") == 0);
 	}
-	else if ((input.compare("validatemap")==0) && (state.compare("maploaded") == 0)) {
-		com.saveEffect("mapvalidated");
+	case 2: {
+		return (FirstArg.compare("loadmap") == 0 || FirstArg.compare("validatemap") == 0);
 	}
-	else if (std::regex_match(input, std::regex("addplayer <(.*)>")) && (state.compare("mapvalidated") == 0 || state.compare("playersadded") == 0)) {
-		com.saveEffect("playersadded: "+comP.extractName(com));
+	case 3: {
+		return (FirstArg.compare("addplayer") == 0 );
 	}
-	else if ((input.compare("gamestart") == 0) && (state.compare("playersadded") == 0)){
-		com.saveEffect("assignreinforcement");
+	case 4: {
+		return (FirstArg.compare("addplayer") == 0 || FirstArg.compare("start") == 0);
 	}
-	else if ((input.compare("replay") == 0) && (state.compare("win") == 0)) {
-		com.saveEffect("start");
+	case 6: {
+		return (FirstArg.compare("issueorder") == 0 || FirstArg.compare("endissueorder") == 0);
 	}
-	else if ((input.compare("quit") == 0) && (state.compare("win"))) {
-		com.saveEffect("exit program");
+	case 8: {
+		return (FirstArg.compare("replay") == 0 || FirstArg.compare("quit") == 0);
 	}
-	else {
-
-		string errorMessage = "Rejected: Command [ " + com.getCommand() + "] is invalid in State [ " + state + " ]";
-		com.saveEffect(errorMessage);
-		status = false;
+	default:
+		return false;
 	}
 
+
+	
 	return status;
 
 }
 
 //Used to extract the string in <>
-string CommandProcessor::extractName(Command& com) {
+// REMOVED when working on part2&3. 
 
-	const std::string s = com.getCommand();
-	//Two patterns(addplayer + loadmap). It will extract the substring from <>.
-	std::string string1 = "loadmap <";
-	std::string string2 = "addplayer <";
-	std::regex rgx("(" + string1 + "|" + string2 + ")(.*)>");
-	std::smatch match;
-
-	if (std::regex_search(s.begin(), s.end(), match, rgx))
-		return match[2];
-	else
-		return "";
-}
+//string CommandProcessor::extractName(Command& com) {
+//
+//	const std::string s = com.getOriginalCommand();
+//	//Two patterns(addplayer + loadmap). It will extract the substring from <>.
+//	std::string string1 = "loadmap <";
+//	std::string string2 = "addplayer <";
+//	std::regex rgx("(" + string1 + "|" + string2 + ")(.*)>");
+//	std::smatch match;
+//
+//	if (std::regex_search(s.begin(), s.end(), match, rgx))
+//		return match[2];
+//	else
+//		return "";
+//}
 
 void CommandProcessor::clearMemory() {
-
 	for (Command* com : lc) {
 		delete com;
 	}
 }
+
+
+Command* CommandProcessor::getCommand() {
+	string input = readCommand();
+	Command* com = saveCommand(input);
+	return com;
+}
+
+
 
 //*********************************************************************************
 
@@ -132,31 +136,63 @@ void Command::saveEffect(string effect) {
 	this->effect = effect;
 }
 Command::Command() {
-	command = "";
+	this->originCommand = "";
+	this->SaveStringCommandInToArgs("");
 	effect = "";
 }
 Command::Command(string com,string effect) {
-	command = com;
+	this->originCommand = com;
+	this->SaveStringCommandInToArgs(this->originCommand);
 	this->effect = effect;
 }
 Command::Command(const Command& com) {
-	this->command = com.command;
+	this->originCommand = com.originCommand;
+	this->SaveStringCommandInToArgs(this->originCommand);
 	this->effect = com.effect;
 }
 Command& Command::operator =(const Command& com) {
 	if (this == &com)
 		return *this;
     
-	this->command = com.command;
+	this->originCommand = com.originCommand;
+	this->SaveStringCommandInToArgs(this->originCommand);
 	this->effect = com.effect;
 
 	return *this;
 }
 
+void Command::SaveStringCommandInToArgs(const string& command) {
+	int findIndex,currentStartIndex = 0;
+	findIndex = command.find(" ");
+	if (findIndex == string::npos) {
+		//if there's no " " in command - which means it's a one argument command
+		args.push_back(command);
+	}
+	else {
+		bool notReachEnd = true;
+		while (notReachEnd) {
+			//if we find a " ", telling this command have mutliple lines.
+			args.push_back(command.substr(currentStartIndex, findIndex - currentStartIndex));
+			//push the first argument in. update the index counter.
+			currentStartIndex = findIndex + 1;
+			findIndex = command.find(" ", currentStartIndex);
+			//stop when reach the end - no more arguments will be added and stop.
+			if (findIndex == string::npos) notReachEnd = false;
+		}
+		args.push_back(command.substr(currentStartIndex, findIndex - currentStartIndex));
 
+	}
+	while (args.size() < 4) {
+		args.push_back("");
+		//add arguments to the vector and make sure the command have at least 4 arguments.
+	}
+}
 
-string Command::getCommand() {
-	return command;
+vector<string> Command::getArgs() {
+	return args;
+}
+string Command::getOriginalCommand() {
+	return originCommand;
 }
 
 string Command::getEffect() {
@@ -181,30 +217,36 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProces
 FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 }
 
-string FileCommandProcessorAdapter::readCommand() {
-	
-	return flr->readLineFromFile();
-
+Command* FileCommandProcessorAdapter::getCommand() {
+	return  saveCommand();
 }
 
 //It returns a command object with the command extracted from the saved file. If the flr object of FileCommandProcessorAdapter reaches 
 //the end of the file or the saved file is empty, it will return a nullptr.
 Command* FileCommandProcessorAdapter::saveCommand() {
 	string com = readCommand();
-	Command* tempCom =nullptr;
+	Command* tempCom = nullptr;
 	//No commands read from the . txt file
 	//Store the input strings in the command objects and push the objects into the list of commands
 	if (com.compare("") != 0) {
-		tempCom= new Command(com, "");
+		tempCom = new Command(com, "");
 		lc.push_back(tempCom);
 	}
 	return tempCom;
 }
 
-Command* FileCommandProcessorAdapter::getCommand() {
-	
-	return  saveCommand();
+string FileCommandProcessorAdapter::readCommand() {
+	string inputFromFile = flr->readLineFromFile();
+	if (inputFromFile.compare("")==0) {
+		//if there's no command line from the file - ask the user to enter command instead:
+		string input;
+		std:getline(std::cin, input);
+		return input;
+	}
+	return inputFromFile;
 }
+
+
 
 vector<string> FileCommandProcessorAdapter::readAllCommands() {
 	vector<string> vec(5);
@@ -256,6 +298,7 @@ string FileLineReader::readLineFromFile() {
 	//Read lines from the input file
 	if (!input.eof()) {
 		getline(input,line);
+		return line;
 	}
 
 	return line;

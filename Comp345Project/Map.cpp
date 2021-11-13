@@ -13,7 +13,7 @@ using namespace std;
 #pragma region MapLoader
 // read through provided address and collect corresponding data
 void MapLoader::mapReader(const string& mapName) {
-  std::cout << endl << "---Loading Map File---" << endl << endl;
+  //std::cout << endl << "---Loading Map File---" << endl << endl;
   mapPath = mapName;
   int lineFlag;
   string line;
@@ -21,7 +21,7 @@ void MapLoader::mapReader(const string& mapName) {
   mapFile.open(mapName.c_str(), ios::in);
 
   if (!mapFile.is_open()) {
-    std::cout << "Invalid MapFile: " << mapPath << " can not find!" << endl;
+    std::cout << "Invalid MapFile: " << mapPath << " can not find!!" << endl;
     exit(0);
   } else if (mapFile.peek() == EOF) {
     std::cout << "Invalid MapFile: there is nothing to read within " << mapPath
@@ -85,7 +85,7 @@ void MapLoader::mapReader(const string& mapName) {
     borderVec.push_back(borderLine);
   }
 
-  std::cout << endl << "---Map File Loaded---" << endl << endl;
+  //std::cout << endl << "---Map File Loaded---" << endl << endl;
 }
 
 // print loaded data
@@ -457,6 +457,15 @@ int Map::getCountryIndex(int ID) {
   }
   return index;
 }
+Territory* Map::getTerrtoryById(int IDInput) {
+    for (int x = 0; x < mapGraph.size(); x++) {
+        Territory temp = *(mapGraph[x][0]);
+        if (temp.getCountryID() == IDInput) {
+            return mapGraph[x][0];
+        }
+    }
+    return NULL;
+}
 // Helper function: help to iterate nodes of a graph in the depth-first
 // principle
 void Map::dfs(int i, vector<bool>& visited) {
@@ -633,17 +642,18 @@ bool Map::validate() {
   // are subgraphs(if they are subgraphs, they are connected as well). Third to
   // check if each country belongs to 1 continent
   bool stageCheck1 = is_connected();
+
   bool stageCheck2 = is_subgraphs();
   bool stageCheck3 = belongTo_OneContinent();
 
   // Dispay status info for each checkpoint
-  std::cout << "--------------Validating-------------------------" << endl << endl;
-  std::cout << "Map Graph is Connected: "
-       << static_cast<string>(((stageCheck1) ? "[true]" : "[false]")) << endl;
-  std::cout << "Continents are connected subrgaphs: "
-       << static_cast<string>(((stageCheck2 && stageCheck1) ? "[true]" : "[false]")) << endl;
-  std::cout << "Each country has oen continent: "
-       << static_cast<string>(((stageCheck3) ? "[true]" : "[false]")) << endl;
+  //std::cout << "--------------Validating-------------------------" << endl << endl;
+  //std::cout << "Map Graph is Connected: "
+  //     << static_cast<string>(((stageCheck1) ? "[true]" : "[false]")) << endl;
+  //std::cout << "Continents are connected subrgaphs: "
+  //     << static_cast<string>(((stageCheck2 && stageCheck1) ? "[true]" : "[false]")) << endl;
+  //std::cout << "Each country has oen continent: "
+  //     << static_cast<string>(((stageCheck3) ? "[true]" : "[false]")) << endl;
   return stageCheck1 && stageCheck2 && stageCheck3;
 }
 
@@ -794,13 +804,14 @@ Map* Map::mapCreater(string mapPath) {
     Territory* temp =
         new Territory(temp2[x][1], stoi(temp2[x][0]), stoi(temp2[x][2]),
                       stoi(temp2[x][3]), stoi(temp2[x][4]));
-    if (newMap->addCountry(temp))
-      std::cout << temp2[x][1] << " added " << endl;
-    else
-      std::cout << temp2[x][1]
-           << " NOT added, It might be because of duplicate territory ID's, "
-              "non-exsiting continent ID, and missing territory ID's"
-           << endl;
+    newMap->addCountry(temp);
+    //if (newMap->addCountry(temp))
+    //  std::cout << temp2[x][1] << " added " << endl;
+    //else
+    //  std::cout << temp2[x][1]
+    //       << " NOT added, It might be because of duplicate territory ID's, "
+    //          "non-exsiting continent ID, and missing territory ID's"
+    //       << endl;
   }
 
   // Fill the adjacency list
@@ -831,9 +842,8 @@ Map* Map::mapCreater(string mapPath) {
     }
   }
   if (edgeAdded) {
-    std::cout << endl << "---Edge added---" << endl << endl;
   } else {
-    cerr << endl << "Failed to add the edge" << endl << endl;
+    cerr << endl << "Failed to add the edge!" << endl << endl;
     delete newMap;
     newMap = NULL;
     exit(0);

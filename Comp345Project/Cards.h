@@ -39,7 +39,7 @@ class Card {
  private:
   // 0 for boomb, 1 for reinforcement, 2 for blockade, 3 for airlift, and 4 for
   // diplomacy
-  vector<string> vec_types_card = {"boomb", "reinforcement", "blockade", "airlift", "diplomacy"};
+  vector<string> vec_types_card = {"bomb", "reinforcement", "blockade", "airlift", "diplomacy"};
   // set for card type
   string* card_type;
 };
@@ -107,6 +107,9 @@ class Hand : public Card {
 
   // remove the a played card from hand_cards, for play() method
   void remove_played_card_of_hand_cards(Card* r_card);
+
+  // remove the a played card from hand_cards, for play() method
+  bool removeCardWithTypeID(string type);
 
   // clear play_cards after player played cards
   void clear_play_cards();
