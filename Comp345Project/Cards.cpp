@@ -162,7 +162,7 @@ void Hand::print_play_hand_card() {
 
 void Hand::print_vec_hand_cards() {
   if (vec_hand_cards.size() > 0) {
-    std::cout << ("The Hand cards have: ") << vec_hand_cards.size() << endl;
+      std::cout << "-----              There are: " << vec_hand_cards.size() << " cards in hand                 -----" << endl;
     for (int i = 0; i < vec_hand_cards.size(); i++) {
       std::cout << ("# ") << i << (" is ") << *vec_hand_cards.at(i)->get_card_type()
            << endl;
@@ -195,14 +195,25 @@ vector<Card*>* Hand::get_vec_hand_cards() { return &vec_hand_cards; }
 vector<Card*>* Hand::get_vec_play_cards() { return &vec_play_cards; }
 
 void Hand::remove_played_card_of_hand_cards(Card* r_card) {
-  // find the same cards and delete
-  for (int i = 0; i < vec_hand_cards.size(); i++) {
-    if (*vec_hand_cards.at(i)->get_card_type() == *r_card->get_card_type()) {
-      vec_hand_cards.erase(vec_hand_cards.begin() + i);
-      std::cout << ("Deleting the card: ") << *r_card->get_card_type() << endl;
-      return;
+    // find the same cards and delete
+    for (int i = 0; i < vec_hand_cards.size(); i++) {
+        if (*vec_hand_cards.at(i)->get_card_type() == *r_card->get_card_type()) {
+            vec_hand_cards.erase(vec_hand_cards.begin() + i);
+            std::cout << ("Deleting the card: ") << *r_card->get_card_type() << endl;
+            return;
+        }
     }
-  }
+}
+bool Hand::removeCardWithTypeID(string type) {
+    bool find = false;
+    // find the same cards and delete
+    for (int i = 0; i < vec_hand_cards.size(); i++) {
+        if (vec_hand_cards.at(i)->get_card_type()->compare(type) ==0 ) {
+            vec_hand_cards.erase(vec_hand_cards.begin() + i);
+            return true;
+        }
+    }
+    return find;
 }
 
 void Hand::clear_play_cards() {

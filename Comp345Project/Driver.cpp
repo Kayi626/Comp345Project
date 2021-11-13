@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 #pragma endregion Map
 #pragma region Player
 
-    // Map* newMap = Map::mapCreater("LOTR2.map"); // bigeurope.map, LOTR2.map
+    // Map* newMap = Map::mapCreater("../Comp345Project/LOTR2.map"); // bigeurope.map, LOTR2.map
     // if (!newMap->validate()) {
     //     std::cout << "ERROR: the map we are loading didn't pass the validate process." << "\n";
     //     return 0;
@@ -272,51 +272,75 @@ int main(int argc, char* argv[]) {
   //
 #pragma endregion Card
 #pragma region GameEngine
-    if (argc == 1) {
-        cout << "Error: No command line argument has been entered! The program exits." << endl << endl;
-        exit(0);
-    }
-    cout <<"Command Line Argument: "<<argv[1] << endl;
-    //Console inputs
-    if(std::regex_match(argv[1], std::regex("-console\\s*"))){
-        GameEngine* ge = new GameEngine();
-        CommandProcessor* comP = new CommandProcessor();
 
-        //GameLoop 
-        ge->gameFlow(*comP);
+    FileLineReader* flr = new FileLineReader("commands.txt");
+    FileCommandProcessorAdapter* fcomP = new FileCommandProcessorAdapter(flr);
+    GameEngine* ge = new GameEngine(fcomP,6,true);
+    //gameEngine的构造器参数：  FileLineReader【推荐FileCommandProcessorAdapter，可以直接用文本文档】
 
-        //De-allocation
-        delete ge;
-        delete comP;
-        ge = nullptr;
-        comP = nullptr;
-    }
-    //File inputs(Important: In command line argument, double quotes are needed in "-file <filename>".
-    else if(std::regex_match(argv[1], std::regex("-file\\s+<(.*)>"))) {
-        
-        GameEngine* ge = new GameEngine();
-        FileLineReader* flr = new FileLineReader(extractLineArgumentCommand(argv[1]));
-        FileCommandProcessorAdapter * fcomP = new FileCommandProcessorAdapter(flr);
+    //Game Loop (Important: If any invalid commands are received by the loop, it will prompt users to enter inputs by console)
+    ge->startup();
+
+    //De-allocation
+    delete ge;
+    delete fcomP;
+    delete flr;
+    ge = nullptr;
+    fcomP = nullptr;
+    flr = nullptr;
+
+
+
+
+
+
+
+
+    //if (argc == 1) {
+    //    cout << "Error: No command line argument has been entered! The program exits." << endl << endl;
+    //    exit(0);
+    //}
+    //cout <<"Command Line Argument: "<<argv[1] << endl;
+    ////Console inputs
+    //if(std::regex_match(argv[1], std::regex("-console\\s*"))){
+    //    GameEngine* ge = new GameEngine();
+    //    CommandProcessor* comP = new CommandProcessor();
+
+    //    //GameLoop 
+    //    ge->gameFlow(*comP);
+
+    //    //De-allocation
+    //    delete ge;
+    //    delete comP;
+    //    ge = nullptr;
+    //    comP = nullptr;
+    //}
+    ////File inputs(Important: In command line argument, double quotes are needed in "-file <filename>".
+    //else if(std::regex_match(argv[1], std::regex("-file\\s+<(.*)>"))) {
+    //    
+    //    GameEngine* ge = new GameEngine();
+    //    FileLineReader* flr = new FileLineReader(extractLineArgumentCommand(argv[1]));
+    //    FileCommandProcessorAdapter * fcomP = new FileCommandProcessorAdapter(flr);
  
-        
-        //Game Loop (Important: If any invalid commands are received by the loop, it will prompt users to enter inputs by console)
-        ge->gameFlow(*fcomP);
+    //    
+    //    //Game Loop (Important: If any invalid commands are received by the loop, it will prompt users to enter inputs by console)
+    //    ge->gameFlow(*fcomP);
 
-        //De-allocation
-        delete ge;
-        delete fcomP;
-        delete flr;
-        ge = nullptr;
-        fcomP = nullptr;
-        flr = nullptr;
-        
-        
-    }
+    //    //De-allocation
+    //    delete ge;
+    //    delete fcomP;
+    //    delete flr;
+    //    ge = nullptr;
+    //    fcomP = nullptr;
+    //    flr = nullptr;
+    //    
+    //    
+    //}
 
-    else {
-        cout << "Invalid Command Line Arguments. Please try again. The program exits" << endl;
-        exit(0);
-    }
+    //else {
+    //    cout << "Invalid Command Line Arguments. Please try again. The program exits" << endl;
+    //    exit(0);
+    //}
     
    
 #pragma endregion GameEngine

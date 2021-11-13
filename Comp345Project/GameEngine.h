@@ -2,6 +2,12 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include "Cards.h"
+#include "CommandProcessing.h"
+#include "Orders.h"
+#include "Map.h"
+#include "Player.h"
 
 using namespace std;
 
@@ -9,37 +15,70 @@ class CommandProcessor;
 class GameEngine {
 
 private:
-	bool start;
-	bool map_loaded;
-	bool map_validated;
-	bool players_added;
-	bool assign_reinforcement;
-	bool issue_orders;
-	bool execute_orders;
-	bool win;
 
+	CommandProcessor* cmdProcessor;
+	Map* map;
+	vector<Player*> playerList;
+	Deck* deck;
+
+	bool debugMode;
+	//default to be false; when switch to true, 
+	// - the game wont randomly seletct the first player.
+	bool isStartup; 
+	//the current game stage: on startup ,or on play stage
+	int currentStage;
+
+	/*
+	* currentStage - different value refers to different current stage.
+	* 0 - default
+	* 1 - start
+	* 2 - map loaded
+	* 3 - map validated
+	* 4 - players added
+	* 5 - assign reinforcement
+	* 6 - issue orders
+	* 7 - execute orders
+	* 8 - win
+	* -1 - check win condition
+	*/
+
+	int initialPlayerTerritoriesAmount;
+	void transition(int newState);
+	//change the state of the game
 public:
 	//constructors
 	GameEngine();
+	GameEngine(CommandProcessor* inputCmdProcessor, int iniTerrAmount,bool isDebugmode);
 	GameEngine(const GameEngine& ge);
 	//Assignment Operator
 	GameEngine& operator = (const GameEngine& ge);
 	//Stream Insertion Operator
 	friend ostream& operator << (ostream& ost, const GameEngine& ge);
 	~GameEngine();
-	//other class functions
-	void gameFlow(CommandProcessor& comP);
-	void reset();
-	void checkState(std::ostream& output) const;
 
+
+	void startup();
+	//start the startup phases.
+	void mainGameLoop(int startingPlayer);
+	//start the play phases.
+
+	void reinforcementPhase();
+	int issueOrderPhase(int startingPlayer);
+	void executreOrderPhase(int startingPlayer);
+
+
+	void reset();
+	//reset the variables and clear the memory.
+
+	int switchCurrentPlayer(int current);
+	//change to the next player, let him issue the order.
+
+
+	void showState(std::ostream& output) const;
+	void showState() ;
+	//shows the current stage the game is on.
 
 	//Accessors
-	bool getStart();
-	bool getMap_Loaded();
-	bool getMap_Validated();
-	bool getPlayers_Added();
-	bool getAssign_Reinforcement();
-	bool getIssue_Orders();
-	bool getExecute_Orders();
-	bool getWin();
+	int getCurrentGameStage();
+	bool getIsStartup();
 };

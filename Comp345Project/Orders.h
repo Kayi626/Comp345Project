@@ -33,6 +33,8 @@ class Orders {
 		//return an unique order id.
 		int getPlayerID();
 		//return the player'id who holds this order..
+
+		bool isDeployOrder;
 };
 
 class OrderList {
@@ -64,7 +66,8 @@ public:
 	Orders* popFirst();
 	Orders* popLast();
 	//popFirst & popLast: will remove the order from the list after return its pointer.
- 
+	vector<Orders*> getAllOrders();
+	//return ordersInside
 };
 
 class DeployOrder : public Orders {
