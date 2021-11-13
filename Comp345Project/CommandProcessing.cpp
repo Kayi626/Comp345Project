@@ -62,6 +62,26 @@ ostream& operator<<(ostream& ost, const CommandProcessor& comP){
 	return ost;
 }
 
+string CommandProcessor::readCommand() {
+	string input;
+std:getline(std::cin, input);
+	/*If the input is in the format of "-console commands", it will extract 'commands' automatically.
+	if (std::regex_match(input, std::regex("-console\\s+(.*)"))){
+		input = extractLineArgumentCommand(input);
+	}
+	//If the input in the format of "-file <filename>", it will do nothing(pass "-file <filename> " without extracting)*/
+	return input;
+}
+Command* CommandProcessor::saveCommand(string str) {
+	//Add the newly allocated command object into the list of command
+	Command* tempCom = new Command(str, "");
+	/*Check if the argument string is in the format of "-file <filename>"
+	if (std::regex_match(str, std::regex("-file\\s+<(.*)>"))) {
+		tempCom->saveEffect("FileCommand");
+	}*/
+	lc.push_back(tempCom);
+	return tempCom;
+}
 //Validate the current command given a state and record the effect into the command object
 bool CommandProcessor::validate(Command& com, int state) {
 	bool status = true;
@@ -198,6 +218,9 @@ string Command::getOriginalCommand() {
 string Command::getEffect() {
 	return effect;
 }
+
+
+
 //********************************************************************************
 
 
