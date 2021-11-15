@@ -10,23 +10,24 @@ using namespace std;
 
 //*******************************CommandProcessor***********************************
 CommandProcessor::CommandProcessor() {
-	lc = list<Command*>();
+	this->lc = list<Command*>();
+}
+
+void CommandProcessor::init(const list<Command *> &lc) {
+	for (Command *cmd : lc) {
+		Command *tempCom = new Command(*cmd);
+		for (auto obs : this->observers)
+			tempCom->attach(obs);
+		this->lc.push_back(tempCom);
+	}
 }
 
 CommandProcessor::CommandProcessor(const list<Command*>& lc) {
-	
-	for (list<Command*>::iterator it = this->lc.begin(); it != this->lc.end(); ++it) {
-		this->lc.push_back(new Command(**it));
-	}
+	this->init(lc);
 }
 
 CommandProcessor::CommandProcessor(const CommandProcessor& comP) {
-	list<Command*> tempL = comP.lc;
-	for (list<Command*>::iterator it = tempL.begin(); it != tempL.end(); ++it) {
-		Command* tempCom = new Command(**it);
-		lc.push_back(tempCom);
-	}
-	
+	this->init(comP.lc);
 }
 
 CommandProcessor::~CommandProcessor() {
@@ -38,12 +39,9 @@ CommandProcessor::~CommandProcessor() {
 CommandProcessor& CommandProcessor::operator =(const CommandProcessor& comP) {
 	if (this == &comP)
 		return *this;
-	list<Command*> tempL = comP.lc;
-	for (list<Command*>::iterator it = tempL.begin(); it != tempL.end(); ++it) {
-		Command* tempCom = new Command(**it);
-		lc.push_back(tempCom);
-	}
-
+	for (Command *cmd : this->lc) delete cmd;
+	this->lc.clear();
+	this->init(comP.lc);
 	return *this;
 }
 
@@ -74,7 +72,11 @@ std:getline(std::cin, input);
 }
 Command* CommandProcessor::saveCommand(string str) {
 	//Add the newly allocated command object into the list of command
+	if (str == "") return nullptr;
+	notify(this);
 	Command* tempCom = new Command(str, "");
+	for (auto obs : this->observers)
+		tempCom->attach(obs);
 	/*Check if the argument string is in the format of "-file <filename>"
 	if (std::regex_match(str, std::regex("-file\\s+<(.*)>"))) {
 		tempCom->saveEffect("FileCommand");
@@ -84,13 +86,10 @@ Command* CommandProcessor::saveCommand(string str) {
 }
 //Validate the current command given a state and record the effect into the command object
 bool CommandProcessor::validate(Command& com, int state) {
-	bool status = true;
 	string FirstArg = (com.getArgs())[0];
-	switch (state)
-	{
-	case 1: {
-		return (FirstArg.compare("loadmap") == 0);
-	}
+	switch (state) {
+	case 1:
+		return FirstArg == "loadmap";
 	case 2: {
 		return (FirstArg.compare("loadmap") == 0 || FirstArg.compare("validatemap") == 0);
 	}
@@ -109,11 +108,6 @@ bool CommandProcessor::validate(Command& com, int state) {
 	default:
 		return false;
 	}
-
-
-	
-	return status;
-
 }
 
 //Used to extract the string in <>
@@ -148,12 +142,15 @@ Command* CommandProcessor::getCommand() {
 }
 
 
+std::string CommandProcessor::stringToLog() { return "Command: "; };
+
 
 //*********************************************************************************
 
 //************************************Command**************************************
 void Command::saveEffect(string effect) {
 	this->effect = effect;
+	notify(this);
 }
 Command::Command() {
 	this->originCommand = "";
@@ -220,6 +217,7 @@ string Command::getEffect() {
 }
 
 
+std::string Command::stringToLog() { return "Command's Effect: "; };
 
 //********************************************************************************
 
@@ -248,14 +246,9 @@ Command* FileCommandProcessorAdapter::getCommand() {
 //the end of the file or the saved file is empty, it will return a nullptr.
 Command* FileCommandProcessorAdapter::saveCommand() {
 	string com = readCommand();
-	Command* tempCom = nullptr;
 	//No commands read from the . txt file
 	//Store the input strings in the command objects and push the objects into the list of commands
-	if (com.compare("") != 0) {
-		tempCom = new Command(com, "");
-		lc.push_back(tempCom);
-	}
-	return tempCom;
+	return this->CommandProcessor::saveCommand(com);
 }
 
 string FileCommandProcessorAdapter::readCommand() {
@@ -288,7 +281,10 @@ vector<string> FileCommandProcessorAdapter::readAllCommands() {
 list<Command*> FileCommandProcessorAdapter::saveAllCommands() {
 	vector<string> vec = readAllCommands();
 	for (string s : vec) {
-		lc.push_back(new Command(s,""));
+		Command *tempCom = new Command(s, "");
+		for (auto obs : this->observers)
+			tempCom->attach(obs);
+		lc.push_back(tempCom);
 	}
 	return lc;
 }

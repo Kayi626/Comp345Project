@@ -2,13 +2,15 @@
 
 #include <iostream>
 #include <cstring>
-#include<list>
-#include<vector>
+#include <list>
+#include <vector>
 #include <regex>
+
+#include "LoggingObserver.h"
 
 using namespace std;
 
-class Command {
+class Command: public ILoggable, public Subject {
 
 public:
 	
@@ -25,6 +27,7 @@ public:
 
 	string getEffect();
 	void saveEffect(string effect);
+	string stringToLog();
 private:
 	//variables to store command and effect info
 	vector<string> args;
@@ -34,10 +37,11 @@ private:
 	void SaveStringCommandInToArgs(const string& com);
 
 };
-class CommandProcessor {
+class CommandProcessor: public ILoggable, public Subject {
 
 public:
 	list<Command*> lc;
+	void init(const list<Command*> &);
 	CommandProcessor();
 	CommandProcessor(const list<Command*>& lc);
 	CommandProcessor(const CommandProcessor& comP);
@@ -49,6 +53,7 @@ public:
 
 	virtual Command* getCommand();
 	virtual bool validate(Command& com, int state);
+	string stringToLog();
 	/*	Commands & their available states: 
 	* 
 	*	[during startup]
@@ -69,7 +74,8 @@ public:
 
 private:
 	string readCommand();
-	Command* saveCommand(string str);
+protected:
+	virtual Command* saveCommand(string str);
 
 
 };

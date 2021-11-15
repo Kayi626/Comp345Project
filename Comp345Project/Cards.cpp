@@ -5,12 +5,12 @@ Card::Card()  = default;
 Card::~Card() {}
 
 Card::Card(const Card& card) {
-  this->vec_types_card = *new vector<string>(card.vec_types_card);
+  this->vec_types_card = vector<string>(card.vec_types_card);
   this->card_type = new string(*(card.card_type));
 }
 
 Card& Card::operator=(const Card& card) {
-  this->vec_types_card = *new vector<string>(card.vec_types_card);
+  this->vec_types_card = vector<string>(card.vec_types_card);
   this->card_type = new string(*(card.card_type));
   return *this;
 }
@@ -33,7 +33,8 @@ void Card::print_vec_card() {
 void Card::set_card_type_id(int id) { card_type = &vec_types_card.at(id); }
 
 Deck::Deck() {
-
+    pointer_card = nullptr;
+    temp_card = nullptr;
 }
 
 Deck::~Deck() {
@@ -44,13 +45,13 @@ Deck::~Deck() {
 }
 
 Deck::Deck(const Deck& deck) {
-  this->vec_deck = *new vector<Card*>(deck.vec_deck);
+  this->vec_deck = vector<Card*>(deck.vec_deck);
   this->pointer_card = new Card(*(deck.pointer_card));
   this->temp_card = new Card(*(deck.temp_card));
 }
 
 Deck& Deck::operator=(const Deck& deck) {
-  this->vec_deck = *new vector<Card*>(deck.vec_deck);
+  this->vec_deck = vector<Card*>(deck.vec_deck);
   this->pointer_card = new Card(*(deck.pointer_card));
   this->temp_card = new Card(*(deck.temp_card));
   return *this;
@@ -130,13 +131,13 @@ Hand::~Hand() {
 }
 
 Hand::Hand(const Hand& hand) {
-  this->vec_hand_cards = *new vector<Card*>(hand.vec_hand_cards);
-  this->vec_play_cards = *new vector<Card*>(hand.vec_play_cards);
+  this->vec_hand_cards = vector<Card*>(hand.vec_hand_cards);
+  this->vec_play_cards = vector<Card*>(hand.vec_play_cards);
 }
 
 Hand& Hand::operator=(const Hand& hand) {
-  this->vec_hand_cards = *new vector<Card*>(hand.vec_hand_cards);
-  this->vec_play_cards = *new vector<Card*>(hand.vec_play_cards);
+  this->vec_hand_cards = vector<Card*>(hand.vec_hand_cards);
+  this->vec_play_cards = vector<Card*>(hand.vec_play_cards);
   return *this;
 }
 

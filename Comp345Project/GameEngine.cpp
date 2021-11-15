@@ -11,10 +11,8 @@
 #include <iostream>
 using namespace std;
 
-
-
 //Constructor
-GameEngine::GameEngine() {
+void GameEngine::init() {
 	this->isStartup = true;
 	this->debugMode = false;
 	this->currentStage = 0;
@@ -23,52 +21,73 @@ GameEngine::GameEngine() {
 	this->deck = new Deck();
 	this->deck->original_vec_deck();
 	this->initialPlayerTerritoriesAmount = 4;
+	this->logger = new LogObserver();
+	this->attach(logger);
+	this->cmdProcessor->attach(this->logger);
 }
-GameEngine::GameEngine(CommandProcessor* inputCmdProcessor,int iniTerrAmount,bool isDebugMode) {
-	this->isStartup = true;
-	this->currentStage = 0;
-	this->debugMode = isDebugMode;
-	this->cmdProcessor = inputCmdProcessor;
-	this->map = new Map();
-	this->deck = new Deck();
-	this->deck->original_vec_deck();
-	this->initialPlayerTerritoriesAmount = iniTerrAmount;
-}
-
-GameEngine::GameEngine(const GameEngine& ge) {
-	this->isStartup = *new bool(ge.isStartup);
-	this->debugMode = *new bool(ge.debugMode);
-	this->currentStage = *new int(ge.currentStage);
-	this->initialPlayerTerritoriesAmount = *new int(ge.initialPlayerTerritoriesAmount);
+void GameEngine::init(const GameEngine &ge) {
+	this->isStartup = ge.isStartup;
+	this->debugMode = ge.debugMode;
+	this->currentStage = ge.currentStage;
+	this->initialPlayerTerritoriesAmount = ge.initialPlayerTerritoriesAmount;
 	this->cmdProcessor = new CommandProcessor(*(ge.cmdProcessor));
 	this->map = new Map(*(ge.map));
 	this->deck = new Deck(*(ge.deck));
-	this->playerList = ge.playerList;
+	for (auto &player : ge.playerList) {
+		Player *p = new Player(*player);
+		p->attachToPlayerOrderList(this->observers);
+		this->playerList.push_back(p);
+	}
+	this->logger = new LogObserver();
+	this->attach(logger);
+	this->cmdProcessor->attach(this->logger);
+}
+void GameEngine::destory() {
+	if (this->cmdProcessor && string(typeid(*this->cmdProcessor).name()) == "class CommandProcessor") {
+		delete this->cmdProcessor;
+		this->cmdProcessor = nullptr;
+	}
+	if (this->map) delete this->map;
+	if (this->deck) delete this->deck;
+	this->map = nullptr;
+	this->deck = nullptr;
+	for (int i = 0; i < playerList.size(); i++)
+		delete this->playerList[i];
+	this->playerList.clear();
+	if (this->logger) delete this->logger;
+	this->logger = nullptr;
+}
+GameEngine::GameEngine() {
+	this->init();
+}
+GameEngine::GameEngine(CommandProcessor* inputCmdProcessor,int iniTerrAmount,bool isDebugMode) {
+	this->init();
+	delete this->cmdProcessor;
+	this->cmdProcessor = inputCmdProcessor;
+	this->cmdProcessor->attach(this->logger);
+	this->initialPlayerTerritoriesAmount = iniTerrAmount;
+	this->debugMode = isDebugMode;
+}
+
+GameEngine::GameEngine(const GameEngine& ge) {
+	this->init(ge);
 }
 
 //Assignment Operator
 GameEngine& GameEngine::operator= (const GameEngine& ge) {
-	if (this == &ge) {
-		return *this;
-	}
-	this->isStartup = *new bool(ge.isStartup);
-	this->debugMode = *new bool(ge.debugMode);
-	this->currentStage = *new int(ge.currentStage);
-	this->initialPlayerTerritoriesAmount = *new int(ge.initialPlayerTerritoriesAmount);
-	this->cmdProcessor = new CommandProcessor(*(ge.cmdProcessor));
-	this->map = new Map(*(ge.map));
-	this->deck = new Deck(*(ge.deck));
-	this->playerList = ge.playerList;
-
+	if (this == &ge) return *this;
+	this->destory();
+	this->init(ge);
 	return *this;
 }
 
 //Destructor
 GameEngine::~GameEngine() {
-
+	this->destory();
 }
 
 //Other class functions
+std::string GameEngine::stringToLog() { return "Current Game State: "; };
 
 //Stream Insertion Operators
 ostream& operator << (ostream& ost, const GameEngine& ge) {
@@ -236,6 +255,7 @@ void GameEngine::startup() {
 			//map validated Phase
 			transition(4);
 			Player* p1 = new Player(playerCount, args[1], &connectedGraph);
+			p1->attachToPlayerOrderList(this->observers);
 			playerList.push_back(p1);
 			
 			playerCount++;
@@ -246,6 +266,7 @@ void GameEngine::startup() {
 			//players added Phase
 			if (args[0].compare("addplayer") == 0) {
 				Player* p1 = new Player(playerCount, args[1], &connectedGraph);
+				p1->attachToPlayerOrderList(this->observers);
 				playerList.push_back(p1);
 
 				playerCount++;
@@ -324,8 +345,7 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 	while (!isStartup) {
 		cout << "================================================================================¨[" << endl;
 		//check the current game state by a switch statement. displays the message refers to that stage.
-		switch (currentStage)
-		{
+		switch (currentStage) {
 		case 5:
 			showState();
 			//assign reinforcement Phase
@@ -377,8 +397,7 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 		}
 
 
-		switch (currentStage)
-		{
+		switch (currentStage) {
 		case 5: {
 			//assign reinforcement Phase
 			reinforcementPhase();
@@ -509,16 +528,16 @@ void GameEngine::reset() {
 	this->isStartup = true;
 	transition(0);
 
-	//delete cmdProcessor;
-	//cmdProcessor = nullptr;
+	if (string(typeid(*this->cmdProcessor).name()) == "class CommandProcessor") {
+		delete this->cmdProcessor;
+		this->cmdProcessor = nullptr;
+	}
 	delete map;
-	map = nullptr;
+	map = new Map();
+	// TODO: ??why don't we renew the deck? I'm just quite confused! 
 
 	for (int i = 0; i < playerList.size(); i++)
-	{
 		delete playerList[i];
-		playerList[i] = nullptr;
-	}
 	playerList.clear();
 }
 
@@ -711,13 +730,13 @@ void GameEngine::executreOrderPhase(int startingPlayer) {
 	int currentPlayer = startingPlayer;
 	//first execute all the deploy orders
 	for (int i = 0; i < playerList.size(); i++) {
-		for (int j = 0; j < playerList[i]->getOrderList()->getAllOrders().size(); j++)
-		{
-			if ((playerList[i]->getOrderList()->getAllOrders())[j]->isDeployOrder) {
-
-				(playerList[i]->getOrderList()->getAllOrders())[j]->execute();
-				int* targetOrderID = ((playerList[i]->getOrderList()->getAllOrders())[j]->getOrderID());
-				playerList[i]->getOrderList()->remove(*targetOrderID);
+		auto ol = playerList[i]->getOrderList();
+		auto cnmdb = ol->getAllOrders();
+		for (int j = 0; j < cnmdb.size(); j++) {
+			if (cnmdb[j] && "class DeployOrder" == string(typeid(*cnmdb[j]).name())) {
+				cnmdb[j]->execute();
+				int targetOrderID = cnmdb[j]->getOrderID();
+				ol->remove(targetOrderID);
 				//execute the deploy order we find and remove them from the list.
 			}
 		}
@@ -728,10 +747,13 @@ void GameEngine::executreOrderPhase(int startingPlayer) {
 	while (!isEmpty) {
 		isEmpty = true;
 		for (int i = 0; i < playerList.size(); i++) {
-			int size =( playerList[currentPlayer]->getOrderList()->getAllOrders().size());
+			auto ol = playerList[currentPlayer]->getOrderList();
+			int size = ol->getAllOrders().size();
 			if (size != 0) {
 				isEmpty = false;
-				playerList[currentPlayer]->getOrderList()->popLast()->execute();
+				auto ord = ol->popLast();
+				ord->execute();
+				delete ord;
 			}
 			currentPlayer = switchCurrentPlayer(currentPlayer);
 		}
@@ -743,4 +765,5 @@ void GameEngine::executreOrderPhase(int startingPlayer) {
 
 void GameEngine::transition(int newState) {
 	this->currentStage = newState;
+	notify(this);
 }
