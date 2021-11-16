@@ -13,9 +13,9 @@ CommandProcessor::CommandProcessor() {
 	this->lc = list<Command*>();
 }
 
-void CommandProcessor::init(const list<Command *> &lc) {
-	for (Command *cmd : lc) {
-		Command *tempCom = new Command(*cmd);
+void CommandProcessor::init(const list<Command*>& lc) {
+	for (Command* cmd : lc) {
+		Command* tempCom = new Command(*cmd);
 		for (auto obs : this->observers)
 			tempCom->attach(obs);
 		this->lc.push_back(tempCom);
@@ -31,7 +31,7 @@ CommandProcessor::CommandProcessor(const CommandProcessor& comP) {
 }
 
 CommandProcessor::~CommandProcessor() {
-	for (Command* element:lc) {
+	for (Command* element : lc) {
 		delete element;
 	}
 }
@@ -39,7 +39,7 @@ CommandProcessor::~CommandProcessor() {
 CommandProcessor& CommandProcessor::operator =(const CommandProcessor& comP) {
 	if (this == &comP)
 		return *this;
-	for (Command *cmd : this->lc) delete cmd;
+	for (Command* cmd : this->lc) delete cmd;
 	this->lc.clear();
 	this->init(comP.lc);
 	return *this;
@@ -51,9 +51,9 @@ ostream& operator<<(ostream& ost, const Command& com) {
 	return ost;
 
 }
-ostream& operator<<(ostream& ost, const CommandProcessor& comP){
+ostream& operator<<(ostream& ost, const CommandProcessor& comP) {
 	int counter = 1;
-	ost << endl <<comP.lc.front()->getOriginalCommand();
+	ost << endl << comP.lc.front()->getOriginalCommand();
 	for (Command* com : comP.lc) {
 		ost << counter << ". " << *com << endl;
 	}
@@ -94,13 +94,29 @@ bool CommandProcessor::validate(Command& com, int state) {
 		return (FirstArg.compare("loadmap") == 0 || FirstArg.compare("validatemap") == 0);
 	}
 	case 3: {
-		return (FirstArg.compare("addplayer") == 0 );
+		return (FirstArg.compare("addplayer") == 0);
 	}
 	case 4: {
 		return (FirstArg.compare("addplayer") == 0 || FirstArg.compare("start") == 0);
 	}
 	case 6: {
-		return (FirstArg.compare("issueorder") == 0 || FirstArg.compare("endissueorder") == 0);
+		if (FirstArg.compare("endissueorder") == 0) {
+			return true;
+		}
+		if (FirstArg.compare("issueorder") == 0) {
+			if (!isNumber((com.getArgs())[1]) || !isNumber((com.getArgs())[2])) return false;
+			if ((com.getArgs())[1].compare("2") != 0  || (com.getArgs())[1].compare("3") != 0){
+				//if this command is not blockedade order or bomb order, testing the 3nd argument
+				if (!isNumber((com.getArgs())[3])) return false;
+				if ((com.getArgs())[1].compare("0") != 0) {
+					//if this command is not a deploy order, testing the 4rd argument.
+					if (!isNumber((com.getArgs())[4])) return false;
+				}
+			}
+			return true;
+		}
+		return false;
+
 	}
 	case 8: {
 		return (FirstArg.compare("replay") == 0 || FirstArg.compare("quit") == 0);
@@ -109,6 +125,10 @@ bool CommandProcessor::validate(Command& com, int state) {
 		return false;
 	}
 }
+bool CommandProcessor::isNumber(string &input) {
+	return std::all_of(input.begin(), input.end(), ::isdigit); 
+}
+
 
 //Used to extract the string in <>
 // REMOVED when working on part2&3. 

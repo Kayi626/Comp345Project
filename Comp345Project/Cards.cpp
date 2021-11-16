@@ -91,7 +91,6 @@ void Deck::original_vec_deck() {
       }
     }
   }
-  std::cout << ("*** Deck cards have been initilized ***") << endl;
 }
 
 void Deck::print_vec_size_of_deck() {

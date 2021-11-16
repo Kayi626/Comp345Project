@@ -281,7 +281,7 @@ using namespace std;
 Territory::Territory(string countryName, int countryID,
                      int belongToWhichContinent, int x, int y) {
   Territory::ctrName = countryName;
-  Territory::armyNumber = 0;
+  Territory::armyNumber = 1;
   Territory::ctrID = (countryID < 0) ? abs(countryID) : countryID;
   Territory::contiBelong = (belongToWhichContinent < 0)
                                ? abs(belongToWhichContinent)

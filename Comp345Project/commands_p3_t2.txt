@@ -1,0 +1,16 @@
+loadmap smallMap.map
+validatemap
+addplayer Dash
+addplayer Lemon
+start
+endissueorder
+endissueorder
+issueorder 0 3 20
+endissueorder
+issueorder 0 4 20
+issueorder 1 1 10 4
+issueorder 1 2 10 3
+endissueorder
+issueorder 1 5 10 3
+issueorder 1 6 10 4
+endissueorder
