@@ -12,6 +12,29 @@
 
 using namespace std;
 
+
+GameEngine* GameEngine::GE_instance = 0;
+bool GameEngine::isDebugMode = false;
+bool GameEngine::useFileCommandProcessor = true;
+string GameEngine::fileLineReaderFilePath = "commands_p4_t1.txt";
+int GameEngine::defualtTerritoriesAmount = 2;
+
+GameEngine* GameEngine::instance() {
+	if (!GE_instance) {
+		if (useFileCommandProcessor) {
+			FileLineReader* flr = new FileLineReader(GameEngine::fileLineReaderFilePath);
+			FileCommandProcessorAdapter* fcomP = new FileCommandProcessorAdapter(flr);
+			GE_instance = new GameEngine(fcomP, GameEngine::defualtTerritoriesAmount, GameEngine::isDebugMode);
+		}
+		else {
+			CommandProcessor* comP = new CommandProcessor();
+			GE_instance = new GameEngine(comP, GameEngine::defualtTerritoriesAmount, GameEngine::isDebugMode);
+		}
+	}
+	return GE_instance;
+}
+
+
 //Constructor
 void GameEngine::init() {
 	this->isStartup = true;
@@ -38,6 +61,11 @@ void GameEngine::init(const GameEngine &ge) {
 		Player *p = new Player(*player);
 		p->attachToPlayerOrderList(this->observers);
 		this->playerList.push_back(p);
+	}
+	for (int x = 0; x < static_cast<int>(ge.negotiateOrderList.size()); x++) {
+		for (int y = 0; y < ge.negotiateOrderList[x].size(); y++) {
+			this->negotiateOrderList[x].push_back(ge.negotiateOrderList[x][y]);
+		}
 	}
 	this->logger = new LogObserver();
 	this->attach(logger);
@@ -265,6 +293,8 @@ void GameEngine::startup() {
 			else {
 				//dont need to varifly if the 1st argument is 'only validatemap/loadmap'. this process is dnoe in cmdProcessor.validte();
 				map = Map::mapCreater(args[1]);
+
+				
 				std::cout << "The map: " << args[1] << " is successfully loaded!" << endl;
 			}
 		}
@@ -309,7 +339,6 @@ void GameEngine::startup() {
 					//let each player draw 2 initial cards
 					p1->getHandsOfCard()->set_vec_hand_cards(deck->draw());
 					p1->getHandsOfCard()->set_vec_hand_cards(deck->draw());
-					p1->getHandsOfCard()->print_vec_hand_cards();
 
 					for (int i = 0; i < initialPlayerTerritoriesAmount; i++)
 					{
@@ -389,10 +418,11 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 				std::cout << "~=~ 2 - BombOrder, 2 args           ~=~ " << endl;
 				std::cout << "~=~ 3 - BlockadeOrder, 2 args       ~=~ " << endl;
 				std::cout << "~=~ 4 - AirliftOrder, 4 args        ~=~ " << endl;
-				std::cout << "~=~ 5 - NegotiateOrder, 3 args      ~=~ " << endl;
+				std::cout << "~=~ 5 - NegotiateOrder, 2 args      ~=~ " << endl;
 				std::cout << "1. enter \"issueorder <ordertype ID> [TargetTerrtoryID] [numberOfArmies] [FromTerrtoryID]\" " << endl;
 				std::cout << "to add an order into your order list " << endl;
 				std::cout << "2. enter \"endissueorder\" to stop your turns of order issueing" << endl;
+				std::cout << "You have: "<< playerList[startingPlayer] ->getEstimatePool()<<" Armies in your reinforcement pool! (estimate)" << endl;
 			}
 		}
 			break;
@@ -463,15 +493,27 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 			bool someoneWin = false;
 			string winPlayerName = "";
 			//check win Phase
-			for (int j = 0; j < playerList.size(); j++)
+			for (int j = playerList.size()-1; j >=0; j--)
 			{
 				bool controlledAll = true;
-				for (size_t i = 0; i < map->getContinentGraph().size(); i++)
+				bool stillControlSomeTerritory = false;
+				for (size_t i = 0; i < map->getMapGraph().size(); i++)
 				{
+
+					if (!stillControlSomeTerritory && ((map->getMapGraph())[i][0]->getcontrolledPlayerID() )== playerList[j]->getPlayerID()) {
+						//check if this player still controll any terrtories
+						stillControlSomeTerritory = true;
+					}
 					if ((map->getMapGraph())[i][0]->getcontrolledPlayerID() != playerList[j]->getPlayerID()) {
 						//if there's an territory that is not controlled by player 
 						controlledAll = false;
 					}
+				}
+				if (!stillControlSomeTerritory) {
+					//remove the player if he dont control any terrtories.
+					cout << "Player: " << playerList[j] ->getName()<<" has been removed since he dont control any terrtories anymore!" << endl;
+					removePlayerFromPlayerList(playerList[j]->getPlayerID());
+					startingPlayer = switchCurrentPlayer(startingPlayer);
 				}
 				if (controlledAll) {
 					someoneWin = true;
@@ -541,6 +583,75 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 
 }
 
+void GameEngine::setPlayerConquered(int fromPlayerID) {
+	for (int i = 0; i < this->playerList.size(); i++)
+	{
+		if ((this->playerList)[i]->getPlayerID() == fromPlayerID) {
+			(this->playerList)[i]->setConqueredInThisTurn(true);
+		}
+
+	}
+
+}
+
+bool GameEngine::checkPlayerPool(int playerID, int amount) {
+	for (int i = 0; i < this->playerList.size(); i++)
+	{
+		if ((this->playerList)[i]->getPlayerID() == playerID) {
+			if ((this->playerList)[i]->getReinforcementpool() < amount) {
+				return false;
+			}
+			return true;
+		}
+
+	}
+	return false;
+}
+void GameEngine::subtractPlayerPool(int playerID, int amount) {
+	for (int i = 0; i < this->playerList.size(); i++)
+	{
+		if ((this->playerList)[i]->getPlayerID() == playerID) {
+			if ((this->playerList)[i]->getReinforcementpool() < amount) {
+				return;
+			}
+			(this->playerList)[i]->setReinforcementpool((this->playerList)[i]->getReinforcementpool()  -amount);
+		}
+
+	}
+}
+
+void GameEngine::addToNegotiateOrderList(int fromPlayerID, int toPlayerID) {
+	vector<int> newOrder;
+	newOrder.push_back(fromPlayerID);
+	newOrder.push_back(toPlayerID);
+	this->negotiateOrderList.push_back(newOrder);
+}
+bool GameEngine::checkNegotiateOrderList(int fromPlayerID, int toPlayerID) {
+	for (int i = 0; i < this->negotiateOrderList.size(); i++)
+	{
+		cout << "DEBUGGGGGGGGGGGGGGGG------------------------------------------------------------------------------------------------" << (this->negotiateOrderList)[i][0] << endl;
+		cout << "DEBUGGGGGGGGGGGGGGGG-------------------------------------------------+++-----------------------------------------------" << (this->negotiateOrderList)[i][1] << endl;
+		cout << "DEBUGGGGGGGGGGGGGGGG-------------------------------------------------+++-----------------------------------------------" << fromPlayerID << endl;
+		cout << "DEBUGGGGGGGGGGGGGGGG-------------------------------------------------+++-----------------------------------------------" << toPlayerID << endl;
+		if ((this->negotiateOrderList)[i][0] == fromPlayerID && (this->negotiateOrderList)[i][1] == toPlayerID) return true;
+		if ((this->negotiateOrderList)[i][1] == fromPlayerID && (this->negotiateOrderList)[i][0] == toPlayerID) return true;
+	}
+	return false;
+}
+
+void GameEngine::removePlayerFromPlayerList(int playerID) {
+
+	for (int i = 0; i < this->playerList.size(); i++)
+	{
+		if ((this->playerList)[i]->getPlayerID() == playerID) {
+			auto player = (this->playerList)[i];
+			playerList.erase(std::next(playerList.begin(), i));
+			delete player;
+			return;
+		}
+
+	}
+}
 //Reset state status
 void GameEngine::reset() {
 	this->isStartup = true;
@@ -552,7 +663,8 @@ void GameEngine::reset() {
 	}
 	delete map;
 	map = new Map();
-	// TODO: ??why don't we renew the deck? I'm just quite confused! 
+	delete deck;
+	deck = new Deck();
 
 	for (int i = 0; i < playerList.size(); i++)
 		delete playerList[i];
@@ -562,9 +674,10 @@ void GameEngine::reset() {
 int GameEngine::switchCurrentPlayer(int current) {
 	int size = playerList.size();
 	int result = current + 1;
-	if (result == size) {
+	if (result >= size) {
 		result = 0;
 	}
+
 	return result;
 
 }
@@ -608,6 +721,7 @@ void GameEngine::reinforcementPhase() {
 		}
 		cout << "Player:  " << playerList[i]->getName() << " received a reinforcement of:  " << amount << " armies! " << endl;
 		playerList[i]->addReinforcementpool(amount);
+		playerList[i]->updateEstimatePool();
 
 	}
 	transition(6);
@@ -646,6 +760,7 @@ int GameEngine::issueOrderPhase(int startingPlayer) {
 				map->getTerrtoryById(atoi(args[2].c_str())),
 				atoi(args[3].c_str()),
 				NULL);
+			playerList[startingPlayer]->substractEstimatePool(atoi(args[3].c_str()));
 			cout << "You successfully placed an order!  " << endl;
 			theCurrentPlayer = switchCurrentPlayer(startingPlayer);
 		}
@@ -776,6 +891,21 @@ void GameEngine::executreOrderPhase(int startingPlayer) {
 			currentPlayer = switchCurrentPlayer(currentPlayer);
 		}
 	}
+
+	//one card is given to a player if they conquer at least one territory in a turn
+
+	for (int i = 0; i < this->playerList.size(); i++)
+	{
+		if ((this->playerList)[i]->checkAndResetConqueredInThisTurn()) {
+			Player* p1 = ((this->playerList)[i]);
+			//let player draw 1 cards
+			p1->getHandsOfCard()->set_vec_hand_cards(deck->draw());
+
+			cout << "Player: " <<p1->getName()<<" Conquered a terrtorie this turn. He received a card as boost!" << endl;
+		}
+
+	}
+
 	transition(-1);
 }
 

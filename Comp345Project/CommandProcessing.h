@@ -53,6 +53,7 @@ public:
 
 	virtual Command* getCommand();
 	virtual bool validate(Command& com, int state);
+	bool isNumber(string &input);
 	string stringToLog();
 	/*	Commands & their available states: 
 	* 

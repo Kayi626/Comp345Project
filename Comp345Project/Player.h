@@ -21,6 +21,9 @@ private:
 
 	bool hasEndThisIssueOrderTurn;
 	int reinforcementpool;
+	bool conqueredInThisTurn;
+	int estimatePool;
+	//this is use to showing player how many armies he have during issue order phase.
 	int playerID;
 	string playerName;
 	vector<vector<Territory*>>* mapGraph;
@@ -56,12 +59,22 @@ public:
 	
 
 	 //Mutators
+	bool checkAndResetConqueredInThisTurn();
+	void setConqueredInThisTurn(bool input);
+
 	void sethasEndThisIssueOrderTurn(bool input);
 	bool gethasEndThisIssueOrderTurn();
 
 	void addReinforcementpool(int amount);
 	void setReinforcementpool(int amount);
 	int getReinforcementpool();
+
+	int getEstimatePool();
+	void setEstimatePool(int amount);
+	void substractEstimatePool(int amount);
+	void updateEstimatePool();
+	//will set the estimatePool equals to reinforcementpool
+
 	void setName(string playerName);
 	void setPlayerID(int newPlayerID);
 	void addTerrtories(Territory* newTerritory);
@@ -81,7 +94,7 @@ public:
 	* 2-BombOrder, 2 args
 	* 3-BlockadeOrder, 2 args
 	* 4-AirliftOrder, 4 args
-	* 5-NegotiateOrder, 4 args : when selecting target player, just let the player select one of his territory.
+	* 5-NegotiateOrder, 2 args : when selecting target player, just let the player select one of his territory.
 	* 
 	* all 4 arg is required for every kinds of order. BUT if an order only requires 3 or less argument, the arguments left behind can be whatever.
 	* e.g. Bomborder - 3rd arg'number of armies' can be any integer. 4th argument 'from territory' can be any territory, you can just simply put the 2nd argument inside. it won't have any effect.

@@ -1,0 +1,18 @@
+loadmap LOTR2.map
+loadmap bigeurope.map
+loadmap LOTR2.map
+validatemap
+addplayer Dash
+addplayer Jone
+addplayer Lemon
+addplayer Rick
+addplayer Nestea
+start
+endissueorder
+endissueorder
+endissueorder
+issueorder 0 19 2 0
+endissueorder
+endissueorder
+
+

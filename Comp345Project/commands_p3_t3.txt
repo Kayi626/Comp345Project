@@ -1,0 +1,5 @@
+loadmap smallMap.map
+validatemap
+addplayer Dash
+addplayer Lemon
+start
