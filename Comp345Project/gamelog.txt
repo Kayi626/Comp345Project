@@ -1,41 +1,46 @@
-Current Game State: 
-Command: 
-Current Game State: 
-Command: 
-Command: 
-Command: 
-Current Game State: 
-Command: 
-Current Game State: 
-Command: 
-Command: 
-Command: 
-Command: 
-Command: 
-Current Game State: 
-Current Game State: 
-Command: 
-Command: 
-Command: 
-Command: 
-Order Issued: 
-Command: 
-Command: 
-Order Issued: 
-Command: 
-Order Issued: 
-Command: 
-Order Issued: 
-Command: 
-Order Issued: 
-Command: 
-Order Issued: 
-Command: 
-Order Issued: 
-Command: 
-Current Game State: 
-Order Executed: 
-Order Executed: 
-Current Game State: 
-Current Game State: 
-Current Game State: 
+Current Game State: [start]
+Command: [loadmap LOTR2.map]
+Current Game State: [map loaded]
+Command: [loadmap bigeurope.map]
+Command: [loadmap LOTR2.map]
+Command: [validatemap]
+Current Game State: [map validated]
+Command: [addplayer Dash]
+Current Game State: [players added]
+Command: [addplayer Jone]
+Command: [addplayer King]
+Command: [addplayer dude]
+Command: [addplayer what]
+Command: [start]
+Current Game State: [assign reinforcement]
+Current Game State: [issue orders]
+Command: [endissueorder]
+Command: [endissueorder]
+Command: [endissueorder]
+Command: [issueorder 0 19 2 0]
+Order Issued: [DeployOrder]
+Command: [endissueorder]
+Command: [issueorder 0 20 17 23333223235]
+Order Issued: [DeployOrder]
+Command: [issueorder 1 23 17 29]
+Order Issued: [AdvanceOrder]
+Command: [issueorder 2 12 2323232 232323]
+Order Issued: [BombOrder]
+Command: [issueorder 3 20 2323232 232323]
+Order Issued: [BlockadeOrder]
+Command: [issueorder 4 20 2 29]
+Order Issued: [AirliftOrder]
+Command: [issueorder 5 20 223232 29]
+Order Issued: [NegotiateOrder]
+Command: [endissueorder]
+Current Game State: [execute orders]
+Order Executed: [1][DeployOrder]
+Order Executed: [2][DeployOrder]
+Order Executed: [7][NegotiateOrder]
+Order Executed: [6][AirliftOrder]
+Order Executed: [5][BlockadeOrder]
+Order Executed: [4][BombOrder]
+Order Executed: [3][AdvanceOrder]
+Current Game State: [check win condition]
+Current Game State: [assign reinforcement]
+Current Game State: [issue orders]

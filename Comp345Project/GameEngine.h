@@ -25,6 +25,7 @@ private:
 	Map* map;
 	vector<Player*> playerList;
 	Deck* deck;
+	string stageToString(int b);
 
 	bool debugMode;
 	//default to be false; when switch to true, 
