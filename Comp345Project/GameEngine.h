@@ -13,8 +13,13 @@
 using namespace std;
 
 class CommandProcessor;
+
 class GameEngine: public ILoggable, public Subject {
 private:
+
+	static GameEngine* GE_instance;
+	//using Singleton class design pettern.
+
 	void init();
 	void init(const GameEngine &);
 	void destory();
@@ -25,6 +30,7 @@ private:
 	Map* map;
 	vector<Player*> playerList;
 	Deck* deck;
+	vector<vector<int>> negotiateOrderList;
 
 	bool debugMode;
 	//default to be false; when switch to true, 
@@ -62,6 +68,12 @@ public:
 	~GameEngine();
 
 
+	static GameEngine* instance();
+	static bool isDebugMode;
+	static string fileLineReaderFilePath;
+	static int defualtTerritoriesAmount;
+	static bool useFileCommandProcessor;
+
 	void startup();
 	//start the startup phases.
 	void mainGameLoop(int startingPlayer);
@@ -71,7 +83,14 @@ public:
 	int issueOrderPhase(int startingPlayer);
 	void executreOrderPhase(int startingPlayer);
 
-
+	void subtractPlayerPool(int playerID, int amount);
+	//subtract some amount of armies from target player's reinforcementpool.
+	bool checkPlayerPool(int playerID, int amount);
+	//if this player does't exist or he don't have enough armies, will return false.
+	void addToNegotiateOrderList(int fromPlayerID, int toPlayerID);
+	bool checkNegotiateOrderList(int fromPlayerID, int toPlayerID);
+	void setPlayerConquered(int fromPlayerID);
+	void removePlayerFromPlayerList(int playerID);
 	void reset();
 	//reset the variables and clear the memory.
 

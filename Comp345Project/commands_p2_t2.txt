@@ -1,0 +1,16 @@
+lp LOTR2.map
+loadmap LOTR2.map
+valip
+validatemap
+addplayer Lemon
+addddddddddddddddddddddddddplayer InvesrdPla
+addplayer Nestea
+wewefdsd sdjsah kdh  sdshdhsj sd sad sajd h sajd 
+startwe 1 we we1  we we we we wew 2 2 
+addplayer Juice
+start
+endissueorder
+endissueorder
+
+
+

@@ -14,12 +14,16 @@ Player::Player() {
 	this->playerID = -1;
 	this->playerName = "NONAME";
 	this->reinforcementpool = 30;
+	this->conqueredInThisTurn = false;
+	this->estimatePool = 30;
 	this->hasEndThisIssueOrderTurn = false;
 	this->playerHandOfCards = new Hand();
 }
 Player::Player(int playerID, string playerName, vector<vector<Territory*>> *mapGraph) {
 	this->playerID = playerID;
 	this->reinforcementpool = 30;
+	this->estimatePool = 30;
+	this->conqueredInThisTurn = false;
 	this->hasEndThisIssueOrderTurn = false;
 	this->playerName = playerName;
 	this->mapGraph = mapGraph;
@@ -41,6 +45,8 @@ Player& Player::operator= (const Player& p) {
 	}
 	this->playerID = p.playerID;
 	this->reinforcementpool = p.reinforcementpool;
+	this->estimatePool = p.estimatePool;
+	this->conqueredInThisTurn = p.conqueredInThisTurn;
 	this->hasEndThisIssueOrderTurn = p.hasEndThisIssueOrderTurn;
 	this->playerName = string(p.playerName);
 	this->mapGraph = p.mapGraph;
@@ -54,6 +60,8 @@ Player& Player::operator= (const Player& p) {
 Player::Player(const Player& p) {
 	this->playerID = p.playerID;
 	this->reinforcementpool = p.reinforcementpool;
+	this->conqueredInThisTurn = p.conqueredInThisTurn;
+	this->estimatePool = p.estimatePool;
 	this->hasEndThisIssueOrderTurn = p.hasEndThisIssueOrderTurn;
 	this->playerName = string(p.playerName);
 	this->mapGraph = p.mapGraph;
@@ -95,6 +103,14 @@ vector<Territory*> Player::toAttack() {
 }
 
 
+bool Player::checkAndResetConqueredInThisTurn() {
+	bool temp = this->conqueredInThisTurn;
+	this->conqueredInThisTurn = false;
+	return temp;
+}
+void Player::setConqueredInThisTurn(bool input) {
+	this->conqueredInThisTurn = input;
+}
 bool Player::gethasEndThisIssueOrderTurn() {
 	return this->hasEndThisIssueOrderTurn;
 }
@@ -103,6 +119,7 @@ void Player::sethasEndThisIssueOrderTurn(bool input) {
 }
 void Player::addReinforcementpool(int amount) {
 	this->reinforcementpool += amount;
+
 }
 void Player::setReinforcementpool(int amount) {
 	this->reinforcementpool = amount;
@@ -110,6 +127,21 @@ void Player::setReinforcementpool(int amount) {
 int Player::getReinforcementpool() {
 	return this->reinforcementpool;
 }
+
+
+int Player::getEstimatePool() {
+	return this->estimatePool;
+}
+void Player::setEstimatePool(int amount) {
+	this->estimatePool = amount;
+}
+void Player::substractEstimatePool(int amount) {
+	this->estimatePool = this->estimatePool - amount;
+}
+void Player::updateEstimatePool() {
+	this->estimatePool = this->reinforcementpool;
+}
+
 void Player::setName(string playerName) {
 	this->playerName = playerName;
 }

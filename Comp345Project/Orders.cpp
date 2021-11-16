@@ -2,8 +2,10 @@
 #include <vector>
 #include <cstring>
 #include <string>
+#include <random>
 #include "Orders.h"
 #include "Map.h"
+#include "GameEngine.h"
 
 using namespace std;
 
@@ -282,15 +284,43 @@ std::unique_ptr<string> DeployOrder::describingMessage() {
 
 string DeployOrder::execute() {
 	notify(this);
-	if(!validate()) return "ERROR";
+	if (!validate()) {
+		string temp1 = "[Order Failed]Deploy Order: ";
+		string temp2 = to_string(this->getOrderID());
+		string temp3 = " from player: ";
+		string temp4 = to_string(this->getPlayerID());
+		string temp5 = " didn't execute! ";
+		temp1.append(temp2);
+		temp1.append(temp3);
+		temp1.append(temp4);
+		temp1.append(temp5);
+		temp1.append(this->targetTerritory->getName());
+		cout << temp1 << endl;
+		return temp1;
+	} 
+
+	GameEngine::instance()->subtractPlayerPool(this->getPlayerID(),this->numberOfArmies);
+	this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber()) + this->numberOfArmies);
 
 
-	//TODO: this part leave for next assignment
-	//REMINDER: will need to return the effect of the order after execute.
-	return "You have successfuly deployed some armies.";
+
+	string temp1 = "[Order Executed]Player: ";
+	string temp2 = to_string(this->getPlayerID());
+	string temp3 = " deployed ";
+	string temp4 = to_string(this->numberOfArmies);
+	string temp5 = " armies on terrtire: ";
+	temp1.append(temp2);
+	temp1.append(temp3);
+	temp1.append(temp4);
+	temp1.append(temp5);
+	temp1.append(this->targetTerritory->getName());
+
+	cout << temp1 << endl;
+	return temp1;
 }
 bool DeployOrder::validate() {
-	return (this->getPlayerID() == targetTerritory->getcontrolledPlayerID());
+	bool haveEnoughArmies = GameEngine::instance()->checkPlayerPool(this->getPlayerID(), this->numberOfArmies);
+	return (  (this->getPlayerID() == targetTerritory->getcontrolledPlayerID())      && haveEnoughArmies);
 }
 
 AdvanceOrder::AdvanceOrder(int playerID, int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory, bool isAdjacent)
@@ -348,20 +378,134 @@ std::unique_ptr<string> AdvanceOrder::describingMessage() {
 }
 
 string AdvanceOrder::execute() {
-	if (!validate())return "ERROR";
-	//TODO: this part leave for next assignment
-	//REMINDER: will need to return the effect of the order after execute.
-	return "You have successfuly moved some army.";
+	if (!validate()) {
+		string temp1 = "[Order Failed]Advance Order: ";
+		string temp2 = to_string(this->getOrderID());
+		string temp3 = " from player: ";
+		string temp4 = to_string(this->getPlayerID());
+		string temp5 = " didn't execute! ";
+		temp1.append(temp2);
+		temp1.append(temp3);
+		temp1.append(temp4);
+		temp1.append(temp5);
+		temp1.append(this->targetTerritory->getName());
+		cout << temp1 << endl;
+		return temp1;
+	}
+	
+
+	//this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber()) + this->numberOfArmies);
+
+	if (targetTerritory->getcontrolledPlayerID() == fromTerritory->getcontrolledPlayerID()) {
+		//if there's no battle between to terrtories
+		this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber()) + numberOfArmies);
+		this->fromTerritory->setArmyNumber((this->fromTerritory->getArmyNumber()) - numberOfArmies);
+
+		string temp1 = "[Order Executed]Player: ";
+		string temp2 = to_string(this->getPlayerID());
+		string temp3 = " advanced ";
+		string temp4 = to_string(this->numberOfArmies);
+		string temp5 = " armies from terrtire: ";
+		string temp6 = this->fromTerritory->getName();
+		string temp7 = " to terrtire: ";
+		temp1.append(temp2);
+		temp1.append(temp3);
+		temp1.append(temp4);
+		temp1.append(temp5);
+		temp1.append(temp6);
+		temp1.append(temp7);
+		temp1.append(this->targetTerritory->getName());
+
+		cout << temp1 << endl;
+		return temp1;
+	}
+	else {
+		//simulate the attack between terrtories:
+		bool battle = true;
+		int currentRemainingArmies = numberOfArmies;
+		int randomNumber = 0;
+		while (battle) {
+			currentRemainingArmies - 1;
+
+			std::srand(std::time(nullptr));
+			randomNumber = rand() % 10;
+			//can be 0,1,2,3,4,5,6,7,8,9
+			if (randomNumber < 6) {
+				//attacking unit killing one defending army
+				this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber()) - 1);
+			}
+			if (this->targetTerritory->getArmyNumber() > 0) {
+				this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber()) - 1);
+				std::srand(std::time(nullptr));
+				randomNumber = rand() % 10;
+				if (randomNumber < 7) {
+					//defending unit killing one attacking army
+					currentRemainingArmies - 1;
+				}
+			}
+			if (currentRemainingArmies < 1) battle = false;
+			if (this->targetTerritory->getArmyNumber() < 1) battle = false;
+		}
+		if (this->targetTerritory->getArmyNumber() == 0) {
+			//attacker win the battle
+			this->targetTerritory->setControlledPlayerID(this->getPlayerID());
+			this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber()) + currentRemainingArmies);
+
+			GameEngine::instance()->setPlayerConquered(this->getPlayerID());
+
+			string temp1 = "[Order Executed]Player: ";
+			string temp2 = to_string(this->getPlayerID());
+			string temp3 = " advanced ";
+			string temp4 = to_string(this->numberOfArmies);
+			string temp5 = " armies from terrtire: ";
+			string temp6 = this->fromTerritory->getName();
+			string temp7 = " , and succesfully conquered terrtory: ";
+			temp1.append(temp2);
+			temp1.append(temp3);
+			temp1.append(temp4);
+			temp1.append(temp5);
+			temp1.append(temp6);
+			temp1.append(temp7);
+			temp1.append(this->targetTerritory->getName());
+
+			cout << temp1 << endl;
+			return temp1;
+		}
+		else {
+
+			string temp1 = "[Order Executed]Player: ";
+			string temp2 = to_string(this->getPlayerID());
+			string temp3 = " advanced ";
+			string temp4 = to_string(this->numberOfArmies);
+			string temp5 = " armies from terrtire: ";
+			string temp6 = this->fromTerritory->getName();
+			string temp7 = " , and failed to conquered terrtory: ";
+			temp1.append(temp2);
+			temp1.append(temp3);
+			temp1.append(temp4);
+			temp1.append(temp5);
+			temp1.append(temp6);
+			temp1.append(temp7);
+			temp1.append(this->targetTerritory->getName());
+
+			cout << temp1 << endl;
+			return temp1;
+		}
+	}
+
+
 }
 bool AdvanceOrder::validate() {
 
-	std::cout << "DEBUG: this->getPlayerID() == fromTerritory->getcontrolledPlayerID(): " << (this->getPlayerID() == fromTerritory->getcontrolledPlayerID()) << "\n";
-	std::cout << "DEBUG: isAdjacent: " << isAdjacent << "\n";
-	std::cout << "DEBUG: getArmyNumber()>= numberOfArmies " << (fromTerritory->getArmyNumber() >= numberOfArmies) << "\n";
-	std::cout << "DEBUG: fromTerritory->getArmyNumber() " << fromTerritory->getArmyNumber() << "\n";
+	bool InNegotiateOrder = GameEngine::instance()->checkNegotiateOrderList(this->targetTerritory->getcontrolledPlayerID(), this->getPlayerID());
+	if (targetTerritory->getcontrolledPlayerID() == fromTerritory->getcontrolledPlayerID()) {
+		InNegotiateOrder = false;
+	}
+
 	return (this->getPlayerID() == fromTerritory->getcontrolledPlayerID()
 		&&isAdjacent
-		&&fromTerritory->getArmyNumber()>= numberOfArmies);
+		&&fromTerritory->getArmyNumber()>= numberOfArmies
+		&& (!InNegotiateOrder));
 }
 
 BombOrder::BombOrder(int playerID, Territory* targetTerritory,bool isAdjacent)
@@ -397,13 +541,38 @@ std::unique_ptr<string> BombOrder::describingMessage() {
 }
 
 string BombOrder::execute() {
-	if (!validate())return "ERROR";
-	//TODO: this part leave for next assignment
-	//REMINDER: will need to return the effect of the order after execute.
-	return "You destroied half of the armies.";
+	if (!validate()) {
+		string temp1 = "[Order Failed]Bomb Order: ";
+		string temp2 = to_string(this->getOrderID());
+		string temp3 = " from player: ";
+		string temp4 = to_string(this->getPlayerID());
+		string temp5 = " didn't execute! ";
+		temp1.append(temp2);
+		temp1.append(temp3);
+		temp1.append(temp4);
+		temp1.append(temp5);
+		temp1.append(this->targetTerritory->getName());
+		cout << temp1 << endl;
+		return temp1;
+	}
+
+
+	this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber()) /2);
+
+	string temp1 = "[Order Executed]Player: ";
+	string temp2 = to_string(this->getPlayerID());
+	string temp3 = " destoryed half of the unit at Terrtory: ";
+	string temp4 = this->targetTerritory->getName();
+	temp1.append(temp2);
+	temp1.append(temp3);
+	temp1.append(temp4);
+
+	cout << temp1 << endl;
+	return temp1;
 }
 bool BombOrder::validate() {
-	return (this->getPlayerID() != targetTerritory->getcontrolledPlayerID() && isAdjacent);
+	bool InNegotiateOrder = GameEngine::instance()->checkNegotiateOrderList(this->targetTerritory->getcontrolledPlayerID(), this->getPlayerID());
+	return (this->getPlayerID() != targetTerritory->getcontrolledPlayerID() && isAdjacent && (!InNegotiateOrder));
 }
 
 BlockadeOrder::BlockadeOrder(int playerID, Territory* targetTerritory)
@@ -436,11 +605,34 @@ std::unique_ptr<string> BlockadeOrder::describingMessage() {
 }
 
 string BlockadeOrder::execute() {
-	if (!validate())return "ERROR";
+	if (!validate()) {
+		string temp1 = "[Order Failed]Blockade Order: ";
+		string temp2 = to_string(this->getOrderID());
+		string temp3 = " from player: ";
+		string temp4 = to_string(this->getPlayerID());
+		string temp5 = " didn't execute! ";
+		temp1.append(temp2);
+		temp1.append(temp3);
+		temp1.append(temp4);
+		temp1.append(temp5);
+		temp1.append(this->targetTerritory->getName());
+		cout << temp1 << endl;
+		return temp1;
+	}
 
-	//TODO: this part leave for next assignment
-	//REMINDER: will need to return the effect of the order after execute.
-	return "You tripled the number of armies on a territry.";
+	this->targetTerritory->setControlledPlayerID(-1);
+	this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber())*3);
+
+	string temp1 = "[Order Executed]Player: ";
+	string temp2 = to_string(this->getPlayerID());
+	string temp3 = " Executed an blockade order. half of the armies has been destoryed at terrtory: ";
+	string temp4 = this->targetTerritory->getName();
+	temp1.append(temp2);
+	temp1.append(temp3);
+	temp1.append(temp4);
+
+	cout << temp1 << endl;
+	return temp1;
 }
 bool BlockadeOrder::validate() {
 	return (this->getPlayerID() == targetTerritory->getcontrolledPlayerID());
@@ -497,13 +689,44 @@ std::unique_ptr<string> AirliftOrder::describingMessage() {
 }
 
 string AirliftOrder::execute() {
-	if (!validate())return "ERROR";
-	//TODO: this part leave for next assignment
-	//REMINDER: will need to return the effect of the order after execute.
-	return "You advanced some army to the target terrtories.";
+	if (!validate()) {
+		string temp1 = "[Order Failed]Airlift Order: ";
+		string temp2 = to_string(this->getOrderID());
+		string temp3 = " from player: ";
+		string temp4 = to_string(this->getPlayerID());
+		string temp5 = " didn't execute! ";
+		temp1.append(temp2);
+		temp1.append(temp3);
+		temp1.append(temp4);
+		temp1.append(temp5);
+		temp1.append(this->targetTerritory->getName());
+		cout << temp1 << endl;
+		return temp1;
+	}
+	this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber()) + numberOfArmies);
+	this->fromTerritory->setArmyNumber((this->fromTerritory->getArmyNumber()) - numberOfArmies);
+
+	string temp1 = "[Order Executed]Player: ";
+	string temp2 = to_string(this->getPlayerID());
+	string temp3 = " airlifted ";
+	string temp4 = to_string(this->numberOfArmies);
+	string temp5 = " armies from terrtire: ";
+	string temp6 = this->fromTerritory->getName();
+	string temp7 = " to terrtory: ";
+	temp1.append(temp2);
+	temp1.append(temp3);
+	temp1.append(temp4);
+	temp1.append(temp5);
+	temp1.append(temp6);
+	temp1.append(temp7);
+	temp1.append(this->targetTerritory->getName());
+
+	cout << temp1 << endl;
+	return temp1;
 }
 bool AirliftOrder::validate() {
 	return (this->getPlayerID() == fromTerritory->getcontrolledPlayerID()
+		&& this->getPlayerID() == targetTerritory->getcontrolledPlayerID()
 		&& fromTerritory->getArmyNumber() >=numberOfArmies);
 }
 
@@ -541,10 +764,34 @@ std::unique_ptr<string> NegotiateOrder::describingMessage() {
 }
 
 string NegotiateOrder::execute() {
-	if (!validate())return "ERROR";
-	//TODO: this part leave for next assignment
-	//REMINDER: will need to return the effect of the order after execute.
-	return "The attacks between two players is prevented.";
+	if (!validate()) {
+		string temp1 = "[Order Failed]Negotiate Order: ";
+		string temp2 = to_string(this->getOrderID());
+		string temp3 = " from player: ";
+		string temp4 = to_string(this->getPlayerID());
+		string temp5 = " didn't execute! ";
+		temp1.append(temp2);
+		temp1.append(temp3);
+		temp1.append(temp4);
+		temp1.append(temp5);
+		temp1.append(this->targetTerritory->getName());
+		cout << temp1 << endl;
+		return temp1;
+	}
+
+	GameEngine::instance()->addToNegotiateOrderList(this->getPlayerID(), this->targetTerritory->getcontrolledPlayerID());
+
+	string temp1 = "[Order Executed]An Negotiate Order between player: ";
+	string temp2 = to_string(this->getPlayerID());
+	string temp3 = " and player: ";
+	string temp4 = to_string(this->targetTerritory->getcontrolledPlayerID());
+	string temp5 = " is created! ";
+	temp1.append(temp2);
+	temp1.append(temp3);
+	temp1.append(temp4);
+	temp1.append(temp5);
+	cout << temp1 << endl;
+	return temp1;
 }
 bool NegotiateOrder::validate() {
 	//just need to validate if it's negotiate with itself.
