@@ -9,6 +9,7 @@
 #include <ctime>
 #include <vector>
 #include <iostream>
+
 using namespace std;
 
 
@@ -113,9 +114,26 @@ GameEngine& GameEngine::operator= (const GameEngine& ge) {
 GameEngine::~GameEngine() {
 	this->destory();
 }
+string GameEngine::stageToString(int b) {
+	switch (b) {
+		case 0: return "default";
+		case 1: return "start";
+		case 2: return "map loaded";
+		case 3: return "map validated";
+		case 4: return "players added";
+		case 5: return "assign reinforcement";
+		case 6: return "issue orders";
+		case 7: return "execute orders";
+		case 8: return "win";
+		case -1: return "check win condition";
+		default: return "-";
+	}
+}
 
 //Other class functions
-std::string GameEngine::stringToLog() { return "Current Game State: "; };
+std::string GameEngine::stringToLog() {
+	return "Current Game State: [" + stageToString(currentStage)+ "]";
+};
 
 //Stream Insertion Operators
 ostream& operator << (ostream& ost, const GameEngine& ge) {

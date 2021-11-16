@@ -64,12 +64,7 @@ bool Orders::validate() {
 	return false;
 }
 
-std::string Orders::stringToLog() { return "Order Executed: "; };
-
-
-
-
-
+std::string Orders::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "]"; };
 
 
 OrderList::OrderList() {
@@ -227,11 +222,23 @@ vector<Orders*> OrderList::getAllOrders(){
 	return ordersInside;
 }
 
-std::string OrderList::stringToLog() { return "Order Issued: "; };
+string Orders::getOrderName() { return "Order"; };
+string DeployOrder::getOrderName() { return "DeployOrder"; };
+string AdvanceOrder::getOrderName() { return "AdvanceOrder"; };
+string BombOrder::getOrderName() { return "BombOrder"; };
+string BlockadeOrder::getOrderName() { return "BlockadeOrder"; };
+string AirliftOrder::getOrderName() { return  "AirliftOrder"; };
+string NegotiateOrder::getOrderName() { return "NegotiateOrder"; };
+
+std::string OrderList::stringToLog() { return "Order Issued: [" + getLast()->getOrderName() + "]"; };
 
 
-
-
+std::string DeployOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "]["+ getOrderName() +"]"; };
+std::string AdvanceOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"; };
+std::string BombOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"; };
+std::string BlockadeOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"; };
+std::string AirliftOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"; };
+std::string NegotiateOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"; };
 
 
 
@@ -378,6 +385,7 @@ std::unique_ptr<string> AdvanceOrder::describingMessage() {
 }
 
 string AdvanceOrder::execute() {
+	notify(this);
 	if (!validate()) {
 		string temp1 = "[Order Failed]Advance Order: ";
 		string temp2 = to_string(this->getOrderID());
@@ -492,8 +500,6 @@ string AdvanceOrder::execute() {
 			return temp1;
 		}
 	}
-
-
 }
 bool AdvanceOrder::validate() {
 
@@ -541,6 +547,7 @@ std::unique_ptr<string> BombOrder::describingMessage() {
 }
 
 string BombOrder::execute() {
+	notify(this);
 	if (!validate()) {
 		string temp1 = "[Order Failed]Bomb Order: ";
 		string temp2 = to_string(this->getOrderID());
@@ -605,6 +612,7 @@ std::unique_ptr<string> BlockadeOrder::describingMessage() {
 }
 
 string BlockadeOrder::execute() {
+	notify(this);
 	if (!validate()) {
 		string temp1 = "[Order Failed]Blockade Order: ";
 		string temp2 = to_string(this->getOrderID());
@@ -689,6 +697,7 @@ std::unique_ptr<string> AirliftOrder::describingMessage() {
 }
 
 string AirliftOrder::execute() {
+	notify(this);
 	if (!validate()) {
 		string temp1 = "[Order Failed]Airlift Order: ";
 		string temp2 = to_string(this->getOrderID());
@@ -764,6 +773,7 @@ std::unique_ptr<string> NegotiateOrder::describingMessage() {
 }
 
 string NegotiateOrder::execute() {
+	notify(this);
 	if (!validate()) {
 		string temp1 = "[Order Failed]Negotiate Order: ";
 		string temp2 = to_string(this->getOrderID());

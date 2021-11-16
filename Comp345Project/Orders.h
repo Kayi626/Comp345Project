@@ -14,6 +14,7 @@ class Orders: public ILoggable, public Subject {
 		int orderID;
 		int playerID;
 	public:
+		virtual string getOrderName();
 		virtual string stringToLog();
 		Orders();
 		~Orders();
@@ -79,6 +80,8 @@ private:
 	int numberOfArmies;
 	Territory* targetTerritory;
 public:
+	string getOrderName();
+	string stringToLog();
 	DeployOrder(int playerID,int numberOfArmies, Territory* targetTerritory);
 	DeployOrder(const DeployOrder& ord);
 	DeployOrder& operator = (const DeployOrder& ord);
@@ -99,6 +102,8 @@ private:
 	Territory* targetTerritory;
 	bool isAdjacent;
 public:
+	string getOrderName();
+	string stringToLog();
 	AdvanceOrder(int playerID, int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory, bool isAdjacent);
 	AdvanceOrder(const AdvanceOrder& ord);
 	AdvanceOrder& operator = (const AdvanceOrder& ord);
@@ -121,6 +126,8 @@ private:
 	Territory* targetTerritory;
 	bool isAdjacent;
 public:
+	string getOrderName();
+	string stringToLog();
 	BombOrder(int playerID, Territory* targetTerritory,bool isAdjacent);
 	BombOrder(const BombOrder& ord);
 	BombOrder& operator = (const BombOrder& ord);
@@ -140,6 +147,8 @@ class BlockadeOrder : public Orders {
 private:
 	Territory* targetTerritory;
 public:
+	string getOrderName();
+	string stringToLog();
 	BlockadeOrder(int playerID, Territory* targetTerritory);
 	BlockadeOrder(const BlockadeOrder& ord);
 	BlockadeOrder& operator = (const BlockadeOrder& ord);
@@ -160,6 +169,8 @@ private:
 	Territory* fromTerritory;
 	Territory* targetTerritory;
 public:
+	string getOrderName();
+	string stringToLog();
 	AirliftOrder(int playerID, int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory);
 	AirliftOrder(const AirliftOrder& ord);
 	AirliftOrder& operator = (const AirliftOrder& ord);
@@ -181,6 +192,8 @@ class NegotiateOrder : public Orders {
 private:
 	Territory* targetTerritory;
 public:
+	string getOrderName();
+	string stringToLog();
 	NegotiateOrder(int playerID, Territory* targetTerritory);
 	NegotiateOrder(const NegotiateOrder& ord);
 	NegotiateOrder& operator = (const NegotiateOrder& ord);

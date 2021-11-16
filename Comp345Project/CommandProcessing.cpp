@@ -73,7 +73,6 @@ std:getline(std::cin, input);
 Command* CommandProcessor::saveCommand(string str) {
 	//Add the newly allocated command object into the list of command
 	if (str == "") return nullptr;
-	notify(this);
 	Command* tempCom = new Command(str, "");
 	for (auto obs : this->observers)
 		tempCom->attach(obs);
@@ -82,6 +81,7 @@ Command* CommandProcessor::saveCommand(string str) {
 		tempCom->saveEffect("FileCommand");
 	}*/
 	lc.push_back(tempCom);
+	notify(this);
 	return tempCom;
 }
 //Validate the current command given a state and record the effect into the command object
@@ -162,7 +162,7 @@ Command* CommandProcessor::getCommand() {
 }
 
 
-std::string CommandProcessor::stringToLog() { return "Command: "; };
+std::string CommandProcessor::stringToLog() { return "Command: [" + lc.back()->getOriginalCommand() + "]" ; };
 
 
 //*********************************************************************************
@@ -237,7 +237,7 @@ string Command::getEffect() {
 }
 
 
-std::string Command::stringToLog() { return "Command's Effect: "; };
+std::string Command::stringToLog() { return "Command's Effect: [" + effect + "]"; };
 
 //********************************************************************************
 

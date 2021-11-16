@@ -30,6 +30,7 @@ private:
 	Map* map;
 	vector<Player*> playerList;
 	Deck* deck;
+	string stageToString(int b);
 	vector<vector<int>> negotiateOrderList;
 
 	bool debugMode;
