@@ -2,7 +2,7 @@ loadmap smallMap.map
 validatemap
 addplayer Dash
 addplayer Lemon
-start
+gamestart
 endissueorder
 endissueorder
 issueorder 0 3 20

@@ -7,7 +7,7 @@ addplayer Jone
 addplayer King
 addplayer dude
 addplayer what
-start
+gamestart
 endissueorder
 endissueorder
 endissueorder

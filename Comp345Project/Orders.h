@@ -13,9 +13,12 @@ class Orders: public ILoggable, public Subject {
 	private:
 		int orderID;
 		int playerID;
+		string ordereffect;
 	public:
 		virtual string getOrderName();
 		virtual string stringToLog();
+		string getEffect();
+		void setEffect(string str);
 		Orders();
 		~Orders();
 		Orders(int playerID);
@@ -101,7 +104,9 @@ private:
 	Territory* fromTerritory;
 	Territory* targetTerritory;
 	bool isAdjacent;
+	
 public:
+	static string ordeffect2;
 	string getOrderName();
 	string stringToLog();
 	AdvanceOrder(int playerID, int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory, bool isAdjacent);
@@ -125,7 +130,9 @@ class BombOrder : public Orders {
 private:
 	Territory* targetTerritory;
 	bool isAdjacent;
+	
 public:
+	static string ordeffect3;
 	string getOrderName();
 	string stringToLog();
 	BombOrder(int playerID, Territory* targetTerritory,bool isAdjacent);
@@ -146,7 +153,9 @@ public:
 class BlockadeOrder : public Orders {
 private:
 	Territory* targetTerritory;
+	
 public:
+	static string ordeffect4;
 	string getOrderName();
 	string stringToLog();
 	BlockadeOrder(int playerID, Territory* targetTerritory);
@@ -168,7 +177,9 @@ private:
 	int numberOfArmies;
 	Territory* fromTerritory;
 	Territory* targetTerritory;
+	
 public:
+	static string ordeffect5;
 	string getOrderName();
 	string stringToLog();
 	AirliftOrder(int playerID, int numberOfArmies, Territory* fromTerritory, Territory* targetTerritory);
@@ -191,7 +202,9 @@ public:
 class NegotiateOrder : public Orders {
 private:
 	Territory* targetTerritory;
+	static string ordeffect6;
 public:
+	
 	string getOrderName();
 	string stringToLog();
 	NegotiateOrder(int playerID, Territory* targetTerritory);
