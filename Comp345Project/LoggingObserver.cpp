@@ -11,7 +11,6 @@ Subject::~Subject() {};
 
 
 void LogObserver::Update(ILoggable *ilog) {
-	//std::cout << ilog->stringToLog() << std::endl;
 	std::ofstream logFile("gamelog.txt", std::ios::app);
 	logFile << ilog->stringToLog() << std::endl;
 	logFile.close();
