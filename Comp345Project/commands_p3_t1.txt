@@ -3,7 +3,7 @@ validatemap
 addplayer Dash
 addplayer Lemon
 addplayer Nestea
-start
+gamestart
 endissueorder
 endissueorder
 endissueorder

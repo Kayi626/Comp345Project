@@ -223,6 +223,14 @@ vector<Orders*> OrderList::getAllOrders(){
 	return ordersInside;
 }
 
+string Orders::getEffect() {
+	return ordereffect;
+}
+
+void Orders::setEffect(string str) {
+	this->ordereffect = str;
+}
+
 string Orders::getOrderName() { return "Order"; };
 string DeployOrder::getOrderName() { return "DeployOrder"; };
 string AdvanceOrder::getOrderName() { return "AdvanceOrder"; };
@@ -233,12 +241,12 @@ string NegotiateOrder::getOrderName() { return "NegotiateOrder"; };
 
 std::string OrderList::stringToLog() { return "Order Issued: [" + getLast()->getOrderName() + "]"; };
 
-std::string DeployOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "]["+ getOrderName() +"]"; };
-std::string AdvanceOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"; };
-std::string BombOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"; };
-std::string BlockadeOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"; };
-std::string AirliftOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"; };
-std::string NegotiateOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"; };
+std::string DeployOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "]["+ getOrderName() +"]" + this->getEffect(); };
+std::string AdvanceOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]" + this->getEffect(); };
+std::string BombOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"+ this->getEffect(); };
+std::string BlockadeOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]" + this->getEffect(); };
+std::string AirliftOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]" + this->getEffect(); };
+std::string NegotiateOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]" + this->getEffect(); };
 
 
 DeployOrder::DeployOrder(int playerID, int numberOfArmies, Territory* targetTerritory)
@@ -287,7 +295,7 @@ std::unique_ptr<string> DeployOrder::describingMessage() {
 }
 
 string DeployOrder::execute() {
-	notify(this);
+	
 	if (!validate()) {
 		string temp1 = "[Order Failed]Deploy Order: ";
 		string temp2 = to_string(this->getOrderID());
@@ -300,6 +308,8 @@ string DeployOrder::execute() {
 		temp1.append(temp5);
 		temp1.append(this->targetTerritory->getName());
 		cout << temp1 << endl;
+		this->setEffect(temp1);
+		notify(this);
 		return temp1;
 	} 
 
@@ -320,6 +330,8 @@ string DeployOrder::execute() {
 	temp1.append(this->targetTerritory->getName());
 
 	cout << temp1 << endl;
+	this->setEffect(temp1);
+	notify(this);
 	return temp1;
 }
 bool DeployOrder::validate() {
@@ -382,7 +394,7 @@ std::unique_ptr<string> AdvanceOrder::describingMessage() {
 }
 
 string AdvanceOrder::execute() {
-	notify(this);
+	
 	if (!validate()) {
 		string temp1 = "[Order Failed]Advance Order: ";
 		string temp2 = to_string(this->getOrderID());
@@ -395,6 +407,8 @@ string AdvanceOrder::execute() {
 		temp1.append(temp5);
 		temp1.append(this->targetTerritory->getName());
 		cout << temp1 << endl;
+		this->setEffect(temp1);
+		notify(this);
 		return temp1;
 	}
 	
@@ -422,6 +436,8 @@ string AdvanceOrder::execute() {
 		temp1.append(this->targetTerritory->getName());
 
 		cout << temp1 << endl;
+		this->setEffect(temp1);
+		notify(this);
 		return temp1;
 	}
 	else {
@@ -474,6 +490,8 @@ string AdvanceOrder::execute() {
 			temp1.append(this->targetTerritory->getName());
 
 			cout << temp1 << endl;
+			this->setEffect(temp1);
+			notify(this);
 			return temp1;
 		}
 		else {
@@ -494,6 +512,8 @@ string AdvanceOrder::execute() {
 			temp1.append(this->targetTerritory->getName());
 
 			cout << temp1 << endl;
+			this->setEffect(temp1);
+			notify(this);
 			return temp1;
 		}
 	}
@@ -544,7 +564,7 @@ std::unique_ptr<string> BombOrder::describingMessage() {
 }
 
 string BombOrder::execute() {
-	notify(this);
+	
 	if (!validate()) {
 		string temp1 = "[Order Failed]Bomb Order: ";
 		string temp2 = to_string(this->getOrderID());
@@ -557,6 +577,8 @@ string BombOrder::execute() {
 		temp1.append(temp5);
 		temp1.append(this->targetTerritory->getName());
 		cout << temp1 << endl;
+		this->setEffect(temp1);
+		notify(this);
 		return temp1;
 	}
 
@@ -572,6 +594,8 @@ string BombOrder::execute() {
 	temp1.append(temp4);
 
 	cout << temp1 << endl;
+	this->setEffect(temp1);
+	notify(this);
 	return temp1;
 }
 bool BombOrder::validate() {
@@ -609,7 +633,7 @@ std::unique_ptr<string> BlockadeOrder::describingMessage() {
 }
 
 string BlockadeOrder::execute() {
-	notify(this);
+
 	if (!validate()) {
 		string temp1 = "[Order Failed]Blockade Order: ";
 		string temp2 = to_string(this->getOrderID());
@@ -622,6 +646,8 @@ string BlockadeOrder::execute() {
 		temp1.append(temp5);
 		temp1.append(this->targetTerritory->getName());
 		cout << temp1 << endl;
+		this->setEffect(temp1);
+		notify(this);
 		return temp1;
 	}
 
@@ -637,6 +663,8 @@ string BlockadeOrder::execute() {
 	temp1.append(temp4);
 
 	cout << temp1 << endl;
+	this->setEffect(temp1);
+	notify(this);
 	return temp1;
 }
 bool BlockadeOrder::validate() {
@@ -694,7 +722,7 @@ std::unique_ptr<string> AirliftOrder::describingMessage() {
 }
 
 string AirliftOrder::execute() {
-	notify(this);
+	
 	if (!validate()) {
 		string temp1 = "[Order Failed]Airlift Order: ";
 		string temp2 = to_string(this->getOrderID());
@@ -707,6 +735,8 @@ string AirliftOrder::execute() {
 		temp1.append(temp5);
 		temp1.append(this->targetTerritory->getName());
 		cout << temp1 << endl;
+		this->setEffect(temp1);
+		notify(this);
 		return temp1;
 	}
 	this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber()) + numberOfArmies);
@@ -728,6 +758,8 @@ string AirliftOrder::execute() {
 	temp1.append(this->targetTerritory->getName());
 
 	cout << temp1 << endl;
+	this->setEffect(temp1);
+	notify(this);
 	return temp1;
 }
 bool AirliftOrder::validate() {
@@ -770,7 +802,7 @@ std::unique_ptr<string> NegotiateOrder::describingMessage() {
 }
 
 string NegotiateOrder::execute() {
-	notify(this);
+
 	if (!validate()) {
 		string temp1 = "[Order Failed]Negotiate Order: ";
 		string temp2 = to_string(this->getOrderID());
@@ -783,6 +815,8 @@ string NegotiateOrder::execute() {
 		temp1.append(temp5);
 		temp1.append(this->targetTerritory->getName());
 		cout << temp1 << endl;
+		this->setEffect(temp1);
+		notify(this);
 		return temp1;
 	}
 
@@ -798,6 +832,8 @@ string NegotiateOrder::execute() {
 	temp1.append(temp4);
 	temp1.append(temp5);
 	cout << temp1 << endl;
+	this->setEffect(temp1);
+	notify(this);
 	return temp1;
 }
 bool NegotiateOrder::validate() {

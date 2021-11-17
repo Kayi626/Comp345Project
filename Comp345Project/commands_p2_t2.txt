@@ -8,7 +8,7 @@ addplayer Nestea
 wewefdsd sdjsah kdh  sdshdhsj sd sad sajd h sajd 
 startwe 1 we we1  we we we we wew 2 2 
 addplayer Juice
-start
+gamestart
 endissueorder
 endissueorder
 
