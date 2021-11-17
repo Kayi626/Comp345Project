@@ -162,12 +162,16 @@
     <Text Include="commands_p2_t1.txt" />
     <Text Include="commands_p2_t2.txt" />
     <Text Include="commands_p3_t1.txt" />
+    <Text Include="commands_p3_t2.txt" />
+    <Text Include="commands_p3_t3.txt" />
     <Text Include="commands_p4_t1.txt" />
+    <Text Include="gamelog.txt" />
     <Text Include="testcase.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bigeurope.map" />
     <None Include="LOTR2.map" />
+    <None Include="smallMap.map" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
