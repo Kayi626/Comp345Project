@@ -50,7 +50,7 @@ public:
 	friend ostream& operator<<(ostream& ost, const CommandProcessor& comP);
     
 	void clearMemory();
-
+	virtual Command *saveCommand(string str);
 	virtual Command* getCommand();
 	virtual bool validate(Command& com, int state);
 	bool isNumber(string &input);
@@ -75,8 +75,7 @@ public:
 
 private:
 	string readCommand();
-protected:
-	virtual Command* saveCommand(string str);
+	
 
 
 };

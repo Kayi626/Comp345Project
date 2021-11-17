@@ -55,9 +55,10 @@ private:
 	*/
 
 	int initialPlayerTerritoriesAmount;
-	void transition(int newState);
-	//change the state of the game
+	
 public:
+	//change the state of the game
+	void transition(int newState);
 	//constructors
 	GameEngine();
 	GameEngine(CommandProcessor* inputCmdProcessor, int iniTerrAmount,bool isDebugmode);
