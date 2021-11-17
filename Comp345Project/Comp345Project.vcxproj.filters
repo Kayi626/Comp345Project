@@ -70,6 +70,18 @@
     <Text Include="commands.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="commands_p4_t1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="commands_p2_t1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="commands_p2_t2.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="commands_p3_t1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="LOTR2.map">
