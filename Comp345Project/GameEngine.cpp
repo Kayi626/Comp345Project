@@ -19,6 +19,9 @@ bool GameEngine::useFileCommandProcessor = true;
 string GameEngine::fileLineReaderFilePath = "commands_p4_t1.txt";
 int GameEngine::defualtTerritoriesAmount = 2;
 
+void GameEngine::setFilePath(string str) {
+	fileLineReaderFilePath = str;
+}
 GameEngine* GameEngine::instance() {
 	if (!GE_instance) {
 		if (useFileCommandProcessor) {
