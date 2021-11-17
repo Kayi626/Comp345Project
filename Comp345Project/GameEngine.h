@@ -81,6 +81,8 @@ public:
 	void mainGameLoop(int startingPlayer);
 	//start the play phases.
 
+	static void setFilePath(string str);
+
 	void reinforcementPhase();
 	int issueOrderPhase(int startingPlayer);
 	void executreOrderPhase(int startingPlayer);

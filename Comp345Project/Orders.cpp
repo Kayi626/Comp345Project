@@ -241,9 +241,6 @@ std::string AirliftOrder::stringToLog() { return "Order Executed: [" + to_string
 std::string NegotiateOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"; };
 
 
-
-
-
 DeployOrder::DeployOrder(int playerID, int numberOfArmies, Territory* targetTerritory)
 	:Orders(playerID)
 {

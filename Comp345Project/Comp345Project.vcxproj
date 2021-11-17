@@ -159,6 +159,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="commands.txt" />
+    <Text Include="commands_p2_t1.txt" />
+    <Text Include="commands_p2_t2.txt" />
+    <Text Include="commands_p3_t1.txt" />
+    <Text Include="commands_p4_t1.txt" />
     <Text Include="testcase.txt" />
   </ItemGroup>
   <ItemGroup>
