@@ -33,26 +33,25 @@ int main(int argc, char* argv[]) {
 
     //Driver: for part 1
     //swtich between -console and commands file. When input -file filename commnad, it should be "-file <filename>" 
-    std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
-    clearText.close();
+    string str = string(argv[1]);
     std::regex reg1("-console");
     std::regex reg2("-file <(.*)>");
- 
+    cout << argc;
     if (argc == 1) {
         cout << "No Argument Command Line Received! The program exists" << endl;
         return 0;
     } 
-    else if (std::regex_match(argv[1], reg1)) {
+    else if (std::regex_match(str.begin(), str.end(), reg1)) {
             GameEngine::defualtTerritoriesAmount = 3;
             GameEngine::useFileCommandProcessor = false;
             GameEngine::isDebugMode = true;
             GameEngine::instance()->startup();
             return 0;
     }
-    else if (std::regex_match(argv[1], reg2)) {
+    else if (std::regex_match(str.begin(), str.end(), reg2)) {
             GameEngine::defualtTerritoriesAmount = 3;
             GameEngine::useFileCommandProcessor = true;
-            GameEngine::setFilePath(extractLineArgumentCommand(argv[1]));
+            GameEngine::setFilePath(extractLineArgumentCommand(str));
             GameEngine::isDebugMode = true;
             GameEngine::instance()->startup();
             return 0;
@@ -211,8 +210,8 @@ int main(int argc, char* argv[]) {
     //ol.addOrder(ord);
     //// check the gamelog.txt
    
-    //delete tt;
-    //delete ord;
+    delete tt;
+    delete ord;
 
     //return 0;
 }
