@@ -57,6 +57,7 @@ std::unique_ptr<string> Orders::describingMessage() {
 	return message;
 }
 string Orders::execute() {
+	notify(this);
 	if (!validate())return "ERROR";
 	return "ERROR";
 }
@@ -231,7 +232,6 @@ string AirliftOrder::getOrderName() { return  "AirliftOrder"; };
 string NegotiateOrder::getOrderName() { return "NegotiateOrder"; };
 
 std::string OrderList::stringToLog() { return "Order Issued: [" + getLast()->getOrderName() + "]"; };
-
 
 std::string DeployOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "]["+ getOrderName() +"]"; };
 std::string AdvanceOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]"; };

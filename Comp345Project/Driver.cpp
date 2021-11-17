@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
     //flr = nullptr;
     //return 0;
 
+
     //Driver: for part 1
     //swtich between -console and commands file. When input -file filename commnad, it should be "-file <filename>" 
     string str = string(argv[1]);
@@ -60,8 +61,6 @@ int main(int argc, char* argv[]) {
         return 0;
     }
     
-
- 
     /*Driver: for part 2
     * Dear professor, the "isDebugMode"can enable the debug made for testing functions and abilities.
     * when "isDebugMode" is set to true, 
@@ -167,6 +166,45 @@ int main(int argc, char* argv[]) {
     //GameEngine::instance()->startup();
     //return 0;
 
+    /*Driver: for part 5*/
+    /* 
+        note that everything below is just for driver demo part
+        !!No real game engine running!!
+    */
+    std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
+    clearText.close();
+    
+    Territory *tt = new Territory("oi", 11, 1, 11, 1);
+    Orders *ord = new DeployOrder(111, 1111, tt);
+    GameEngine _ge;
+    Command c;
+    CommandProcessor cp;
+    OrderList ol;
+
+    LogObserver logO;
+
+    // has attach and notify, therefore subclass of subject
+    _ge.attach(&logO);
+    c.attach(&logO);
+    cp.attach(&logO);
+    ord->attach(&logO);
+    ol.attach(&logO);
+
+    // has output information, therefore subclass of ILoggable
+    int newState = 1;
+    string effect = "effect for demo";
+    string command = "command for demo";
+    _ge.transition(newState);
+    c.saveEffect(effect);
+    cp.saveCommand(command);
+    ord->execute();
+    ol.addOrder(ord);
+    // check the gamelog.txt
+   
+    delete tt;
+    delete ord;
+
+    return 0;
 }
 
 //Used to extract commands from command Line Argument(Get the filename from <>)
