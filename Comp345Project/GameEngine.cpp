@@ -120,7 +120,7 @@ GameEngine::~GameEngine() {
 string GameEngine::stageToString(int b) {
 	switch (b) {
 		case 0: return "default";
-		case 1: return "start";
+		case 1: return "gamestart";
 		case 2: return "map loaded";
 		case 3: return "map validated";
 		case 4: return "players added";
@@ -265,6 +265,11 @@ void GameEngine::startup() {
 			commandIsNotValid = !(cmdProcessor->validate(*command, currentStage));
 			if (commandIsNotValid) {
 				cout << "Invaild Command! please re-enter the command: " << endl;
+				command->saveEffect("Invalid Command");
+			}
+			else {
+				command->saveEffect("");
+				
 			}
 		}
 
@@ -323,7 +328,7 @@ void GameEngine::startup() {
 				playerCount++;
 				std::cout << "Player: " << args[1] << " is successfully added!" << endl;
 			}   
-			else if (args[0].compare("start") == 0) {
+			else if (args[0].compare("gamestart") == 0) {
 				//game start!
 				//distribute terrtories to the players - base on the initial number of terrtories. 
 				if (connectedGraph.size() < initialPlayerTerritoriesAmount * playerList.size()) {
@@ -553,6 +558,11 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 				commandIsNotValid = !(cmdProcessor->validate(*command, currentStage));
 				if (commandIsNotValid) {
 					cout << "Invaild Command! please re-enter the command: " << endl;
+					command->saveEffect("Invalid Command");
+				}
+				else {
+					command->saveEffect("");
+
 				}
 			}
 
@@ -743,6 +753,11 @@ int GameEngine::issueOrderPhase(int startingPlayer) {
 		commandIsNotValid = !(cmdProcessor->validate(*command, currentStage));
 		if (commandIsNotValid) {
 			cout << "Invaild Command! please re-enter the command: " << endl;
+			command->saveEffect("Invalid Command");
+		}
+		else {
+			command->saveEffect("");
+
 		}
 	}
 

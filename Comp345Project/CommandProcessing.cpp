@@ -97,7 +97,7 @@ bool CommandProcessor::validate(Command& com, int state) {
 		return (FirstArg.compare("addplayer") == 0);
 	}
 	case 4: {
-		return (FirstArg.compare("addplayer") == 0 || FirstArg.compare("start") == 0);
+		return (FirstArg.compare("addplayer") == 0 || FirstArg.compare("gamestart") == 0);
 	}
 	case 6: {
 		if (FirstArg.compare("endissueorder") == 0) {
@@ -169,7 +169,44 @@ std::string CommandProcessor::stringToLog() { return "Command: [" + lc.back()->g
 
 //************************************Command**************************************
 void Command::saveEffect(string effect) {
-	this->effect = effect;
+	string temp1 = "Command is successfully executed: ";
+	string temp2 = this->getOriginalCommand();
+	string temp3 = "";
+	if (effect.compare("Invalid Command") == 0) {
+		this->effect = "Invalid Command";
+		notify(this);
+		return;
+	}
+    if ((this->getArgs())[0].compare("gamestart") == 0) {
+		temp3 = ". The game starts. ";
+	}
+	else if ((this->getArgs())[0].compare("addplayer") == 0) {
+		temp3 = ". Players have been successfully added. ";
+	}
+	else if ((this->getArgs())[0].compare("loadmap") == 0) {
+		temp3 = ". Map has been successfully loaded. ";
+	}
+	else if ((this->getArgs())[0].compare("validatemap") == 0) {
+		temp3 = ". Map has been successfully validated. ";
+	}
+	else if ((this->getArgs())[0].compare("endissueorder") == 0) {
+		temp3 = ". Players have ended the state of issuing orders. ";
+	}
+	else if ((this->getArgs())[0].compare("issueorder") == 0) {
+		temp3 = ".Players have successfully issued the orders . ";
+	}
+	else if ((this->getArgs())[0].compare("replay") == 0) {
+		temp3 = ". The game re-starts. ";
+	}
+	else if ((this->getArgs())[0].compare("quit") == 0) {
+		temp3 = ".The game quits .";
+	}
+
+	temp1.append(temp2);
+	temp1.append(temp3);
+    
+	this->effect = temp1;
+
 	notify(this);
 }
 Command::Command() {

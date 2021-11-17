@@ -82,12 +82,24 @@
     <Text Include="commands_p3_t1.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="gamelog.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="commands_p3_t2.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="commands_p3_t3.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="LOTR2.map">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="bigeurope.map">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="smallMap.map">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
