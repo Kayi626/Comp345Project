@@ -54,6 +54,7 @@ public:
 	virtual Command* getCommand();
 	virtual bool validate(Command& com, int state);
 	bool isNumber(string &input);
+	vector<vector<string>> validateTourna(Command& com,int state);
 	string stringToLog();
 	/*	Commands & their available states: 
 	* 

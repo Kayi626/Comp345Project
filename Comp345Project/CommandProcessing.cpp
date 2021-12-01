@@ -1,9 +1,10 @@
 #include <iostream>
 #include <fstream>
-#include <string>
+#include <cstring>
 #include <list>
 #include <vector>
 #include <regex>
+#include <sstream>
 using namespace std;
 
 #include "CommandProcessing.h"
@@ -72,7 +73,6 @@ std:getline(std::cin, input);
 }
 Command* CommandProcessor::saveCommand(string str) {
 	//Add the newly allocated command object into the list of command
-	if (str == "") return nullptr;
 	Command* tempCom = new Command(str, "");
 	for (auto obs : this->observers)
 		tempCom->attach(obs);
@@ -86,6 +86,7 @@ Command* CommandProcessor::saveCommand(string str) {
 }
 //Validate the current command given a state and record the effect into the command object
 bool CommandProcessor::validate(Command& com, int state) {
+
 	string FirstArg = (com.getArgs())[0];
 	switch (state) {
 	case 1:
@@ -148,6 +149,200 @@ bool CommandProcessor::isNumber(string &input) {
 //		return "";
 //}
 
+vector<vector<string>> CommandProcessor::validateTourna(Command& com, int state) {
+	vector<vector<string>> tempvec;
+	
+	const string str = com.getOriginalCommand();
+
+	if (state != 1) {
+		return tempvec;
+	}
+	//Extract map files
+	//The newly generated string is the list of map files.
+	//The map files are represented normally by numbers(1-5).
+
+	std::regex rgx("tournament -M\\s{1}(.+)\\s{1}-P\\s{1}(.+)\\s{1}-G\\s{1}(\\S+)\\s{1}-D\\s{1}(\\S+)\\s*");
+	std::smatch match;
+	if (std::regex_search(str.begin(), str.end(), match, rgx)) {
+
+		int counter = 1;
+		while (counter <= 4) {
+
+			//std::cout << "match: " << match[counter] << '\n';
+			//Validate all extracted strings
+			//**********************************************
+			//*Counter 1 : Mapfiles validated
+			//*Counter 2 : Player strategies validated
+			//*Counter 3 : Number of games validated
+			//*Counter 4 : Max number of game runs validated
+			//**********************************************
+
+
+			//Counter 1
+			if (counter == 1) {
+				istringstream sst(match[counter]);
+				string tempstr;
+				vector<string> vec;
+				tempvec.push_back(vec);
+				while (getline(sst, tempstr, ' ')) {
+					//The list of map files must contains number ranging from 1 to 50
+					//Otherwise, it is an invalid command
+					try {
+						int i = stoi(tempstr);
+
+						if (i < 1 || i >5) {
+							tempvec.clear();
+							return tempvec;
+						}
+
+						//Reject the repeated parameters
+						if (std::count(tempvec[counter - 1].begin(), tempvec[counter - 1].end(), tempstr) == 0) {
+							tempvec[counter - 1].push_back(tempstr);
+						}
+
+					}
+					catch (const std::invalid_argument& e) {
+						tempvec.clear();
+						return tempvec;
+						//std::cout << e.what() << "\n";
+					}
+					catch (const std::out_of_range& e) {
+						tempvec.clear();
+						return tempvec;
+						//std::cout << e.what() << "\n";
+					}
+				}
+
+				//Extra validation because 0 parameter cant be accepted.Otherwise invalid
+				if (tempvec[counter - 1].size() == 0) {
+					tempvec.clear();
+					return tempvec;
+					//cout<<"Invalid command"<<endl;
+				}
+			}
+			//Counter 2
+			else if (counter == 2) {
+				istringstream sst(match[counter]);
+				string tempstr;
+				vector<string> vec;
+				tempvec.push_back(vec);
+				vector<string> p_strategy = { "A","B","N","C","H"};
+
+				while (getline(sst, tempstr, ' ')) {
+					//The player strategy must be contained in the vector shown above
+					//Otherwise, it is an invalid command
+					if (std::count(p_strategy.begin(), p_strategy.end(), tempstr)) {
+
+						//Reject the repeated parameters
+						if (std::count(tempvec[counter - 1].begin(), tempvec[counter - 1].end(), tempstr) == 0) {
+							tempvec[counter - 1].push_back(tempstr);
+						}
+
+					}
+					else {
+						tempvec.clear();
+						return tempvec;
+						//cout<<"Invalid Command"<<endl;
+					}
+				}
+
+				//Extra validation because 0 parameter cant be accepted.Otherwise invalid
+				if (tempvec[counter - 1].size() == 0) {
+					tempvec.clear();
+					return tempvec;
+					//cout<<"Invalid command"<<endl;
+				}
+			}
+			//Counter 3 
+			else if (counter == 3) {
+				istringstream sst(match[counter]);
+				string tempstr;
+				vector<string> vec;
+				tempvec.push_back(vec);
+				while (getline(sst, tempstr, ' ')) {
+					//The number of game runs on each map must be a number ranging from 1 to 5
+					//Otherwise, it is an invalid command
+					try {
+
+						int i = stoi(tempstr);
+						if (i < 1 || i >5) {
+							tempvec.clear();
+							return tempvec;
+							//cout<<"invalid command";
+						}
+
+						tempvec[counter - 1].push_back(tempstr);
+
+					}
+					catch (const std::invalid_argument& e) {
+						tempvec.clear();
+						return tempvec;
+						//std::cout << e.what() << "\n";
+					}
+					catch (const std::out_of_range& e) {
+						tempvec.clear();
+						return tempvec;
+						//std::cout << e.what() << "\n";
+					}
+				}
+				//Extra validation because only 1 parameter can be accepted.Otherwise invalid
+				if (tempvec[counter - 1].size() != 1) {
+					tempvec.clear();
+					return tempvec;
+					//cout<<"Invalid command"<<endl;
+				}
+			}
+			else if (counter == 4) {
+				istringstream sst(match[counter]);
+				string tempstr;
+				vector<string> vec;
+				tempvec.push_back(vec);
+				while (getline(sst, tempstr, ' ')) {
+					//The max number of game runs must be a number ranging from 10 to 50
+					//Otherwise, it is an invalid command
+					try {
+
+						int i = stoi(tempstr);
+						if (i < 10 || i > 50) {
+							tempvec.clear();
+							return tempvec;
+						}
+						tempvec[counter - 1].push_back(tempstr);
+					}
+					catch (const std::invalid_argument& e) {
+						tempvec.clear();
+						return tempvec;
+						//std::cout << e.what() << "\n";
+					}
+					catch (const std::out_of_range& e) {
+						tempvec.clear();
+						return tempvec;
+						//std::cout << e.what() << "\n";
+					}
+				}
+				//Extra validation because only 1 parameter can be accepted Otherwise invalid
+				if (tempvec[counter - 1].size() != 1) {
+					tempvec.clear();
+					return tempvec;
+					//cout<<"Invalid command"<<endl;
+				}
+			}
+
+			//Update the counter
+			counter++;
+
+		}
+	}
+	//Nothing matched == Invalid command absolutely
+	else {
+		tempvec.clear();
+		return tempvec;
+		//cout<<"Invalid command!";
+	}
+
+	return tempvec;
+}
+
 void CommandProcessor::clearMemory() {
 	for (Command* com : lc) {
 		delete com;
@@ -201,6 +396,8 @@ void Command::saveEffect(string effect) {
 	else if ((this->getArgs())[0].compare("quit") == 0) {
 		temp3 = ".The game quits .";
 	}
+
+    
 
 	temp1.append(temp2);
 	temp1.append(temp3);
