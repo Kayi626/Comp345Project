@@ -10,6 +10,7 @@
 #include <ctime>
 #include <vector>
 #include <iostream>
+#include<map>
 
 using namespace std;
 
@@ -19,6 +20,11 @@ bool GameEngine::isDebugMode = false;
 bool GameEngine::useFileCommandProcessor = true;
 string GameEngine::fileLineReaderFilePath = "../Comp345Project/commands_p4_t1.txt";
 int GameEngine::defualtTerritoriesAmount = 2;
+bool GameEngine::tournaMode = false;
+map<string, string> GameEngine::mapfile_map = {{"1", "LOTR2.map"}, {"2","smallMap.map"}, {"3","bigeurope.map"}};
+map<string, string> GameEngine::strategy_map = { {"A","Aggressive"},{"B","Benevolent"},{"N","Neutral"},{"C","Cheater"},{"H","Human"}};
+int GameEngine::map_positioner = 0;
+vector<vector<string>> GameEngine::tourna_paravec;
 
 void GameEngine::setFilePath(string str) {
 	fileLineReaderFilePath = str;
@@ -221,6 +227,7 @@ void GameEngine::showState(){
 	}
 }
 
+
 void GameEngine::startup() {
 	vector<vector<Territory*>> connectedGraph ;
 	int playerCount = 1;
@@ -228,6 +235,9 @@ void GameEngine::startup() {
 	if (currentStage == 0 && isStartup == true) {
 		transition(1);
 	}
+
+	//Five different map files
+	
 
 
 	//keep looping until the actual game start.
@@ -239,7 +249,7 @@ void GameEngine::startup() {
 		{
 		case 1:
 			//Start Phase
-			std::cout << "1. enter \"loadmap <mapfilepath>\" to load the map. " << endl ;
+			std::cout << "1. enter \"loadmap <mapfilepath>\" to load the map \nOR \"tournament - M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D < maxnumberofturns>\" to start tournament mode" << endl ;
 			break;
 		case 2:
 			//map loaded Phase
@@ -260,22 +270,75 @@ void GameEngine::startup() {
 			break;
 		}
 
-		Command* command = NULL;
+		
+		Command* command = NULL;	
 		bool commandIsNotValid = true;
-		while (commandIsNotValid) {
+		while (commandIsNotValid && !tournaMode) {
 			//read a command .
 			command = cmdProcessor->getCommand();
+
 			commandIsNotValid = !(cmdProcessor->validate(*command, currentStage));
-			if (commandIsNotValid) {
+
+			//*******************Validate tournament command + Runs****************************
+			tourna_paravec = cmdProcessor->validateTourna(*command, currentStage);	
+		
+			tournaMode = !(tourna_paravec.size() == 0);
+			//Turn on tournaMode and Run games under this condition
+			if (tournaMode) {
+
+				command->saveEffect("");
+				int num_map = tourna_paravec[0].size();
+				int num_games = tourna_paravec[2].size();
+				int max_num_runs = tourna_paravec[3].size();
+				for (int x = 0; x < num_map; x++) {
+					map_positioner = x;
+					for (int y = 0; y < num_games; y++){
+						this->startup();
+				    }
+				}
+				return;
+			}
+			//**************************************************************************
+			else if (commandIsNotValid) {
 				cout << "Invaild Command! please re-enter the command: " << endl;
 				command->saveEffect("Invalid Command");
 			}
 			else {
 				command->saveEffect("");
-				
+		
 			}
 		}
 
+		//********************************Tournament Command Initialization********************************************
+		if (tournaMode) {
+			switch (currentStage) {
+			case 1:
+			    command = cmdProcessor->saveCommand("loadmap " + mapfile_map.find(tourna_paravec[0][map_positioner])->second);
+				command->saveEffect("");
+				break;
+			case 2:
+				command = cmdProcessor->saveCommand("validatemap");
+				command->saveEffect("");
+				break;
+			case 3:
+				command = cmdProcessor->saveCommand("addplayer " + strategy_map.find(tourna_paravec[1][0])->second);
+				command->saveEffect("");
+				break;
+			case 4:
+				if (playerCount <= tourna_paravec[1].size()) {
+					command = cmdProcessor->saveCommand("addplayer " + strategy_map.find(tourna_paravec[1][playerCount-1])->second);				
+				}
+				else {
+					command = cmdProcessor->saveCommand("gamestart");
+				}
+				command->saveEffect("");
+				break;
+			default:
+				break;
+			}
+		}
+		//************************************************************************************************************
+		
 		//execute the command refers to different stage.
 		cout << endl << "Executing command:  "<< command->getOriginalCommand()<< endl;
 		vector<string> args = command->getArgs();
@@ -752,18 +815,29 @@ int GameEngine::issueOrderPhase(int startingPlayer) {
 	int theCurrentPlayer = startingPlayer;
 	Command* command = NULL;
 	bool commandIsNotValid = true;
-	while (commandIsNotValid) {
-		//read a command .
-		command = cmdProcessor->getCommand();
-		commandIsNotValid = !(cmdProcessor->validate(*command, currentStage));
-		if (commandIsNotValid) {
-			cout << "Invaild Command! please re-enter the command: " << endl;
-			command->saveEffect("Invalid Command");
-		}
-		else {
-			command->saveEffect("");
+	//Human Player: it needs user's iteraction
+	if (!tournaMode || playerList[startingPlayer]->getName().compare("Human") == 0 ) {
+		while (commandIsNotValid) {
+			//read a command .
+			command = cmdProcessor->getCommand();
+			commandIsNotValid = !(cmdProcessor->validate(*command, currentStage));
+			if (commandIsNotValid) {
+				cout << "Invaild Command! please re-enter the command: " << endl;
+				command->saveEffect("Invalid Command");
+			}
+			else {
+				command->saveEffect("");
 
+			}
 		}
+	}
+	//AI Player: auto-running commands
+	else {
+		command = cmdProcessor->saveCommand("AI Player's turn of issuing orders");
+		command->saveEffect("");
+		//playerList[startingPlayer]->issueOrder();
+		command = cmdProcessor->saveCommand("endissueorder");
+		command->saveEffect("");
 	}
 
 	//execute the command refers to different stage.

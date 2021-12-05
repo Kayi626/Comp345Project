@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 #include "Cards.h"
 #include "CommandProcessing.h"
 #include "Orders.h"
@@ -75,9 +76,20 @@ public:
 	static string fileLineReaderFilePath;
 	static int defualtTerritoriesAmount;
 	static bool useFileCommandProcessor;
+	static bool tournaMode;
+	//Record the parameters of tournament
+	//Index 0: Map list(eg. 1 2 3); Index 1: PlayerStrategies(eg.A C B); Index 2: # of Game runs on each map
+	//Index 3: max # of game runs in play stage of each game
+	static vector<vector<string>> tourna_paravec;
+	//Record five map files
+	static std::map<string,string> mapfile_map;
+	//Record four player strategies
+	static std::map<string, string> strategy_map;
+	//Record which map is being used so far(we use it to reference the corresponding map file)
+	static int map_positioner;
 
 	void startup();
-	//start the startup phases.
+	//start the startup phases
 	void mainGameLoop(int startingPlayer);
 	//start the play phases.
 
