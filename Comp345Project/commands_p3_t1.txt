@@ -1,4 +1,4 @@
-loadmap LOTR2.map
+loadmap ../Comp345Project/LOTR2.map
 validatemap
 addplayer Dash
 addplayer Lemon

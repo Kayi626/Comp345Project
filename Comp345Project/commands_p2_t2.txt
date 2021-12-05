@@ -1,5 +1,5 @@
-lp LOTR2.map
-loadmap LOTR2.map
+lp ../Comp345Project/LOTR2.map
+loadmap ../Comp345Project/LOTR2.map
 valip
 validatemap
 addplayer Lemon
