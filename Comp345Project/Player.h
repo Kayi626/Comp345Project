@@ -9,15 +9,14 @@
 
 using namespace std;
 
+class PlayerStrategy;
+
 class Player {
 private:
 
-	vector<Territory*> controlledTerritories;
-	//will return with (toDefend())
-	vector<Territory*> reachcableTerritories;
-	//will return with (toAttack())
+	PlayerStrategy* ps;
+
 	Hand* playerHandOfCards;
-	OrderList* playerOrderList;
 
 	bool hasEndThisIssueOrderTurn;
 	int reinforcementpool;
@@ -26,8 +25,6 @@ private:
 	//this is use to showing player how many armies he have during issue order phase.
 	int playerID;
 	string playerName;
-	vector<vector<Territory*>>* mapGraph;
-	//The mapGraph that this player is in.
 
 
 
@@ -36,6 +33,15 @@ private:
 	//add to the verctor list by checking territory's Name. won't add two same territory to a vector.
 	//return false if there's already exit a territory with same country id
 public:
+	vector<Territory*> controlledTerritories;
+	//will return with (toDefend())
+	vector<Territory*> reachcableTerritories;
+	//will return with (toAttack())
+
+	OrderList* playerOrderList;
+	vector<vector<Territory*>>* mapGraph;
+	//The mapGraph that this player is in.
+
 	void attachToPlayerOrderList(list<Observer *> &);
 	Player();
 	Player(int playerID, string playerName, vector<vector<Territory*>> *mapGraph);
@@ -51,6 +57,10 @@ public:
 	int getPlayerID();
 	OrderList* getOrderList();
 	Hand* getHandsOfCard();
+
+	PlayerStrategy* getPlayerStrategy();
+	void setPlayerStrategy(PlayerStrategy* newPS);
+
 
 	vector<Territory*> toDefend();
 	//return a list of terrtiries to be defended
@@ -101,3 +111,4 @@ public:
 	*/
 
 };
+

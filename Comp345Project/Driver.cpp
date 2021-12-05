@@ -10,6 +10,7 @@
 #include "Map.h"
 #include "GameEngine.h"
 #include "CommandProcessing.h"
+#include "PlayerStrategies.h"
 
 using namespace std;
 
@@ -33,33 +34,33 @@ int main(int argc, char* argv[]) {
 
     //Driver: for part 1
     //swtich between -console and commands file. When input -file filename commnad, it should be "-file <filename>"  
-    std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
-    clearText.close();    
-    std::regex reg1("-console");
-    std::regex reg2("-file <(.*)>");
-    if (argc == 1) {
-        cout << "No Argument Command Line Received! The program exists" << endl;
-        return 0;
-    } 
-    else if (std::regex_match(argv[1], reg1)) {
-            GameEngine::defualtTerritoriesAmount = 3;
-            GameEngine::useFileCommandProcessor = false;
-            GameEngine::isDebugMode = true;
-            GameEngine::instance()->startup();
-            return 0;
-    }
-    else if (std::regex_match(argv[1], reg2)) {
-            GameEngine::defualtTerritoriesAmount = 3;
-            GameEngine::useFileCommandProcessor = true;
-            GameEngine::setFilePath(extractLineArgumentCommand(argv[1]));
-            GameEngine::isDebugMode = true;
-            GameEngine::instance()->startup();
-            return 0;
-    }
-    else{
-        cout << "Invalid Command Line Argument! The program exists! ";
-        return 0;
-    }
+    //std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
+    //clearText.close();    
+    //std::regex reg1("-console");
+    //std::regex reg2("-file <(.*)>");
+    //if (argc == 1) {
+    //    cout << "No Argument Command Line Received! The program exists" << endl;
+    //    return 0;
+    //} 
+    //else if (std::regex_match(argv[1], reg1)) {
+    //        GameEngine::defualtTerritoriesAmount = 3;
+    //        GameEngine::useFileCommandProcessor = false;
+    //        GameEngine::isDebugMode = true;
+    //        GameEngine::instance()->startup();
+    //        return 0;
+    //}
+    //else if (std::regex_match(argv[1], reg2)) {
+    //        GameEngine::defualtTerritoriesAmount = 3;
+    //        GameEngine::useFileCommandProcessor = true;
+    //        GameEngine::setFilePath(extractLineArgumentCommand(argv[1]));
+    //        GameEngine::isDebugMode = true;
+    //        GameEngine::instance()->startup();
+    //        return 0;
+    //}
+    //else{
+    //    cout << "Invalid Command Line Argument! The program exists! ";
+    //    return 0;
+    //}
     
     /*Driver: for part 2
     * Dear professor, the "isDebugMode"can enable the debug made for testing functions and abilities.
@@ -80,26 +81,27 @@ int main(int argc, char* argv[]) {
     * 8.the gamestart command results transiting to the play phase 
     * 14-17. demonstrates the effect of commands
     */
-   /* std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
-    clearText.close();
-    GameEngine::fileLineReaderFilePath = "commands_p2_t1.txt";
-    GameEngine::defualtTerritoriesAmount = 6;
-    GameEngine::isDebugMode = true;
-    GameEngine::instance()->startup();
-    return 0;*/
+
+    //std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
+    //clearText.close();
+    //GameEngine::fileLineReaderFilePath = "../Comp345Project/commands_p2_t1.txt";
+    //GameEngine::defualtTerritoriesAmount = 6;
+    //GameEngine::isDebugMode = true;
+    //GameEngine::instance()->startup();
+    //return 0;
 
 
     /*>>>>>>>>>>>>>>>>>>>>>>testing:
     * 5.the gamestart command results in randomly determine the order of play of the players in the game
     * 9.Invalid commands for the current state are rejected. 
     */
-   /* std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
-    clearText.close();
-    GameEngine::fileLineReaderFilePath = "commands_p2_t2.txt";
-    GameEngine::defualtTerritoriesAmount = 2;
-    GameEngine::isDebugMode = false;
-    GameEngine::instance()->startup();
-    return 0;*/
+    //std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
+    //clearText.close();
+    //GameEngine::fileLineReaderFilePath = "../Comp345Project/commands_p2_t2.txt";
+    //GameEngine::defualtTerritoriesAmount = 2;
+    //GameEngine::isDebugMode = false;
+    //GameEngine::instance()->startup();
+    //return 0;
 
 
 
@@ -117,13 +119,13 @@ int main(int argc, char* argv[]) {
     * Since the 'debug mode' is on, it wont requries there to be a card to issue the order.
     * I will demostrate the function of cards system in the next example
     */
- /*  std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
+   std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
     clearText.close();
-    GameEngine::fileLineReaderFilePath = "commands_p3_t1.txt";
+    GameEngine::fileLineReaderFilePath = "../Comp345Project/commands_p3_t1.txt";
     GameEngine::defualtTerritoriesAmount = 4;
     GameEngine::isDebugMode = true;
     GameEngine::instance()->startup();
-    return 0;*/
+    return 0;
 
 
     /*>>>>>>>>>>>>>>>>>>>>>>testing:
@@ -131,9 +133,9 @@ int main(int argc, char* argv[]) {
     * 16.Driver clearly demonstrates that a player that does not control any territory is removed from the game
     * 17.Driver clearly demonstrates that the game ends when a single player controls all the territories
     */
-    /*std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
-    clearText.close();
-    GameEngine::fileLineReaderFilePath = "commands_p3_t2.txt";
+    //std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
+ /*   clearText.close();
+    GameEngine::fileLineReaderFilePath = "../Comp345Project/commands_p3_t2.txt";
     GameEngine::defualtTerritoriesAmount = 2;
     GameEngine::isDebugMode = true;
     GameEngine::instance()->startup();
@@ -147,13 +149,13 @@ int main(int argc, char* argv[]) {
     * for this part, I will enter the command by console, in order to show you the card has been used after issue the order, 
     * and the order will failed to add to the order list if that player dont have the card.
     */
-   /* std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
-    clearText.close();
-    GameEngine::fileLineReaderFilePath = "commands_p3_t3.txt";
-    GameEngine::defualtTerritoriesAmount = 3;
-    GameEngine::isDebugMode = false;
-    GameEngine::instance()->startup();
-    return 0;*/
+    //std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
+    //clearText.close();
+    //GameEngine::fileLineReaderFilePath = "../Comp345Project/commands_p3_t3.txt";
+    //GameEngine::defualtTerritoriesAmount = 3;
+    //GameEngine::isDebugMode = false;
+    //GameEngine::instance()->startup();
+    //return 0;
 
 
 
@@ -167,9 +169,9 @@ int main(int argc, char* argv[]) {
     * 12.Driver clearly demonstrates that the blockade order transfers ownership to the Neutral player
     * 13.Driver clearly demonstrates that all the orders described above can be issued by a player and executed by the game engine.
     */
-     /*std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
-     clearText.close();*/
-    //GameEngine::fileLineReaderFilePath = "commands_p4_t1.txt";
+    // std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
+    // clearText.close();
+    //GameEngine::fileLineReaderFilePath = "../Comp345Project/commands_p4_t1.txt";
     //GameEngine::defualtTerritoriesAmount = 3;
     //GameEngine::isDebugMode = true;
     //GameEngine::instance()->startup();

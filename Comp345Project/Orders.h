@@ -222,3 +222,25 @@ public:
 };
 
 
+class CheatingOrder : public Orders {
+private:
+	Territory* targetTerritory;
+	static string ordeffect6;
+public:
+
+	string getOrderName();
+	string stringToLog();
+	CheatingOrder(int playerID, Territory* targetTerritory);
+	CheatingOrder(const CheatingOrder& ord);
+	CheatingOrder& operator = (const CheatingOrder& ord);
+	virtual void describe(std::ostream& output) const override;
+
+	virtual std::unique_ptr<string> describingMessage();
+	virtual string execute();
+	virtual bool validate();
+	/*Conctructor: targetTerritory: the territories hold by the target player
+	*
+	* validate(): will check nothing. this order will 100% executed since it's created by the cheater player.
+	*/
+};
+

@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include "Player.h"
+#include "PlayerStrategies.h"
 #include "Orders.h"
 #include "Cards.h"
 #include "CommandProcessing.h"
@@ -16,7 +17,7 @@ using namespace std;
 GameEngine* GameEngine::GE_instance = 0;
 bool GameEngine::isDebugMode = false;
 bool GameEngine::useFileCommandProcessor = true;
-string GameEngine::fileLineReaderFilePath = "commands_p4_t1.txt";
+string GameEngine::fileLineReaderFilePath = "../Comp345Project/commands_p4_t1.txt";
 int GameEngine::defualtTerritoriesAmount = 2;
 
 void GameEngine::setFilePath(string str) {
@@ -62,6 +63,8 @@ void GameEngine::init(const GameEngine &ge) {
 	this->deck = new Deck(*(ge.deck));
 	for (auto &player : ge.playerList) {
 		Player *p = new Player(*player);
+
+		p->setPlayerStrategy(new HumanPlayerStrategy(p));
 		p->attachToPlayerOrderList(this->observers);
 		this->playerList.push_back(p);
 	}
@@ -311,6 +314,7 @@ void GameEngine::startup() {
 			//map validated Phase
 			transition(4);
 			Player* p1 = new Player(playerCount, args[1], &connectedGraph);
+			p1->setPlayerStrategy(new HumanPlayerStrategy(p1));
 			p1->attachToPlayerOrderList(this->observers);
 			playerList.push_back(p1);
 			
@@ -322,6 +326,7 @@ void GameEngine::startup() {
 			//players added Phase
 			if (args[0].compare("addplayer") == 0) {
 				Player* p1 = new Player(playerCount, args[1], &connectedGraph);
+				p1->setPlayerStrategy(new HumanPlayerStrategy(p1));
 				p1->attachToPlayerOrderList(this->observers);
 				playerList.push_back(p1);
 
