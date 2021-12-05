@@ -3,6 +3,7 @@
 #include <cstring>
 #include <string>
 #include "Player.h"
+#include "PlayerStrategies.h"
 #include "Map.h"
 #include "Orders.h"
 #include "Cards.h"
@@ -35,6 +36,7 @@ Player::Player(int playerID, string playerName, vector<vector<Territory*>> *mapG
 	this->playerOrderList = new OrderList(playerID);
 	//this->playerOrderList->attach()
 
+
 	this->update();
 	// asign correct values to ControlledTerritories and ReachcableTerritories.
 }
@@ -54,6 +56,7 @@ Player& Player::operator= (const Player& p) {
 	this->reachcableTerritories = vector<Territory*>(p.reachcableTerritories);
 	this->playerHandOfCards = new Hand(*(p.playerHandOfCards));
 	this->playerOrderList = new OrderList(*(p.playerOrderList));
+	this->ps = p.ps;
 	return *this;
 
 }
@@ -69,6 +72,7 @@ Player::Player(const Player& p) {
 	this->reachcableTerritories = vector<Territory*>(p.reachcableTerritories);
 	this->playerHandOfCards = new Hand(*(p.playerHandOfCards));
 	this->playerOrderList = new OrderList(*(p.playerOrderList));
+	this->ps = p.ps;
 }
 
 void Player::attachToPlayerOrderList(list<Observer*> &observers) {
@@ -95,12 +99,25 @@ OrderList* Player::getOrderList() {
 Hand* Player::getHandsOfCard() {
 	return this->playerHandOfCards;
 }
+
+PlayerStrategy* Player::getPlayerStrategy() {
+	return this->ps;
+}
+
+void Player::setPlayerStrategy(PlayerStrategy* newPS) {
+	this->ps = newPS;
+}
+
 vector<Territory*> Player::toDefend() {
-	return this->controlledTerritories;
+
+	return this->ps->toDefend();
 }
 vector<Territory*> Player::toAttack() {
-	return this->reachcableTerritories;
+
+	return this->ps->toAttack();
 }
+
+
 
 
 bool Player::checkAndResetConqueredInThisTurn() {
@@ -206,70 +223,11 @@ void Player::printPlayerTerrtories() {
 }
 
 void Player::issueOrder(int type, Territory* targetTerritory, int numberOfArmies, Territory* fromTerritory) {
-	switch (type) {
-		case 0: {
-			//0 - DeployOrder, 3 args
-			Orders* order = new DeployOrder(this->getPlayerID(), numberOfArmies, targetTerritory);
-			this->playerOrderList->addOrder(order);
-			break;
-		}
-		case 1: {
-			//1 - AdvanceOrder, 4 args
-			bool isAdjacent = false;
 
-			for (vector<Territory*> v : *mapGraph) {
-				bool isHoldByPlayer = false;
-				for (int x = 0; x < v.size(); x++) {
-					Territory temp = *(v[x]);
-					if (x == 0) {
-						if (temp.getName().compare(fromTerritory->getName())== 0) {
-							isHoldByPlayer = true;
-						}
-					}
-					else if (isHoldByPlayer) {
-						if (temp.getName().compare(targetTerritory->getName()) == 0) {
-							isAdjacent = true;
-						}
-					}
-				}
-			} // check if the target terrtory and from territory is adjacent
 
-			Orders* order = new AdvanceOrder(this->getPlayerID(), numberOfArmies, fromTerritory, targetTerritory,isAdjacent);
+	this->ps->issueOrder(type, targetTerritory, numberOfArmies, fromTerritory);
 
-			this->playerOrderList->addOrder(order);
-			break;
-		}
-		case 2: {
-			//2 - BombOrder, 2 args
-			bool isAdjacent = false;
-			for (Territory* ter : this->toAttack()) {
-				if (ter->getName().compare(targetTerritory->getName()) == 0) {
-					isAdjacent = true;
-				}
-			}
-			Orders* order = new BombOrder(this->getPlayerID(),targetTerritory,isAdjacent);
-			this->playerOrderList->addOrder(order);
-			break;
-		}
-		case 3: {
-			//3 - BlockadeOrder, 2 args
-			Orders* order = new BlockadeOrder(this->getPlayerID(), targetTerritory);
-			this->playerOrderList->addOrder(order);
-			break;
-		}
-		case 4: {
-			//4 - AirliftOrder, 4 args
-			Orders* order = new AirliftOrder(this->getPlayerID(), numberOfArmies, fromTerritory, targetTerritory);
-			this->playerOrderList->addOrder(order);
-			break;
-		}
-		case 5: {
-			//5 - NegotiateOrder, 1 args
-			Orders* order = new NegotiateOrder(this->getPlayerID(), targetTerritory);
-			this->playerOrderList->addOrder(order);
-			break;
-		}
-	}
+
 
 }
 
@@ -294,3 +252,4 @@ bool Player::addToReachableWithNoRepeatition(Territory* t) {
 	reachcableTerritories.push_back(t);
 	return true;
 }
+
