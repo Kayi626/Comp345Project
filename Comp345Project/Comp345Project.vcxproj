@@ -146,6 +146,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="Orders.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerStrategies.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cards.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="Driver.cpp" />
     <ClCompile Include="Orders.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerStrategies.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="commands.txt" />
