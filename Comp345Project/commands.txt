@@ -1,6 +1,6 @@
-loadmap LOTR2.map
-loadmap bigeurope.map
-loadmap LOTR2.map
+loadmap ../Comp345Project/LOTR2.map
+loadmap ../Comp345Project/bigeurope.map
+loadmap ../Comp345Project/LOTR2.map
 validatemap
 addplayer Dash
 addplayer Jone
