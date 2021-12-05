@@ -1,0 +1,5 @@
+loadmap ../Comp345Project/smallMap.map
+validatemap
+addplayer Dash
+addplayer Lemon
+gamestart

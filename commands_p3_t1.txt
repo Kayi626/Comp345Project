@@ -1,0 +1,26 @@
+loadmap ../Comp345Project/LOTR2.map
+validatemap
+addplayer Dash
+addplayer Lemon
+addplayer Nestea
+gamestart
+endissueorder
+endissueorder
+endissueorder
+issueorder 0 5 10
+issueorder 0 12 20
+issueorder 0 3 2
+issueorder 0 6 2
+issueorder 0 11 20
+issueorder 0 3 2
+issueorder 1 10 1 6
+issueorder 1 18 1 9
+issueorder 1 2 1 1
+issueorder 3 5 1 1
+issueorder 2 15 1 0
+issueorder 4 4 1 2
+endissueorder
+endissueorder
+endissueorder
+endissueorder
+endissueorder
