@@ -1,0 +1,18 @@
+loadmap ../Comp345Project/LOTR2.map
+loadmap ../Comp345Project/bigeurope.map
+loadmap ../Comp345Project/LOTR2.map
+validatemap
+addplayer Dash
+addplayer Jone
+addplayer Lemon
+addplayer Rick
+addplayer Nestea
+gamestart
+endissueorder
+endissueorder
+endissueorder
+issueorder 0 19 2 0
+endissueorder
+endissueorder
+
+

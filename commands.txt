@@ -1,0 +1,25 @@
+loadmap ../Comp345Project/LOTR2.map
+loadmap ../Comp345Project/bigeurope.map
+loadmap ../Comp345Project/LOTR2.map
+validatemap
+addplayer Dash
+addplayer Jone
+addplayer King
+addplayer dude
+addplayer what
+gamestart
+endissueorder
+endissueorder
+endissueorder
+issueorder 0 19 2 0
+endissueorder
+issueorder 0 20 17 23333223235
+issueorder 1 23 17 29
+issueorder 2 12 2323232 232323
+issueorder 3 20 2323232 232323
+issueorder 4 20 2 29
+issueorder 5 20 223232 29
+endissueorder
+
+
+
