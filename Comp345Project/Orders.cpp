@@ -238,6 +238,7 @@ string BombOrder::getOrderName() { return "BombOrder"; };
 string BlockadeOrder::getOrderName() { return "BlockadeOrder"; };
 string AirliftOrder::getOrderName() { return  "AirliftOrder"; };
 string NegotiateOrder::getOrderName() { return "NegotiateOrder"; };
+string CheatingOrder::getOrderName() { return "CheatingOrder"; };
 
 std::string OrderList::stringToLog() { return "Order Issued: [" + getLast()->getOrderName() + "]"; };
 
@@ -247,6 +248,7 @@ std::string BombOrder::stringToLog() { return "Order Executed: [" + to_string(ge
 std::string BlockadeOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]" + this->getEffect(); };
 std::string AirliftOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]" + this->getEffect(); };
 std::string NegotiateOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]" + this->getEffect(); };
+std::string CheatingOrder::stringToLog() { return "Order Executed: [" + to_string(getOrderID()) + "][" + getOrderName() + "]" + this->getEffect(); };
 
 
 DeployOrder::DeployOrder(int playerID, int numberOfArmies, Territory* targetTerritory)
@@ -839,4 +841,61 @@ string NegotiateOrder::execute() {
 bool NegotiateOrder::validate() {
 	//just need to validate if it's negotiate with itself.
 	return (!(this->getPlayerID() == this->targetTerritory->getcontrolledPlayerID()));
+}
+
+
+
+CheatingOrder::CheatingOrder(int playerID, Territory* targetTerritory)
+	:Orders(playerID)
+{
+	this->targetTerritory = targetTerritory;
+
+}
+CheatingOrder& CheatingOrder::operator= (const CheatingOrder& ord) {
+	if (this == &ord) {
+		return (CheatingOrder&)ord;
+	}
+	Orders::operator=(ord);
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+	return *this;
+
+}
+CheatingOrder::CheatingOrder(const CheatingOrder& ord) {
+	this->targetTerritory = new Territory(*(ord.targetTerritory));
+}
+
+void CheatingOrder::describe(std::ostream& output) const {
+	string temp1 = "[CHEATING] Cheater player automatically conquers the terrtory :";
+	string temp2 = this->targetTerritory->getName();
+	temp1.append(temp2);
+	std::cout << temp1;
+}
+std::unique_ptr<string> CheatingOrder::describingMessage() {
+	string temp1 = "[CHEATING] Cheater player automatically conquers the terrtory :";
+	string temp2 = this->targetTerritory->getName();
+	temp1.append(temp2);
+	std::unique_ptr<string> message = std::make_unique<string>(temp1);
+	return message;
+}
+
+string CheatingOrder::execute() {
+
+	if (!validate()) {
+		string temp1 = "ERROR : You will never see this message. ";
+		//validate() will always return true.
+		return temp1;
+	}
+	//this->targetTerritory->setControlledPlayerID( this->getPlayerID());
+
+	string temp1 = "[Order Executed]Cheater player automatically conquers the terrtory: ";
+	string temp2 = this->targetTerritory->getName();
+	temp1.append(temp2);
+	cout << temp1 << endl;
+	this->setEffect(temp1);
+	notify(this);
+	return temp1;
+}
+bool CheatingOrder::validate() {
+	//will check nothing. this order will 100% executed since it's created by the cheater player.
+	return true;
 }
