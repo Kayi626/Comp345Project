@@ -96,6 +96,8 @@ public:
 	static int map_positioner;
 	//Record the wins of each game run 
 	static std::vector<vector<string>> winRecord;
+	//Record how many games have been run so far;
+	static int totalNumGames;
 
 	void startup();
 	//start the startup phases
@@ -105,9 +107,11 @@ public:
 	static void setFilePath(string str);
 
 	//Tournament's result Update Methods
-	void setGameResult(string str);
+	void  setGameResult(string str);
 	void  setTournaMode(bool value);
+	void  increNumGames();
 
+	void addPlayerToList(Player* player,int id);
 	void reinforcementPhase();
 	int issueOrderPhase(int startingPlayer);
 	void executreOrderPhase(int startingPlayer);

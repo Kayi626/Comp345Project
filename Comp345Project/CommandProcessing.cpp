@@ -372,7 +372,7 @@ void Command::saveEffect(string effect) {
 		temp3 = ". The game starts. ";
 	}
 	else if (std::regex_match(temp2,std::regex("addplayer\\s{1}(.*)\\s*"))) {
-		temp3 = ".PlAYER "+extractName(temp2)+" have been successfully added. ";
+		temp3 = ".PlAYER "+extractName(temp2)+" will be created and added into the PlayerList. ";
 	}
 	else if ((this->getArgs())[0].compare("loadmap") == 0) {
 		temp3 = ". Map has been successfully loaded. ";

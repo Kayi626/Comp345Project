@@ -29,6 +29,7 @@ map<string, string> GameEngine::strategy_map = { {"A","Aggressive"},{"B","Benevo
 int GameEngine::map_positioner = 0;
 vector<vector<string>> GameEngine::tourna_paravec;
 std::vector<vector<string>> GameEngine::winRecord;
+int GameEngine::totalNumGames = 0;
 
 void GameEngine::setFilePath(string str) {
 	fileLineReaderFilePath = str;
@@ -62,6 +63,7 @@ void GameEngine::init() {
 	this->logger = new LogObserver();
 	this->attach(logger);
 	this->cmdProcessor->attach(this->logger);
+	totalNumGames = 0;
 }
 void GameEngine::init(const GameEngine &ge) {
 	this->isStartup = ge.isStartup;
@@ -341,6 +343,7 @@ void GameEngine::startup() {
 					vector<string> temp;
 					winRecord.push_back(temp);
 					for (int y = 0; y < num_games; y++){
+						increNumGames();
 						this->startup();
 				    }
 				}
@@ -442,7 +445,7 @@ void GameEngine::startup() {
 				p1->setPlayerStrategy(new NeutralPlayerStrategy(p1));
 			}
 			p1->attachToPlayerOrderList(this->observers);
-			playerList.push_back(p1);
+			addPlayerToList(p1, playerCount);
 			
 			playerCount++;
 			std::cout << "Player: " << args[1] << " is successfully added!" << endl;
@@ -468,8 +471,7 @@ void GameEngine::startup() {
 					p1->setPlayerStrategy(new NeutralPlayerStrategy(p1));
 				}
 				p1->attachToPlayerOrderList(this->observers);
-				playerList.push_back(p1);
-
+				addPlayerToList(p1, playerCount);
 				playerCount++;
 				std::cout << "Player: " << args[1] << " is successfully added!" << endl;
 			}   
@@ -547,7 +549,7 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 	//keep looping until the actual game start.
 	while (counter_runs <= stoi(tourna_paravec[3][0]) && !isStartup) {
 	    
-		cout << "================================================================================¨[" << endl;
+		cout << "================================================================================" << endl;
 		//check the current game state by a switch statement. displays the message refers to that stage.
 		switch (currentStage) {
 		case 5:
@@ -556,8 +558,9 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 			break;
 		case 6: {
 			//issue orders Phase
-			if (!(playerList[startingPlayer]->gethasEndThisIssueOrderTurn())) {
-				cout << "========================PLAYER " + playerList[startingPlayer]->getName() + " TURN===================================="<<endl;
+			if (!tournaMode || playerList[startingPlayer]->getName().compare("Human") == 0) {
+			   if (!(playerList[startingPlayer]->gethasEndThisIssueOrderTurn())) {
+				cout << "========================PLAYER " + playerList[startingPlayer]->getName() + " TURN====================================" << endl;
 				playerList[startingPlayer]->getOrderList()->displayAll();
 				//display the current player's orderlist
 				std::cout << endl;
@@ -568,23 +571,30 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 				std::cout << endl;
 				//show the terrtories player own / can attack
 				showState();
-				if (!tournaMode || playerList[startingPlayer]->getName().compare("Human") == 0) {
-					std::cout << "# " << playerList[startingPlayer]->getPlayerID() << " Player: [" << playerList[startingPlayer]->getName() << "] it's your turn to issue an order!" << endl;
-					std::cout << "~=~ Order and their ordertype ID:   ~=~ " << endl;
-					std::cout << "~=~ 0 - DeployOrder, 3 args         ~=~ " << endl;
-					std::cout << "~=~ 1 - AdvanceOrder, 4 args        ~=~ " << endl;
-					std::cout << "~=~ 2 - BombOrder, 2 args           ~=~ " << endl;
-					std::cout << "~=~ 3 - BlockadeOrder, 2 args       ~=~ " << endl;
-					std::cout << "~=~ 4 - AirliftOrder, 4 args        ~=~ " << endl;
-					std::cout << "~=~ 5 - NegotiateOrder, 2 args      ~=~ " << endl;
-					std::cout << "1. enter \"issueorder <ordertype ID> [TargetTerrtoryID] [numberOfArmies] [FromTerrtoryID]\" " << endl;
-					std::cout << "to add an order into your order list " << endl;
-					std::cout << "2. enter \"endissueorder\" to stop your turns of order issueing" << endl;
-					std::cout << "You have: " << playerList[startingPlayer]->getEstimatePool() << " Armies in your reinforcement pool! (estimate)" << endl;
-				}
-				else {
+
+				std::cout << "# " << playerList[startingPlayer]->getPlayerID() << " Player: [" << playerList[startingPlayer]->getName() << "] it's your turn to issue an order!" << endl;
+				std::cout << "~=~ Order and their ordertype ID:   ~=~ " << endl;
+				std::cout << "~=~ 0 - DeployOrder, 3 args         ~=~ " << endl;
+				std::cout << "~=~ 1 - AdvanceOrder, 4 args        ~=~ " << endl;
+				std::cout << "~=~ 2 - BombOrder, 2 args           ~=~ " << endl;
+				std::cout << "~=~ 3 - BlockadeOrder, 2 args       ~=~ " << endl;
+				std::cout << "~=~ 4 - AirliftOrder, 4 args        ~=~ " << endl;
+				std::cout << "~=~ 5 - NegotiateOrder, 2 args      ~=~ " << endl;
+				std::cout << "1. enter \"issueorder <ordertype ID> [TargetTerrtoryID] [numberOfArmies] [FromTerrtoryID]\" " << endl;
+				std::cout << "to add an order into your order list " << endl;
+				std::cout << "2. enter \"endissueorder\" to stop your turns of order issueing" << endl;
+				std::cout << "You have: " << playerList[startingPlayer]->getEstimatePool() << " Armies in your reinforcement pool! (estimate)" << endl;
+			   }
+			   else {
+
+				   cout << "Human Player " + playerList[startingPlayer]->getName() + " has completed issuing order!" << endl;
+
+			   }
+		    }
+		 	else {
+				if (!(playerList[startingPlayer]->gethasEndThisIssueOrderTurn())) {
 					if (playerList[startingPlayer]->getName().compare("Aggressive") == 0) {
-						cout << "Aggressive AI Player is issuing orders......"<<endl;
+						cout << "Aggressive AI Player is issuing orders......" << endl;
 					}
 					else if (playerList[startingPlayer]->getName().compare("Benevolent") == 0) {
 						cout << "Benevolent AI Player is issuing orders....." << endl;
@@ -595,7 +605,20 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 					else if (playerList[startingPlayer]->getName().compare("Neutral") == 0) {
 						cout << "Neutral AI Player is issuing orders....." << endl;
 					}
-
+				}
+				else {
+					if (playerList[startingPlayer]->getName().compare("Aggressive") == 0) {
+						cout << "Aggressive AI Player has completed issuing orders!" << endl;
+					}
+					else if (playerList[startingPlayer]->getName().compare("Benevolent") == 0) {
+						cout << "Benevolent AI Player has completed issuing orders!" << endl;
+					}
+					else if (playerList[startingPlayer]->getName().compare("Cheater") == 0) {
+						cout << "Cheater AI Player has completed issuing orders!" << endl;
+					}
+					else if (playerList[startingPlayer]->getName().compare("Neutral") == 0) {
+						cout << "Neutral AI Player has completed issuing orders!" << endl;
+					}
 				}
 			}
 		}
@@ -1094,7 +1117,11 @@ int GameEngine::issueOrderPhase(int startingPlayer) {
 	return theCurrentPlayer;
 }
 
-
+void GameEngine::addPlayerToList(Player* player,int id) {
+	this->playerList.push_back(player);
+	logValue = "Player "+ player->getName()+" is added and assigned with ID "+to_string(id);
+	notify(this);
+}
 void GameEngine::executreOrderPhase(int startingPlayer) {
 	int currentPlayer = startingPlayer;
 	//first execute all the deploy orders
@@ -1145,13 +1172,19 @@ void GameEngine::executreOrderPhase(int startingPlayer) {
 	transition(-1);
 }
 
+void  GameEngine::increNumGames() {
+	totalNumGames++;
+	int temp = ((totalNumGames % stoi(tourna_paravec[2][0]) == 0) ? stoi(tourna_paravec[2][0]) : (totalNumGames % stoi(tourna_paravec[2][0])));
+	logValue = "\nGame No." + to_string(temp)+" on Map["+mapfile_map.find(tourna_paravec[0][map_positioner])->second+"]";
+	notify(this);
+}
 void GameEngine::transition(int newState) {
 	this->currentStage = newState;
 	if (newState != 0) {
 		logValue = "Current Game State: [" + stageToString(currentStage) + "]";
 	}
 	else {
-		logValue = "Current Game State has been re-set to default(0)";
+		logValue = "Current Game State has been re-set to default(0)\n";
 	}
 	notify(this);
 }
