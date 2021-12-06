@@ -10,6 +10,9 @@
 #include "Map.h"
 #include "Player.h"
 #include "LoggingObserver.h"
+#include <iomanip> 
+#include <sstream>
+
 
 using namespace std;
 
@@ -32,6 +35,7 @@ private:
 	vector<Player*> playerList;
 	Deck* deck;
 	string stageToString(int b);
+	string tourResultToStr();
 	vector<vector<int>> negotiateOrderList;
 
 	bool debugMode;
