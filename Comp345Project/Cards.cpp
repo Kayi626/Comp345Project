@@ -6,12 +6,12 @@ Card::~Card() {}
 
 Card::Card(const Card& card) {
   this->vec_types_card = vector<string>(card.vec_types_card);
-  this->card_type = new string(*(card.card_type));
+  this->card_type =card.card_type;
 }
 
 Card& Card::operator=(const Card& card) {
   this->vec_types_card = vector<string>(card.vec_types_card);
-  this->card_type = new string(*(card.card_type));
+  this->card_type = card.card_type;
   return *this;
 }
 
@@ -20,7 +20,7 @@ void Card::original_vec_type_card() {}
 
 vector<string>* Card::get_pointer_type_arr() { return &vec_types_card; }
 
-string* Card::get_card_type() { return card_type; }
+string Card::get_card_type() { return card_type; }
 
 // for printing the card type
 void Card::print_vec_card() {
@@ -30,7 +30,7 @@ void Card::print_vec_card() {
   }
 }
 
-void Card::set_card_type_id(int id) { card_type = &vec_types_card.at(id); }
+void Card::set_card_type_id(int id) { card_type = vec_types_card.at(id); }
 
 Deck::Deck() {
     pointer_card = nullptr;
@@ -39,7 +39,6 @@ Deck::Deck() {
 
 Deck::~Deck() {
   // delete the pointer to the card
-
   delete (pointer_card);
   delete (temp_card);
 }
@@ -100,7 +99,7 @@ void Deck::print_vec_size_of_deck() {
 void Deck::print_vec_deck() {
    std::cout << endl << ("*** The current vec_deck contains ") << vec_deck.size() <<(" cards ***") << endl;
   for (int i = 0; i < vec_deck.size(); i++) {
-    std::cout << ("#") << i << (" card is ") << *vec_deck.at(i)->get_card_type() << endl;
+    std::cout << ("#") << i << (" card is ") << vec_deck.at(i)->get_card_type() << endl;
   }
 }
 
@@ -126,7 +125,14 @@ void Deck::return_card_into_deck_vec(Card* card) { vec_deck.push_back(card); }
 Hand::Hand() {}
 
 Hand::~Hand() {
-  // destructor
+    for (Card* card : vec_hand_cards) {
+        delete card;
+    }
+    vec_hand_cards.clear();
+    for (Card* card : vec_play_cards) {
+        delete card;
+    }
+    vec_play_cards.clear();
 }
 
 Hand::Hand(const Hand& hand) {
@@ -150,8 +156,7 @@ void Hand::print_play_hand_card() {
   if (vec_play_cards.size() > 0) {
     std::cout << ("Play cards order is: ") << endl;
     for (int i = 0; i < vec_play_cards.size(); i++) {
-      std::cout << ("# ") << i << " is " << *vec_play_cards.at(i)->get_card_type()
-           << endl;
+        (vec_play_cards.at(i) != NULL) ? std::cout << ("# ") << i << " is " << vec_play_cards.at(i)->get_card_type()<< endl :std::cout<<""<<endl;
     }
   }
 
@@ -164,8 +169,7 @@ void Hand::print_vec_hand_cards() {
   if (vec_hand_cards.size() > 0) {
       std::cout << "-----              There are: " << vec_hand_cards.size() << " cards in hand                 -----" << endl;
     for (int i = 0; i < vec_hand_cards.size(); i++) {
-      std::cout << ("# ") << i << (" is ") << *vec_hand_cards.at(i)->get_card_type()
-           << endl;
+        (vec_hand_cards.at(i) != NULL) ? std::cout << ("# ") << i << " is " << vec_hand_cards.at(i)->get_card_type() << endl : std::cout << "" << endl;
     }
   }
 }
@@ -197,9 +201,9 @@ vector<Card*>* Hand::get_vec_play_cards() { return &vec_play_cards; }
 void Hand::remove_played_card_of_hand_cards(Card* r_card) {
     // find the same cards and delete
     for (int i = 0; i < vec_hand_cards.size(); i++) {
-        if (*vec_hand_cards.at(i)->get_card_type() == *r_card->get_card_type()) {
+        if (vec_hand_cards.at(i)->get_card_type().compare(r_card->get_card_type())==0) {
             vec_hand_cards.erase(vec_hand_cards.begin() + i);
-            std::cout << ("Deleting the card: ") << *r_card->get_card_type() << endl;
+            std::cout << ("Deleting the card: ") << r_card->get_card_type() << endl;
             return;
         }
     }
@@ -208,7 +212,7 @@ bool Hand::removeCardWithTypeID(string type) {
     bool find = false;
     // find the same cards and delete
     for (int i = 0; i < vec_hand_cards.size(); i++) {
-        if (vec_hand_cards.at(i)->get_card_type()->compare(type) ==0 ) {
+        if (vec_hand_cards.at(i)->get_card_type().compare(type) ==0 ) {
             vec_hand_cards.erase(vec_hand_cards.begin() + i);
             return true;
         }
