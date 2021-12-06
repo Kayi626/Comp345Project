@@ -157,8 +157,8 @@ void GameEngine::setGameResult(string str) {
 	}
 	else {
 		logValue = "The winner of this game run is [" + str + "]";
+		winRecord[map_positioner].push_back(str);
 	}
-	winRecord[map_positioner].push_back(str);
 	notify(this);
 }
 void GameEngine::setTournaMode(bool value){
@@ -1156,11 +1156,19 @@ void GameEngine::transition(int newState) {
 	notify(this);
 }
 
-//return game result:
+string GameEngine::right(const string s, const int w) {
+	stringstream ss, spaces;
+	int padding = w - s.size();                 // count excess room to pad
+	for (int i = 0; i < padding; ++i)
+		spaces << " ";
+	ss << spaces.str() << s;                    // format with padding
+	return ss.str();
+}
+
+//return game result
 string GameEngine::tourResultToStr() {
-	//parameter;
+	//parameters
 	string inDisp = "";
-	vector<string> vecOptTable;
 	int games = stoi(tourna_paravec[2][0]);
 
 	//create a string for input information display;
@@ -1172,26 +1180,17 @@ string GameEngine::tourResultToStr() {
 	inDisp.append("\nG: " + tourna_paravec[2][0] + " ");
 	inDisp.append("\nD: " + tourna_paravec[3][0] + " \n\n");
 
-	inDisp.append("\nGame Result:");
-	//create a vector of string containing result of games;
-	vecOptTable.push_back("\t");
-	vecOptTable.push_back("\t");
-	for (int i = 0; i < games; i++) {
-		vecOptTable.push_back("Game" + std::to_string(i + 1)+ '\t');
-	}
+	inDisp.append("Game Result:\n");
+	inDisp.append(right("",15) + "\t");
+	for (int i = 0; i < games; i++) {inDisp.append(right("Game" + std::to_string(i + 1),15)+ '\t');}
 	for (unsigned int i = 0; i < tourna_paravec[0].size(); i++) {
-		vecOptTable.push_back("\n" + mapfile_map.find(tourna_paravec[0][i])->second + "\t");
-		vecOptTable.push_back("\t");
-		for (int j = 0; j < games; j++) {
-			vecOptTable.push_back(winRecord[i][j] + '\t');
-		}
+		inDisp.append("\n" + right(mapfile_map.find(tourna_paravec[0][i])->second,15) + "\t");
+		for (int j = 0; j < games; j++) {inDisp.append(right(winRecord[i][j],15) + '\t');}
 	}
-	const char separator = ' ';
 
 	//output data;
 	std::stringstream ss;
 	ss << inDisp << endl;
-	for (auto &opt : vecOptTable) { ss << left << setw(15) << setfill(separator) << opt ; }
 	cout << "<--- Tournament Has Completed And Tournament Report Has been Generated in gamelog.txt. --->" << endl;
 	return ss.str();
 }
