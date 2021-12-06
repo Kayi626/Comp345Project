@@ -34,33 +34,33 @@ int main(int argc, char* argv[]) {
 
     //Driver: for part 1
     //swtich between -console and commands file. When input -file filename commnad, it should be "-file <filename>"  
-    //std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
-    //clearText.close();    
-    //std::regex reg1("-console");
-    //std::regex reg2("-file <(.*)>");
-    //if (argc == 1) {
-    //    cout << "No Argument Command Line Received! The program exists" << endl;
-    //    return 0;
-    //} 
-    //else if (std::regex_match(argv[1], reg1)) {
-    //        GameEngine::defualtTerritoriesAmount = 3;
-    //        GameEngine::useFileCommandProcessor = false;
-    //        GameEngine::isDebugMode = true;
-    //        GameEngine::instance()->startup();
-    //        return 0;
-    //}
-    //else if (std::regex_match(argv[1], reg2)) {
-    //        GameEngine::defualtTerritoriesAmount = 3;
-    //        GameEngine::useFileCommandProcessor = true;
-    //        GameEngine::setFilePath(extractLineArgumentCommand(argv[1]));
-    //        GameEngine::isDebugMode = true;
-    //        GameEngine::instance()->startup();
-    //        return 0;
-    //}
-    //else{
-    //    cout << "Invalid Command Line Argument! The program exists! ";
-    //    return 0;
-    //}
+    std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
+    clearText.close();    
+    std::regex reg1("-console");
+    std::regex reg2("-file <(.*)>");
+    if (argc == 1) {
+        cout << "No Argument Command Line Received! The program exists" << endl;
+        return 0;
+    } 
+    else if (std::regex_match(argv[1], reg1)) {
+            GameEngine::defualtTerritoriesAmount = 3;
+            GameEngine::useFileCommandProcessor = false;
+            GameEngine::isDebugMode = true;
+            GameEngine::instance()->startup();
+            return 0;
+    }
+    else if (std::regex_match(argv[1], reg2)) {
+            GameEngine::defualtTerritoriesAmount = 3;
+            GameEngine::useFileCommandProcessor = true;
+            GameEngine::setFilePath(extractLineArgumentCommand(argv[1]));
+            GameEngine::isDebugMode = true;
+            GameEngine::instance()->startup();
+            return 0;
+    }
+    else{
+        cout << "Invalid Command Line Argument! The program exists! ";
+        return 0;
+    }
     
     /*Driver: for part 2
     * Dear professor, the "isDebugMode"can enable the debug made for testing functions and abilities.
@@ -119,13 +119,13 @@ int main(int argc, char* argv[]) {
     * Since the 'debug mode' is on, it wont requries there to be a card to issue the order.
     * I will demostrate the function of cards system in the next example
     */
-   std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
+  /* std::ofstream clearText("gamelog.txt", std::ofstream::trunc);
     clearText.close();
     GameEngine::fileLineReaderFilePath = "../Comp345Project/commands_p3_t1.txt";
     GameEngine::defualtTerritoriesAmount = 4;
     GameEngine::isDebugMode = true;
     GameEngine::instance()->startup();
-    return 0;
+    return 0;*/
 
 
     /*>>>>>>>>>>>>>>>>>>>>>>testing:

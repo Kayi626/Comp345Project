@@ -241,7 +241,8 @@ void GameEngine::startup() {
 
 
 	//keep looping until the actual game start.
-	while (isStartup) {
+	while (isStartup){
+
 		cout << "================================================================================¨[" << endl;
 		showState();
 		//check the current game state by a switch statement. displays the message refers to that stage.
@@ -289,6 +290,7 @@ void GameEngine::startup() {
 				command->saveEffect("");
 				int num_map = tourna_paravec[0].size();
 				int num_games = tourna_paravec[2].size();
+				// TODO: ADD MAX_NUMS_RUNS INTO THE RUN
 				int max_num_runs = tourna_paravec[3].size();
 				for (int x = 0; x < num_map; x++) {
 					map_positioner = x;
@@ -456,7 +458,7 @@ void GameEngine::startup() {
 void GameEngine::mainGameLoop(int startingPlayer) {
 
 	int totalPlayer = playerList.size();
-
+	int counter_runs = 0;
 	cout << "¨X===============================================================================¨[" << endl;
 	cout << "¨d~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¨g" << endl;
 	cout << "¨d                            WarZone: Game started                              ¨g" << endl;
@@ -465,7 +467,8 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 
 
 	//keep looping until the actual game start.
-	while (!isStartup) {
+	while (counter_runs <= stoi(tourna_paravec[3][0]) && !isStartup) {
+	    
 		cout << "================================================================================¨[" << endl;
 		//check the current game state by a switch statement. displays the message refers to that stage.
 		switch (currentStage) {
@@ -487,18 +490,20 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 				std::cout << endl;
 				//show the terrtories player own / can attack
 				showState();
-				std::cout << "# " << playerList[startingPlayer]->getPlayerID() << " Player: [" << playerList[startingPlayer]->getName() << "] it's your turn to issue an order!" << endl;
-				std::cout << "~=~ Order and their ordertype ID:   ~=~ " << endl;
-				std::cout << "~=~ 0 - DeployOrder, 3 args         ~=~ " << endl;
-				std::cout << "~=~ 1 - AdvanceOrder, 4 args        ~=~ " << endl;
-				std::cout << "~=~ 2 - BombOrder, 2 args           ~=~ " << endl;
-				std::cout << "~=~ 3 - BlockadeOrder, 2 args       ~=~ " << endl;
-				std::cout << "~=~ 4 - AirliftOrder, 4 args        ~=~ " << endl;
-				std::cout << "~=~ 5 - NegotiateOrder, 2 args      ~=~ " << endl;
-				std::cout << "1. enter \"issueorder <ordertype ID> [TargetTerrtoryID] [numberOfArmies] [FromTerrtoryID]\" " << endl;
-				std::cout << "to add an order into your order list " << endl;
-				std::cout << "2. enter \"endissueorder\" to stop your turns of order issueing" << endl;
-				std::cout << "You have: "<< playerList[startingPlayer] ->getEstimatePool()<<" Armies in your reinforcement pool! (estimate)" << endl;
+				//if (!tournaMode || playerList[startingPlayer]->getName().compare("Human") == 0) {
+					std::cout << "# " << playerList[startingPlayer]->getPlayerID() << " Player: [" << playerList[startingPlayer]->getName() << "] it's your turn to issue an order!" << endl;
+					std::cout << "~=~ Order and their ordertype ID:   ~=~ " << endl;
+					std::cout << "~=~ 0 - DeployOrder, 3 args         ~=~ " << endl;
+					std::cout << "~=~ 1 - AdvanceOrder, 4 args        ~=~ " << endl;
+					std::cout << "~=~ 2 - BombOrder, 2 args           ~=~ " << endl;
+					std::cout << "~=~ 3 - BlockadeOrder, 2 args       ~=~ " << endl;
+					std::cout << "~=~ 4 - AirliftOrder, 4 args        ~=~ " << endl;
+					std::cout << "~=~ 5 - NegotiateOrder, 2 args      ~=~ " << endl;
+					std::cout << "1. enter \"issueorder <ordertype ID> [TargetTerrtoryID] [numberOfArmies] [FromTerrtoryID]\" " << endl;
+					std::cout << "to add an order into your order list " << endl;
+					std::cout << "2. enter \"endissueorder\" to stop your turns of order issueing" << endl;
+					std::cout << "You have: " << playerList[startingPlayer]->getEstimatePool() << " Armies in your reinforcement pool! (estimate)" << endl;
+				//}
 			}
 		}
 			break;
@@ -562,6 +567,7 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 			//execute orders Phase
 			cout << "Executing orders... " << endl;
 			executreOrderPhase(startingPlayer);
+			counter_runs++;
 			break;
 
 		}
@@ -658,7 +664,10 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 
 		cout << "================================================================================¨a" << endl << endl << endl;
 
-
+		if (counter_runs > stoi(tourna_paravec[3][0])) {
+		    
+			cout << "Exceed the maximum turns. The game result of the current game run is DRAW." << endl;
+		}
 
 	}
 
@@ -835,7 +844,9 @@ int GameEngine::issueOrderPhase(int startingPlayer) {
 	else {
 		command = cmdProcessor->saveCommand("AI Player's turn of issuing orders");
 		command->saveEffect("");
-		//playerList[startingPlayer]->issueOrder();
+		playerList[startingPlayer]->issueOrder(0,this->map->getMapGraph()[0][0],0,this->map->getMapGraph()[0][0]);
+		//theCurrentPlayer = switchCurrentPlayer(startingPlayer);
+		//return theCurrentPlayer;
 		command = cmdProcessor->saveCommand("endissueorder");
 		command->saveEffect("");
 	}
