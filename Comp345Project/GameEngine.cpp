@@ -11,6 +11,9 @@
 #include <vector>
 #include <iostream>
 #include<map>
+#include <iomanip> 
+#include <sstream>
+
 
 using namespace std;
 
@@ -155,7 +158,7 @@ void GameEngine::setGameResult(string str) {
 }
 void GameEngine::setTournaMode(bool value){
 	if (value == false && tournaMode == true) {
-		logValue = "\n===============================Tournament Ends===============================";
+		logValue = tourResultToStr() + "\n===============================Tournament Ends===============================";;
 		tournaMode = value;
 		notify(this);
 	}
@@ -1076,10 +1079,46 @@ void GameEngine::executreOrderPhase(int startingPlayer) {
 	transition(-1);
 }
 
-
-
 void GameEngine::transition(int newState) {
 	this->currentStage = newState;
 	logValue = "Current Game State: [" + stageToString(currentStage) + "]";
 	notify(this);
+}
+
+//return game result:
+string GameEngine::tourResultToStr() {
+	//parameter;
+	string inDisp = "";
+	vector<string> vecOptTable;
+	int games = stoi(tourna_paravec[2][0]);
+
+	//create a string for input information display;
+	inDisp.append("\nTournament mode:");
+	inDisp.append("\nM: ");
+	for (auto &map : tourna_paravec[0]) { inDisp.append(mapfile_map.find(map)->second + " | "); }
+	inDisp.append("\nP: ");
+	for (auto &pl : tourna_paravec[1]) { inDisp.append(strategy_map.find(pl)->second + " | "); }
+	inDisp.append("\nG: " + tourna_paravec[2][0] + " ");
+	inDisp.append("\nD: " + tourna_paravec[3][0] + " \n\n");
+
+	inDisp.append("\nGame Result:");
+	//create a vector of string containing result of games;
+	vecOptTable.push_back("\t");
+	for (int i = 0; i < games; i++) {
+		vecOptTable.push_back("Game" + std::to_string(i + 1) + "\t");
+	}
+	for (unsigned int i = 0; i < tourna_paravec[0].size(); i++) {
+		vecOptTable.push_back('\n' + mapfile_map.find(tourna_paravec[0][i])->second + '\t');
+		for (int j = 0; j < games; j++) {
+			vecOptTable.push_back(winRecord[i][j] + '\t');
+		}
+	}
+	vecOptTable.push_back("\n");
+
+	//output data;
+	std::stringstream ss;
+	ss << inDisp << endl;
+	for (auto &opt : vecOptTable) { ss << std::right << std::setw(15) << opt; }
+	cout << "<--- Tournament result is printed. --->" << endl;
+	return ss.str();
 }
