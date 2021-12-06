@@ -485,6 +485,7 @@ void GameEngine::startup() {
 					p1->setReinforcementpool(50);
 
 					//let each player draw 2 initial cards
+					//deck->print_vec_size_of_deck();
 					p1->getHandsOfCard()->set_vec_hand_cards(deck->draw());
 					p1->getHandsOfCard()->set_vec_hand_cards(deck->draw());
 
@@ -551,7 +552,7 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 		case 6: {
 			//issue orders Phase
 			if (!(playerList[startingPlayer]->gethasEndThisIssueOrderTurn())) {
-
+				cout << "========================PLAYER " + playerList[startingPlayer]->getName() + " TURN======================================"<<endl;
 				playerList[startingPlayer]->getOrderList()->displayAll();
 				//display the current player's orderlist
 				std::cout << endl;
@@ -840,7 +841,9 @@ void GameEngine::reset() {
 	delete map;
 	map = new Map();
 	delete deck;
+	//restore the original deck for a new game!!
 	deck = new Deck();
+	deck->original_vec_deck();
 	
 	for (int i = 0; i < playerList.size(); i++)
 		delete playerList[i];
