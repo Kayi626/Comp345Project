@@ -1166,30 +1166,32 @@ string GameEngine::tourResultToStr() {
 	//create a string for input information display;
 	inDisp.append("\nTournament mode:");
 	inDisp.append("\nM: ");
-	for (auto &map : tourna_paravec[0]) { inDisp.append(mapfile_map.find(map)->second + " | "); }
+	for (auto &map : tourna_paravec[0]) { " | " + inDisp.append(mapfile_map.find(map)->second + " | "); }
 	inDisp.append("\nP: ");
-	for (auto &pl : tourna_paravec[1]) { inDisp.append(strategy_map.find(pl)->second + " | "); }
+	for (auto &pl : tourna_paravec[1]) { " | " + inDisp.append(strategy_map.find(pl)->second + " | "); }
 	inDisp.append("\nG: " + tourna_paravec[2][0] + " ");
 	inDisp.append("\nD: " + tourna_paravec[3][0] + " \n\n");
 
 	inDisp.append("\nGame Result:");
 	//create a vector of string containing result of games;
 	vecOptTable.push_back("\t");
+	vecOptTable.push_back("\t");
 	for (int i = 0; i < games; i++) {
-		vecOptTable.push_back("Game" + std::to_string(i + 1) + "\t");
+		vecOptTable.push_back("Game" + std::to_string(i + 1)+ '\t');
 	}
 	for (unsigned int i = 0; i < tourna_paravec[0].size(); i++) {
-		vecOptTable.push_back('\n' + mapfile_map.find(tourna_paravec[0][i])->second + '\t');
+		vecOptTable.push_back("\n" + mapfile_map.find(tourna_paravec[0][i])->second + "\t");
+		vecOptTable.push_back("\t");
 		for (int j = 0; j < games; j++) {
 			vecOptTable.push_back(winRecord[i][j] + '\t');
 		}
 	}
-	vecOptTable.push_back("\n");
+	const char separator = ' ';
 
 	//output data;
 	std::stringstream ss;
 	ss << inDisp << endl;
-	for (auto &opt : vecOptTable) { ss << std::left << std::setw(15) << opt; }
+	for (auto &opt : vecOptTable) { ss << left << setw(15) << setfill(separator) << opt ; }
 	cout << "<--- Tournament Has Completed And Tournament Report Has been Generated in gamelog.txt. --->" << endl;
 	return ss.str();
 }
