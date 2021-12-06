@@ -25,6 +25,7 @@ map<string, string> GameEngine::mapfile_map = {{"1", "LOTR2.map"}, {"2","smallMa
 map<string, string> GameEngine::strategy_map = { {"A","Aggressive"},{"B","Benevolent"},{"N","Neutral"},{"C","Cheater"},{"H","Human"}};
 int GameEngine::map_positioner = 0;
 vector<vector<string>> GameEngine::tourna_paravec;
+std::vector<vector<string>> GameEngine::winRecord;
 
 void GameEngine::setFilePath(string str) {
 	fileLineReaderFilePath = str;
