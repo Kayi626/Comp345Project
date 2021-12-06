@@ -10,17 +10,21 @@ Command: [validatemap]
 Command's Effect: [Command is successfully executed: validatemap. Map has been successfully validated. ]
 Current Game State: [map validated]
 Command: [addplayer Aggressive]
-Command's Effect: [Command is successfully executed: addplayer Aggressive. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Aggressive.Aggressive have been successfully added. ]
 Current Game State: [players added]
 Command: [addplayer Benevolent]
-Command's Effect: [Command is successfully executed: addplayer Benevolent. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Benevolent.Benevolent have been successfully added. ]
 Command: [addplayer Cheater]
-Command's Effect: [Command is successfully executed: addplayer Cheater. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Cheater.Cheater have been successfully added. ]
 Command: [addplayer Neutral]
-Command's Effect: [Command is successfully executed: addplayer Neutral. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Neutral.Neutral have been successfully added. ]
 Command: [gamestart]
 Command's Effect: [Command is successfully executed: gamestart. The game starts. ]
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+AI Player: Neutral received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Aggressive Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
@@ -46,7 +50,12 @@ Order Executed: [6][CheatingOrder][Order Executed]Cheater player automatically c
 Order Executed: [3][AdvanceOrder][Order Failed]Advance Order: 3 from player: 1 didn't execute! Barad_D鹯
 Order Executed: [2][AdvanceOrder][Order Failed]Advance Order: 2 from player: 1 didn't execute! Plateau_of_Gorogoth
 Current Game State: [check win condition]
+No Winner Yet
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+AI Player: Neutral received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Benevolent Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Benevolent Player Issuing Orders]
@@ -68,7 +77,11 @@ Order Executed: [10][CheatingOrder][Order Executed]Cheater player automatically 
 Order Executed: [12][AdvanceOrder][Order Executed]Player: 1 advanced 57 armies from terrtire: Black_lake , and succesfully conquered terrtory: Barad_D鹯
 Order Executed: [9][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
 Current Game State: [check win condition]
+No Winner Yet
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Aggressive Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
@@ -90,7 +103,10 @@ Order Executed: [15][AdvanceOrder][Order Executed]Player: 1 advanced 60 armies f
 Order Executed: [17][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
 Order Executed: [14][AdvanceOrder][Order Failed]Advance Order: 14 from player: 1 didn't execute! Ered_Lithui
 Current Game State: [check win condition]
+No Winner Yet
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Aggressive Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
@@ -108,15 +124,128 @@ Order Executed: [21][AdvanceOrder][Order Executed]Player: 1 advanced 63 armies f
 Order Executed: [22][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
 Order Executed: [20][AdvanceOrder][Order Failed]Advance Order: 20 from player: 1 didn't execute! Ered_Lithui
 Current Game State: [check win condition]
+The winner of this game run is [Aggressive]
+Current Game State has been re-set to default(0)
+Current Game State: [gamestart]
+Command: [loadmap smallMap.map]
+Command's Effect: [Command is successfully executed: loadmap smallMap.map. Map has been successfully loaded. ]
+Current Game State: [map loaded]
+Command: [validatemap]
+Command's Effect: [Command is successfully executed: validatemap. Map has been successfully validated. ]
+Current Game State: [map validated]
+Command: [addplayer Aggressive]
+Command's Effect: [Command is successfully executed: addplayer Aggressive.Aggressive have been successfully added. ]
+Current Game State: [players added]
+Command: [addplayer Benevolent]
+Command's Effect: [Command is successfully executed: addplayer Benevolent.Benevolent have been successfully added. ]
+Command: [addplayer Cheater]
+Command's Effect: [Command is successfully executed: addplayer Cheater.Cheater have been successfully added. ]
+Command: [addplayer Neutral]
+Command's Effect: [Command is successfully executed: addplayer Neutral.Neutral have been successfully added. ]
+Command: [gamestart]
+Command's Effect: [Command is successfully executed: gamestart. The game starts. ]
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+AI Player: Neutral received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Aggressive Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
 Order Issued: [DeployOrder]
 Order Issued: [AdvanceOrder]
+Order Issued: [AdvanceOrder]
+Order Issued: [AdvanceOrder]
+Command: [Benevolent Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Benevolent Player Issuing Orders]
+Order Issued: [DeployOrder]
+Command: [Cheater Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Cheater Player Issuing Orders]
+Order Issued: [CheatingOrder]
+Order Issued: [CheatingOrder]
+Command: [Neutral Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Neutral Player Issuing Orders]
 Current Game State: [execute orders]
-Order Executed: [24][DeployOrder][Order Executed]Player: 1 deployed 6 armies on terrtire: Orodruin
-Order Executed: [25][AdvanceOrder][Order Executed]Player: 1 advanced 69 armies from terrtire: Orodruin , and succesfully conquered terrtory: Ered_Lithui
+Order Executed: [24][DeployOrder][Order Executed]Player: 1 deployed 53 armies on terrtire: NURN
+Order Executed: [28][DeployOrder][Order Executed]Player: 2 deployed 53 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [30][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [27][AdvanceOrder][Order Executed]Player: 1 advanced 54 armies from terrtire: NURN , and succesfully conquered terrtory: Black_lake
+Order Executed: [29][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [26][AdvanceOrder][Order Failed]Advance Order: 26 from player: 1 didn't execute! Barad_D鹯
+Order Executed: [25][AdvanceOrder][Order Failed]Advance Order: 25 from player: 1 didn't execute! Plateau_of_Gorogoth
+Current Game State: [check win condition]
+No Winner Yet
+Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+AI Player: Neutral received a reinforcement of:  3 armies! 
+Current Game State: [issue orders]
+Command: [Benevolent Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Benevolent Player Issuing Orders]
+Order Issued: [DeployOrder]
+Command: [Cheater Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Cheater Player Issuing Orders]
+Order Issued: [CheatingOrder]
+Order Issued: [CheatingOrder]
+Command's Effect: [Command is successfully executed: Neutral Player Issuing Orders]
+Command: [Aggressive Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
+Order Issued: [DeployOrder]
+Order Issued: [AdvanceOrder]
+Current Game State: [execute orders]
+Order Executed: [34][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Black_lake
+Order Executed: [31][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [33][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [35][AdvanceOrder][Order Executed]Player: 1 advanced 57 armies from terrtire: Black_lake , and succesfully conquered terrtory: Barad_D鹯
+Order Executed: [32][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Current Game State: [check win condition]
+No Winner Yet
+Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+Current Game State: [issue orders]
+Command: [Aggressive Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
+Order Issued: [DeployOrder]
+Order Issued: [AdvanceOrder]
+Order Issued: [AdvanceOrder]
+Command: [Benevolent Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Benevolent Player Issuing Orders]
+Order Issued: [DeployOrder]
+Command: [Cheater Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Cheater Player Issuing Orders]
+Order Issued: [CheatingOrder]
+Order Issued: [CheatingOrder]
+Current Game State: [execute orders]
+Order Executed: [36][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Barad_D鹯
+Order Executed: [39][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [41][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [38][AdvanceOrder][Order Executed]Player: 1 advanced 60 armies from terrtire: Barad_D鹯 , and succesfully conquered terrtory: Plateau_of_Gorogoth
+Order Executed: [40][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [37][AdvanceOrder][Order Failed]Advance Order: 37 from player: 1 didn't execute! Ered_Lithui
+Current Game State: [check win condition]
+No Winner Yet
+Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+Current Game State: [issue orders]
+Command: [Aggressive Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
+Order Issued: [DeployOrder]
+Order Issued: [AdvanceOrder]
+Order Issued: [AdvanceOrder]
+Command: [Cheater Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Cheater Player Issuing Orders]
+Order Issued: [CheatingOrder]
+Order Issued: [CheatingOrder]
+Current Game State: [execute orders]
+Order Executed: [42][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [46][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [44][AdvanceOrder][Order Executed]Player: 1 advanced 63 armies from terrtire: Plateau_of_Gorogoth , and succesfully conquered terrtory: Orodruin
+Order Executed: [45][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [43][AdvanceOrder][Order Failed]Advance Order: 43 from player: 1 didn't execute! Ered_Lithui
 Current Game State: [check win condition]
 The winner of this game run is [Aggressive]
 Current Game State has been re-set to default(0)
@@ -128,17 +257,21 @@ Command: [validatemap]
 Command's Effect: [Command is successfully executed: validatemap. Map has been successfully validated. ]
 Current Game State: [map validated]
 Command: [addplayer Aggressive]
-Command's Effect: [Command is successfully executed: addplayer Aggressive. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Aggressive.Aggressive have been successfully added. ]
 Current Game State: [players added]
 Command: [addplayer Benevolent]
-Command's Effect: [Command is successfully executed: addplayer Benevolent. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Benevolent.Benevolent have been successfully added. ]
 Command: [addplayer Cheater]
-Command's Effect: [Command is successfully executed: addplayer Cheater. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Cheater.Cheater have been successfully added. ]
 Command: [addplayer Neutral]
-Command's Effect: [Command is successfully executed: addplayer Neutral. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Neutral.Neutral have been successfully added. ]
 Command: [gamestart]
 Command's Effect: [Command is successfully executed: gamestart. The game starts. ]
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+AI Player: Neutral received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Aggressive Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
@@ -156,15 +289,20 @@ Order Issued: [CheatingOrder]
 Command: [Neutral Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Neutral Player Issuing Orders]
 Current Game State: [execute orders]
-Order Executed: [26][DeployOrder][Order Executed]Player: 1 deployed 53 armies on terrtire: NURN
-Order Executed: [30][DeployOrder][Order Executed]Player: 2 deployed 53 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [32][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [29][AdvanceOrder][Order Executed]Player: 1 advanced 54 armies from terrtire: NURN , and succesfully conquered terrtory: Black_lake
-Order Executed: [31][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
-Order Executed: [28][AdvanceOrder][Order Failed]Advance Order: 28 from player: 1 didn't execute! Barad_D鹯
-Order Executed: [27][AdvanceOrder][Order Failed]Advance Order: 27 from player: 1 didn't execute! Plateau_of_Gorogoth
+Order Executed: [47][DeployOrder][Order Executed]Player: 1 deployed 53 armies on terrtire: NURN
+Order Executed: [51][DeployOrder][Order Executed]Player: 2 deployed 53 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [53][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [50][AdvanceOrder][Order Executed]Player: 1 advanced 54 armies from terrtire: NURN , and succesfully conquered terrtory: Black_lake
+Order Executed: [52][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [49][AdvanceOrder][Order Failed]Advance Order: 49 from player: 1 didn't execute! Barad_D鹯
+Order Executed: [48][AdvanceOrder][Order Failed]Advance Order: 48 from player: 1 didn't execute! Plateau_of_Gorogoth
 Current Game State: [check win condition]
+No Winner Yet
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+AI Player: Neutral received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Benevolent Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Benevolent Player Issuing Orders]
@@ -180,13 +318,17 @@ Command's Effect: [Command is successfully executed: Aggressive Player Issuing O
 Order Issued: [DeployOrder]
 Order Issued: [AdvanceOrder]
 Current Game State: [execute orders]
-Order Executed: [36][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Black_lake
-Order Executed: [33][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [35][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [37][AdvanceOrder][Order Executed]Player: 1 advanced 57 armies from terrtire: Black_lake , and succesfully conquered terrtory: Barad_D鹯
-Order Executed: [34][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [57][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Black_lake
+Order Executed: [54][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [56][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [58][AdvanceOrder][Order Executed]Player: 1 advanced 57 armies from terrtire: Black_lake , and succesfully conquered terrtory: Barad_D鹯
+Order Executed: [55][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
 Current Game State: [check win condition]
+No Winner Yet
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Aggressive Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
@@ -201,14 +343,17 @@ Command's Effect: [Command is successfully executed: Cheater Player Issuing Orde
 Order Issued: [CheatingOrder]
 Order Issued: [CheatingOrder]
 Current Game State: [execute orders]
-Order Executed: [38][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Barad_D鹯
-Order Executed: [41][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [43][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [40][AdvanceOrder][Order Executed]Player: 1 advanced 60 armies from terrtire: Barad_D鹯 , and succesfully conquered terrtory: Plateau_of_Gorogoth
-Order Executed: [42][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
-Order Executed: [39][AdvanceOrder][Order Failed]Advance Order: 39 from player: 1 didn't execute! Ered_Lithui
+Order Executed: [59][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Barad_D鹯
+Order Executed: [62][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [64][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [61][AdvanceOrder][Order Executed]Player: 1 advanced 60 armies from terrtire: Barad_D鹯 , and succesfully conquered terrtory: Plateau_of_Gorogoth
+Order Executed: [63][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [60][AdvanceOrder][Order Failed]Advance Order: 60 from player: 1 didn't execute! Ered_Lithui
 Current Game State: [check win condition]
+No Winner Yet
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Aggressive Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
@@ -220,21 +365,11 @@ Command's Effect: [Command is successfully executed: Cheater Player Issuing Orde
 Order Issued: [CheatingOrder]
 Order Issued: [CheatingOrder]
 Current Game State: [execute orders]
-Order Executed: [44][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [48][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [46][AdvanceOrder][Order Executed]Player: 1 advanced 63 armies from terrtire: Plateau_of_Gorogoth , and succesfully conquered terrtory: Orodruin
-Order Executed: [47][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
-Order Executed: [45][AdvanceOrder][Order Failed]Advance Order: 45 from player: 1 didn't execute! Ered_Lithui
-Current Game State: [check win condition]
-Current Game State: [assign reinforcement]
-Current Game State: [issue orders]
-Command: [Aggressive Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
-Order Issued: [DeployOrder]
-Order Issued: [AdvanceOrder]
-Current Game State: [execute orders]
-Order Executed: [49][DeployOrder][Order Executed]Player: 1 deployed 6 armies on terrtire: Orodruin
-Order Executed: [50][AdvanceOrder][Order Executed]Player: 1 advanced 69 armies from terrtire: Orodruin , and succesfully conquered terrtory: Ered_Lithui
+Order Executed: [65][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [69][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [67][AdvanceOrder][Order Executed]Player: 1 advanced 63 armies from terrtire: Plateau_of_Gorogoth , and succesfully conquered terrtory: Orodruin
+Order Executed: [68][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [66][AdvanceOrder][Order Failed]Advance Order: 66 from player: 1 didn't execute! Ered_Lithui
 Current Game State: [check win condition]
 The winner of this game run is [Aggressive]
 Current Game State has been re-set to default(0)
@@ -246,17 +381,21 @@ Command: [validatemap]
 Command's Effect: [Command is successfully executed: validatemap. Map has been successfully validated. ]
 Current Game State: [map validated]
 Command: [addplayer Aggressive]
-Command's Effect: [Command is successfully executed: addplayer Aggressive. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Aggressive.Aggressive have been successfully added. ]
 Current Game State: [players added]
 Command: [addplayer Benevolent]
-Command's Effect: [Command is successfully executed: addplayer Benevolent. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Benevolent.Benevolent have been successfully added. ]
 Command: [addplayer Cheater]
-Command's Effect: [Command is successfully executed: addplayer Cheater. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Cheater.Cheater have been successfully added. ]
 Command: [addplayer Neutral]
-Command's Effect: [Command is successfully executed: addplayer Neutral. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Neutral.Neutral have been successfully added. ]
 Command: [gamestart]
 Command's Effect: [Command is successfully executed: gamestart. The game starts. ]
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+AI Player: Neutral received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Aggressive Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
@@ -274,15 +413,20 @@ Order Issued: [CheatingOrder]
 Command: [Neutral Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Neutral Player Issuing Orders]
 Current Game State: [execute orders]
-Order Executed: [51][DeployOrder][Order Executed]Player: 1 deployed 53 armies on terrtire: NURN
-Order Executed: [55][DeployOrder][Order Executed]Player: 2 deployed 53 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [57][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [54][AdvanceOrder][Order Executed]Player: 1 advanced 54 armies from terrtire: NURN , and succesfully conquered terrtory: Black_lake
-Order Executed: [56][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
-Order Executed: [53][AdvanceOrder][Order Failed]Advance Order: 53 from player: 1 didn't execute! Barad_D鹯
-Order Executed: [52][AdvanceOrder][Order Failed]Advance Order: 52 from player: 1 didn't execute! Plateau_of_Gorogoth
+Order Executed: [70][DeployOrder][Order Executed]Player: 1 deployed 53 armies on terrtire: NURN
+Order Executed: [74][DeployOrder][Order Executed]Player: 2 deployed 53 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [76][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [73][AdvanceOrder][Order Executed]Player: 1 advanced 54 armies from terrtire: NURN , and succesfully conquered terrtory: Black_lake
+Order Executed: [75][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [72][AdvanceOrder][Order Failed]Advance Order: 72 from player: 1 didn't execute! Barad_D鹯
+Order Executed: [71][AdvanceOrder][Order Failed]Advance Order: 71 from player: 1 didn't execute! Plateau_of_Gorogoth
 Current Game State: [check win condition]
+No Winner Yet
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+AI Player: Neutral received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Benevolent Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Benevolent Player Issuing Orders]
@@ -298,13 +442,17 @@ Command's Effect: [Command is successfully executed: Aggressive Player Issuing O
 Order Issued: [DeployOrder]
 Order Issued: [AdvanceOrder]
 Current Game State: [execute orders]
-Order Executed: [61][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Black_lake
-Order Executed: [58][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [60][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [62][AdvanceOrder][Order Executed]Player: 1 advanced 57 armies from terrtire: Black_lake , and succesfully conquered terrtory: Barad_D鹯
-Order Executed: [59][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [80][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Black_lake
+Order Executed: [77][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [79][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [81][AdvanceOrder][Order Executed]Player: 1 advanced 57 armies from terrtire: Black_lake , and succesfully conquered terrtory: Barad_D鹯
+Order Executed: [78][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
 Current Game State: [check win condition]
+No Winner Yet
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Aggressive Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
@@ -319,14 +467,17 @@ Command's Effect: [Command is successfully executed: Cheater Player Issuing Orde
 Order Issued: [CheatingOrder]
 Order Issued: [CheatingOrder]
 Current Game State: [execute orders]
-Order Executed: [63][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Barad_D鹯
-Order Executed: [66][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [68][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [65][AdvanceOrder][Order Executed]Player: 1 advanced 60 armies from terrtire: Barad_D鹯 , and succesfully conquered terrtory: Plateau_of_Gorogoth
-Order Executed: [67][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
-Order Executed: [64][AdvanceOrder][Order Failed]Advance Order: 64 from player: 1 didn't execute! Ered_Lithui
+Order Executed: [82][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Barad_D鹯
+Order Executed: [85][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [87][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [84][AdvanceOrder][Order Executed]Player: 1 advanced 60 armies from terrtire: Barad_D鹯 , and succesfully conquered terrtory: Plateau_of_Gorogoth
+Order Executed: [86][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [83][AdvanceOrder][Order Failed]Advance Order: 83 from player: 1 didn't execute! Ered_Lithui
 Current Game State: [check win condition]
+No Winner Yet
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Aggressive Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
@@ -338,140 +489,12 @@ Command's Effect: [Command is successfully executed: Cheater Player Issuing Orde
 Order Issued: [CheatingOrder]
 Order Issued: [CheatingOrder]
 Current Game State: [execute orders]
-Order Executed: [69][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [73][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [71][AdvanceOrder][Order Executed]Player: 1 advanced 63 armies from terrtire: Plateau_of_Gorogoth , and succesfully conquered terrtory: Orodruin
-Order Executed: [72][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
-Order Executed: [70][AdvanceOrder][Order Failed]Advance Order: 70 from player: 1 didn't execute! Ered_Lithui
-Current Game State: [check win condition]
-Current Game State: [assign reinforcement]
-Current Game State: [issue orders]
-Command: [Aggressive Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
-Order Issued: [DeployOrder]
-Order Issued: [AdvanceOrder]
-Current Game State: [execute orders]
-Order Executed: [74][DeployOrder][Order Executed]Player: 1 deployed 6 armies on terrtire: Orodruin
-Order Executed: [75][AdvanceOrder][Order Executed]Player: 1 advanced 69 armies from terrtire: Orodruin , and succesfully conquered terrtory: Ered_Lithui
-Current Game State: [check win condition]
-The winner of this game run is [Aggressive]
-Current Game State has been re-set to default(0)
-Current Game State: [gamestart]
-Command: [loadmap smallMap.map]
-Command's Effect: [Command is successfully executed: loadmap smallMap.map. Map has been successfully loaded. ]
-Current Game State: [map loaded]
-Command: [validatemap]
-Command's Effect: [Command is successfully executed: validatemap. Map has been successfully validated. ]
-Current Game State: [map validated]
-Command: [addplayer Aggressive]
-Command's Effect: [Command is successfully executed: addplayer Aggressive. Players have been successfully added. ]
-Current Game State: [players added]
-Command: [addplayer Benevolent]
-Command's Effect: [Command is successfully executed: addplayer Benevolent. Players have been successfully added. ]
-Command: [addplayer Cheater]
-Command's Effect: [Command is successfully executed: addplayer Cheater. Players have been successfully added. ]
-Command: [addplayer Neutral]
-Command's Effect: [Command is successfully executed: addplayer Neutral. Players have been successfully added. ]
-Command: [gamestart]
-Command's Effect: [Command is successfully executed: gamestart. The game starts. ]
-Current Game State: [assign reinforcement]
-Current Game State: [issue orders]
-Command: [Aggressive Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
-Order Issued: [DeployOrder]
-Order Issued: [AdvanceOrder]
-Order Issued: [AdvanceOrder]
-Order Issued: [AdvanceOrder]
-Command: [Benevolent Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Benevolent Player Issuing Orders]
-Order Issued: [DeployOrder]
-Command: [Cheater Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Cheater Player Issuing Orders]
-Order Issued: [CheatingOrder]
-Order Issued: [CheatingOrder]
-Command: [Neutral Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Neutral Player Issuing Orders]
-Current Game State: [execute orders]
-Order Executed: [76][DeployOrder][Order Executed]Player: 1 deployed 53 armies on terrtire: NURN
-Order Executed: [80][DeployOrder][Order Executed]Player: 2 deployed 53 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [82][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [79][AdvanceOrder][Order Executed]Player: 1 advanced 54 armies from terrtire: NURN , and succesfully conquered terrtory: Black_lake
-Order Executed: [81][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
-Order Executed: [78][AdvanceOrder][Order Failed]Advance Order: 78 from player: 1 didn't execute! Barad_D鹯
-Order Executed: [77][AdvanceOrder][Order Failed]Advance Order: 77 from player: 1 didn't execute! Plateau_of_Gorogoth
-Current Game State: [check win condition]
-Current Game State: [assign reinforcement]
-Current Game State: [issue orders]
-Command: [Benevolent Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Benevolent Player Issuing Orders]
-Order Issued: [DeployOrder]
-Command: [Cheater Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Cheater Player Issuing Orders]
-Order Issued: [CheatingOrder]
-Order Issued: [CheatingOrder]
-Command: [Neutral Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Neutral Player Issuing Orders]
-Command: [Aggressive Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
-Order Issued: [DeployOrder]
-Order Issued: [AdvanceOrder]
-Current Game State: [execute orders]
-Order Executed: [86][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Black_lake
-Order Executed: [83][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [85][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [87][AdvanceOrder][Order Executed]Player: 1 advanced 57 armies from terrtire: Black_lake , and succesfully conquered terrtory: Barad_D鹯
-Order Executed: [84][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
-Current Game State: [check win condition]
-Current Game State: [assign reinforcement]
-Current Game State: [issue orders]
-Command: [Aggressive Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
-Order Issued: [DeployOrder]
-Order Issued: [AdvanceOrder]
-Order Issued: [AdvanceOrder]
-Command: [Benevolent Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Benevolent Player Issuing Orders]
-Order Issued: [DeployOrder]
-Command: [Cheater Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Cheater Player Issuing Orders]
-Order Issued: [CheatingOrder]
-Order Issued: [CheatingOrder]
-Current Game State: [execute orders]
-Order Executed: [88][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Barad_D鹯
-Order Executed: [91][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [93][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [90][AdvanceOrder][Order Executed]Player: 1 advanced 60 armies from terrtire: Barad_D鹯 , and succesfully conquered terrtory: Plateau_of_Gorogoth
-Order Executed: [92][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [88][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [92][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [90][AdvanceOrder][Order Executed]Player: 1 advanced 63 armies from terrtire: Plateau_of_Gorogoth , and succesfully conquered terrtory: Orodruin
+Order Executed: [91][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
 Order Executed: [89][AdvanceOrder][Order Failed]Advance Order: 89 from player: 1 didn't execute! Ered_Lithui
 Current Game State: [check win condition]
-Current Game State: [assign reinforcement]
-Current Game State: [issue orders]
-Command: [Aggressive Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
-Order Issued: [DeployOrder]
-Order Issued: [AdvanceOrder]
-Order Issued: [AdvanceOrder]
-Command: [Cheater Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Cheater Player Issuing Orders]
-Order Issued: [CheatingOrder]
-Order Issued: [CheatingOrder]
-Current Game State: [execute orders]
-Order Executed: [94][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [98][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [96][AdvanceOrder][Order Executed]Player: 1 advanced 63 armies from terrtire: Plateau_of_Gorogoth , and succesfully conquered terrtory: Orodruin
-Order Executed: [97][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
-Order Executed: [95][AdvanceOrder][Order Failed]Advance Order: 95 from player: 1 didn't execute! Ered_Lithui
-Current Game State: [check win condition]
-Current Game State: [assign reinforcement]
-Current Game State: [issue orders]
-Command: [Aggressive Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
-Order Issued: [DeployOrder]
-Order Issued: [AdvanceOrder]
-Current Game State: [execute orders]
-Order Executed: [99][DeployOrder][Order Executed]Player: 1 deployed 6 armies on terrtire: Orodruin
-Order Executed: [100][AdvanceOrder][Order Executed]Player: 1 advanced 69 armies from terrtire: Orodruin , and succesfully conquered terrtory: Ered_Lithui
-Current Game State: [check win condition]
 The winner of this game run is [Aggressive]
 Current Game State has been re-set to default(0)
 Current Game State: [gamestart]
@@ -482,17 +505,21 @@ Command: [validatemap]
 Command's Effect: [Command is successfully executed: validatemap. Map has been successfully validated. ]
 Current Game State: [map validated]
 Command: [addplayer Aggressive]
-Command's Effect: [Command is successfully executed: addplayer Aggressive. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Aggressive.Aggressive have been successfully added. ]
 Current Game State: [players added]
 Command: [addplayer Benevolent]
-Command's Effect: [Command is successfully executed: addplayer Benevolent. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Benevolent.Benevolent have been successfully added. ]
 Command: [addplayer Cheater]
-Command's Effect: [Command is successfully executed: addplayer Cheater. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Cheater.Cheater have been successfully added. ]
 Command: [addplayer Neutral]
-Command's Effect: [Command is successfully executed: addplayer Neutral. Players have been successfully added. ]
+Command's Effect: [Command is successfully executed: addplayer Neutral.Neutral have been successfully added. ]
 Command: [gamestart]
 Command's Effect: [Command is successfully executed: gamestart. The game starts. ]
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+AI Player: Neutral received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Aggressive Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
@@ -510,15 +537,20 @@ Order Issued: [CheatingOrder]
 Command: [Neutral Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Neutral Player Issuing Orders]
 Current Game State: [execute orders]
-Order Executed: [101][DeployOrder][Order Executed]Player: 1 deployed 53 armies on terrtire: NURN
-Order Executed: [105][DeployOrder][Order Executed]Player: 2 deployed 53 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [107][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [104][AdvanceOrder][Order Executed]Player: 1 advanced 54 armies from terrtire: NURN , and succesfully conquered terrtory: Black_lake
-Order Executed: [106][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
-Order Executed: [103][AdvanceOrder][Order Failed]Advance Order: 103 from player: 1 didn't execute! Barad_D鹯
-Order Executed: [102][AdvanceOrder][Order Failed]Advance Order: 102 from player: 1 didn't execute! Plateau_of_Gorogoth
+Order Executed: [93][DeployOrder][Order Executed]Player: 1 deployed 53 armies on terrtire: NURN
+Order Executed: [97][DeployOrder][Order Executed]Player: 2 deployed 53 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [99][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [96][AdvanceOrder][Order Executed]Player: 1 advanced 54 armies from terrtire: NURN , and succesfully conquered terrtory: Black_lake
+Order Executed: [98][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [95][AdvanceOrder][Order Failed]Advance Order: 95 from player: 1 didn't execute! Barad_D鹯
+Order Executed: [94][AdvanceOrder][Order Failed]Advance Order: 94 from player: 1 didn't execute! Plateau_of_Gorogoth
 Current Game State: [check win condition]
+No Winner Yet
 Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+AI Player: Neutral received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Benevolent Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Benevolent Player Issuing Orders]
@@ -534,35 +566,40 @@ Command's Effect: [Command is successfully executed: Aggressive Player Issuing O
 Order Issued: [DeployOrder]
 Order Issued: [AdvanceOrder]
 Current Game State: [execute orders]
-Order Executed: [111][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Black_lake
+Order Executed: [103][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Black_lake
+Order Executed: [100][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [102][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [104][AdvanceOrder][Order Executed]Player: 1 advanced 57 armies from terrtire: Black_lake , and succesfully conquered terrtory: Barad_D鹯
+No Winner Yet
+Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Benevolent received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
+Current Game State: [issue orders]
+Command: [Aggressive Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
+Order Issued: [DeployOrder]
+Order Issued: [AdvanceOrder]
+Order Issued: [AdvanceOrder]
+Command: [Benevolent Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Benevolent Player Issuing Orders]
+Order Issued: [DeployOrder]
+Command: [Cheater Player Issuing Orders]
+Command's Effect: [Command is successfully executed: Cheater Player Issuing Orders]
+Order Issued: [CheatingOrder]
+Order Issued: [CheatingOrder]
+Current Game State: [execute orders]
+Order Executed: [105][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Barad_D鹯
 Order Executed: [108][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
 Order Executed: [110][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [112][AdvanceOrder][Order Executed]Player: 1 advanced 57 armies from terrtire: Black_lake , and succesfully conquered terrtory: Barad_D鹯
+Order Executed: [107][AdvanceOrder][Order Executed]Player: 1 advanced 60 armies from terrtire: Barad_D鹯 , and succesfully conquered terrtory: Plateau_of_Gorogoth
 Order Executed: [109][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [106][AdvanceOrder][Order Failed]Advance Order: 106 from player: 1 didn't execute! Ered_Lithui
 Current Game State: [check win condition]
+No Winner Yet
 Current Game State: [assign reinforcement]
-Current Game State: [issue orders]
-Command: [Aggressive Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
-Order Issued: [DeployOrder]
-Order Issued: [AdvanceOrder]
-Order Issued: [AdvanceOrder]
-Command: [Benevolent Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Benevolent Player Issuing Orders]
-Order Issued: [DeployOrder]
-Command: [Cheater Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Cheater Player Issuing Orders]
-Order Issued: [CheatingOrder]
-Order Issued: [CheatingOrder]
-Current Game State: [execute orders]
-Order Executed: [113][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Barad_D鹯
-Order Executed: [116][DeployOrder][Order Executed]Player: 2 deployed 3 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [118][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [115][AdvanceOrder][Order Executed]Player: 1 advanced 60 armies from terrtire: Barad_D鹯 , and succesfully conquered terrtory: Plateau_of_Gorogoth
-Order Executed: [117][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
-Order Executed: [114][AdvanceOrder][Order Failed]Advance Order: 114 from player: 1 didn't execute! Ered_Lithui
-Current Game State: [check win condition]
-Current Game State: [assign reinforcement]
+AI Player: Aggressive received a reinforcement of:  3 armies! 
+AI Player: Cheater received a reinforcement of:  3 armies! 
 Current Game State: [issue orders]
 Command: [Aggressive Player Issuing Orders]
 Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
@@ -574,21 +611,11 @@ Command's Effect: [Command is successfully executed: Cheater Player Issuing Orde
 Order Issued: [CheatingOrder]
 Order Issued: [CheatingOrder]
 Current Game State: [execute orders]
-Order Executed: [119][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Plateau_of_Gorogoth
-Order Executed: [123][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
-Order Executed: [121][AdvanceOrder][Order Executed]Player: 1 advanced 63 armies from terrtire: Plateau_of_Gorogoth , and succesfully conquered terrtory: Orodruin
-Order Executed: [122][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
-Order Executed: [120][AdvanceOrder][Order Failed]Advance Order: 120 from player: 1 didn't execute! Ered_Lithui
-Current Game State: [check win condition]
-Current Game State: [assign reinforcement]
-Current Game State: [issue orders]
-Command: [Aggressive Player Issuing Orders]
-Command's Effect: [Command is successfully executed: Aggressive Player Issuing Orders]
-Order Issued: [DeployOrder]
-Order Issued: [AdvanceOrder]
-Current Game State: [execute orders]
-Order Executed: [124][DeployOrder][Order Executed]Player: 1 deployed 6 armies on terrtire: Orodruin
-Order Executed: [125][AdvanceOrder][Order Executed]Player: 1 advanced 69 armies from terrtire: Orodruin , and succesfully conquered terrtory: Ered_Lithui
+Order Executed: [111][DeployOrder][Order Executed]Player: 1 deployed 3 armies on terrtire: Plateau_of_Gorogoth
+Order Executed: [115][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Plateau_of_Gorogoth
+Order Executed: [113][AdvanceOrder][Order Executed]Player: 1 advanced 63 armies from terrtire: Plateau_of_Gorogoth , and succesfully conquered terrtory: Orodruin
+Order Executed: [114][CheatingOrder][Order Executed]Cheater player automatically conquers the terrtory: Ered_Lithui
+Order Executed: [112][AdvanceOrder][Order Failed]Advance Order: 112 from player: 1 didn't execute! Ered_Lithui
 Current Game State: [check win condition]
 The winner of this game run is [Aggressive]
 Current Game State has been re-set to default(0)
@@ -602,7 +629,7 @@ D: 50
 
 Game Result:
 	              Game1	         Game2	         Game3	         Game4	         Game5	         
-smallMap.map	 Aggressive	    Aggressive	    Aggressive	    Aggressive	    Aggressive	    
+smallMap.map	 nowiner	       nowiner	       nowiner	       Aggressive	    nowiner	       
               
 ===============================Tournament Ends===============================
 

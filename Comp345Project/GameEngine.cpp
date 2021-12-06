@@ -152,7 +152,12 @@ std::string GameEngine::stringToLog() {
 };
 
 void GameEngine::setGameResult(string str) {
-	logValue = "The winner of this game run is ["+str+"]";
+	if (str.compare("nowiner") == 0) {
+		logValue = "No Winner Yet";
+	}
+	else {
+		logValue = "The winner of this game run is [" + str + "]";
+	}
 	winRecord[map_positioner].push_back(str);
 	notify(this);
 }
@@ -552,7 +557,7 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 		case 6: {
 			//issue orders Phase
 			if (!(playerList[startingPlayer]->gethasEndThisIssueOrderTurn())) {
-				cout << "========================PLAYER " + playerList[startingPlayer]->getName() + " TURN======================================"<<endl;
+				cout << "========================PLAYER " + playerList[startingPlayer]->getName() + " TURN===================================="<<endl;
 				playerList[startingPlayer]->getOrderList()->displayAll();
 				//display the current player's orderlist
 				std::cout << endl;
@@ -576,6 +581,21 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 					std::cout << "to add an order into your order list " << endl;
 					std::cout << "2. enter \"endissueorder\" to stop your turns of order issueing" << endl;
 					std::cout << "You have: " << playerList[startingPlayer]->getEstimatePool() << " Armies in your reinforcement pool! (estimate)" << endl;
+				}
+				else {
+					if (playerList[startingPlayer]->getName().compare("Aggressive") == 0) {
+						cout << "Aggressive AI Player is issuing orders......"<<endl;
+					}
+					else if (playerList[startingPlayer]->getName().compare("Benevolent") == 0) {
+						cout << "Benevolent AI Player is issuing orders....." << endl;
+					}
+					else if (playerList[startingPlayer]->getName().compare("Cheater") == 0) {
+						cout << "Cheater AI Player is issuing orders....." << endl;
+					}
+					else if (playerList[startingPlayer]->getName().compare("Neutral") == 0) {
+						cout << "Neutral AI Player is issuing orders....." << endl;
+					}
+
 				}
 			}
 		}
@@ -651,6 +671,12 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 			{
 				bool controlledAll = true;
 				bool stillControlSomeTerritory = false;
+				//Only 1 player left. It is a trivial win.
+				if (playerList.size() == 1) {
+					someoneWin = true;
+					winPlayerName = playerList[0]->getName();
+					break;
+				}
 				for (size_t i = 0; i < map->getMapGraph().size(); i++)
 				{
 
@@ -671,13 +697,12 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 				}
 				if (controlledAll) {
 					someoneWin = true;
-					winPlayerName = playerList[j]->getName();
-			
-					
+					winPlayerName = playerList[j]->getName();					
 				}
 			}
 
 			if (!someoneWin) {
+				setGameResult("nowiner");
 				transition(5);
 			}
 			//if (true) {
@@ -751,6 +776,7 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 		if (counter_runs > stoi(tourna_paravec[3][0])) {
 			cout << "Exceed the maximum turns. The game result of the current game run is DRAW." << endl;
 			setGameResult("Draw");
+			reset();
 			break;
 		}
 		//cout << "================================================================================¨a" << endl << endl << endl;
@@ -898,9 +924,11 @@ void GameEngine::reinforcementPhase() {
 			amount = 3;
 			//the minimal number of reinforcement armies per turn for any player is 3
 		}
-		cout << "Player:  " << playerList[i]->getName() << " received a reinforcement of:  " << amount << " armies! " << endl;
+		logValue = ((!tournaMode || playerList[i]->getName().compare("Human") == 0)?"Player:  ":"AI Player: ") + playerList[i]->getName() + " received a reinforcement of:  " + to_string(amount) + " armies! ";
+		cout << logValue<< endl;
 		playerList[i]->addReinforcementpool(amount);
 		playerList[i]->updateEstimatePool();
+		notify(this);
 
 	}
 	transition(6);

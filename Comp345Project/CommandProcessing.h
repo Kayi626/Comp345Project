@@ -28,6 +28,7 @@ public:
 	string getEffect();
 	void saveEffect(string effect);
 	string stringToLog();
+	string extractName(string str);
 private:
 	//variables to store command and effect info
 	vector<string> args;
