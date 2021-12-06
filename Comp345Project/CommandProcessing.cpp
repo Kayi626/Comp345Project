@@ -132,24 +132,6 @@ bool CommandProcessor::isNumber(string &input) {
 }
 
 
-//Used to extract the string in <>
-// REMOVED when working on part2&3. 
-
-//string CommandProcessor::extractName(Command& com) {
-//
-//	const std::string s = com.getOriginalCommand();
-//	//Two patterns(addplayer + loadmap). It will extract the substring from <>.
-//	std::string string1 = "loadmap <";
-//	std::string string2 = "addplayer <";
-//	std::regex rgx("(" + string1 + "|" + string2 + ")(.*)>");
-//	std::smatch match;
-//
-//	if (std::regex_search(s.begin(), s.end(), match, rgx))
-//		return match[2];
-//	else
-//		return "";
-//}
-
 vector<vector<string>> CommandProcessor::validateTourna(Command& com, int state) {
 	vector<vector<string>> tempvec;
 	
@@ -363,7 +345,20 @@ std::string CommandProcessor::stringToLog() { return "Command: [" + lc.back()->g
 
 //*********************************************************************************
 
-//************************************Command**************************************
+//************************************Command************************************** 
+string Command::extractName(string str) {
+
+	const std::string s = str;
+
+	std::string string2 = "addplayer <";
+	std::regex rgx("addplayer\\s{1}(.*)\\s*");
+	std::smatch match;
+
+	if (std::regex_search(s.begin(), s.end(), match, rgx))
+		return match[1];
+	else
+		return "";
+}
 void Command::saveEffect(string effect) {
 	string temp1 = "Command is successfully executed: ";
 	string temp2 = this->getOriginalCommand();
@@ -376,8 +371,8 @@ void Command::saveEffect(string effect) {
     if ((this->getArgs())[0].compare("gamestart") == 0) {
 		temp3 = ". The game starts. ";
 	}
-	else if ((this->getArgs())[0].compare("addplayer") == 0) {
-		temp3 = ". Players have been successfully added. ";
+	else if (std::regex_match(temp2,std::regex("addplayer\\s{1}(.*)\\s*"))) {
+		temp3 = ".PlAYER "+extractName(temp2)+" have been successfully added. ";
 	}
 	else if ((this->getArgs())[0].compare("loadmap") == 0) {
 		temp3 = ". Map has been successfully loaded. ";
@@ -398,7 +393,7 @@ void Command::saveEffect(string effect) {
 		temp3 = ".The game quits .";
 	}
 
-    
+   
 	temp1.append(temp2);
 	temp1.append(temp3);
     
