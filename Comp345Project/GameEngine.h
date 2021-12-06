@@ -36,6 +36,7 @@ private:
 	Deck* deck;
 	string stageToString(int b);
 	string tourResultToStr();
+	string right(const string s, const int w);
 	vector<vector<int>> negotiateOrderList;
 
 	bool debugMode;
