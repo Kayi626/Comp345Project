@@ -40,6 +40,8 @@ private:
 	bool isStartup; 
 	//the current game stage: on startup ,or on play stage
 	int currentStage;
+	//Record the current log value used by update() of observers
+	string logValue;
 
 	/*
 	* currentStage - different value refers to different current stage.
@@ -87,6 +89,8 @@ public:
 	static std::map<string, string> strategy_map;
 	//Record which map is being used so far(we use it to reference the corresponding map file)
 	static int map_positioner;
+	//Record the wins of each game run 
+	static std::vector<vector<string>> winRecord;
 
 	void startup();
 	//start the startup phases
@@ -94,6 +98,10 @@ public:
 	//start the play phases.
 
 	static void setFilePath(string str);
+
+	//Tournament's result Update Methods
+	void setGameResult(string str);
+	void  setTournaMode(bool value);
 
 	void reinforcementPhase();
 	int issueOrderPhase(int startingPlayer);
