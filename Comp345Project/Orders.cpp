@@ -466,6 +466,7 @@ string AdvanceOrder::execute() {
 					currentRemainingArmies - 1;
 				}
 			}
+			this->fromTerritory->setArmyNumber((this->fromTerritory->getArmyNumber()) - numberOfArmies);
 			if (currentRemainingArmies < 1) battle = false;
 			if (this->targetTerritory->getArmyNumber() < 1) battle = false;
 		}
