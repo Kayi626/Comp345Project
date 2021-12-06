@@ -144,8 +144,27 @@ string GameEngine::stageToString(int b) {
 
 //Other class functions
 std::string GameEngine::stringToLog() {
-	return "Current Game State: [" + stageToString(currentStage)+ "]";
+	return logValue;
 };
+
+void GameEngine::setGameResult(string str) {
+	logValue = str;
+	winRecord[map_positioner].push_back(str);
+	notify(this);
+}
+void GameEngine::setTournaMode(bool value){
+	if (value == false && tournaMode == true) {
+		logValue = "\n===============================Tournament Ends===============================";
+		tournaMode = value;
+		notify(this);
+	}
+	else if (value == true && tournaMode == false) {
+		logValue = "===============================Tournament Starts===============================";
+		tournaMode = value;
+		notify(this);
+	}
+	
+}
 
 //Stream Insertion Operators
 ostream& operator << (ostream& ost, const GameEngine& ge) {
@@ -294,6 +313,8 @@ void GameEngine::startup() {
 				int max_num_runs = tourna_paravec[3].size();
 				for (int x = 0; x < num_map; x++) {
 					map_positioner = x;
+					vector<string> temp;
+					winRecord.push_back(temp);
 					for (int y = 0; y < num_games; y++){
 						this->startup();
 				    }
@@ -379,7 +400,21 @@ void GameEngine::startup() {
 			//map validated Phase
 			transition(4);
 			Player* p1 = new Player(playerCount, args[1], &connectedGraph);
-			p1->setPlayerStrategy(new HumanPlayerStrategy(p1));
+			if (!tournaMode || p1->getName().compare("Human") == 0) {
+				p1->setPlayerStrategy(new HumanPlayerStrategy(p1));
+			}
+			else if (p1->getName().compare("Aggressive") == 0) {
+				p1->setPlayerStrategy(new AggressivePlayerStrategy(p1));
+			}
+			else if (p1->getName().compare("Benevolent") == 0) {
+				p1->setPlayerStrategy(new BenevolentPlayerStrategy(p1));
+			}
+			else if (p1->getName().compare("Cheater") == 0) {
+				p1->setPlayerStrategy(new CheaterPlayerStrategy(p1));
+			}
+			else if (p1->getName().compare("Neutral") == 0) {
+				p1->setPlayerStrategy(new NeutralPlayerStrategy(p1));
+			}
 			p1->attachToPlayerOrderList(this->observers);
 			playerList.push_back(p1);
 			
@@ -391,7 +426,21 @@ void GameEngine::startup() {
 			//players added Phase
 			if (args[0].compare("addplayer") == 0) {
 				Player* p1 = new Player(playerCount, args[1], &connectedGraph);
-				p1->setPlayerStrategy(new HumanPlayerStrategy(p1));
+				if (!tournaMode || p1->getName().compare("Human") == 0) {
+					p1->setPlayerStrategy(new HumanPlayerStrategy(p1));
+				}
+				else if (p1->getName().compare("Aggressive") == 0) {
+					p1->setPlayerStrategy(new AggressivePlayerStrategy(p1));
+				}
+				else if (p1->getName().compare("Benevolent") == 0) {
+					p1->setPlayerStrategy(new BenevolentPlayerStrategy(p1));
+				}
+				else if (p1->getName().compare("Cheater") == 0) {
+					p1->setPlayerStrategy(new CheaterPlayerStrategy(p1));
+				}
+				else if (p1->getName().compare("Neutral") == 0) {
+					p1->setPlayerStrategy(new NeutralPlayerStrategy(p1));
+				}
 				p1->attachToPlayerOrderList(this->observers);
 				playerList.push_back(p1);
 
@@ -490,7 +539,7 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 				std::cout << endl;
 				//show the terrtories player own / can attack
 				showState();
-				//if (!tournaMode || playerList[startingPlayer]->getName().compare("Human") == 0) {
+				if (!tournaMode || playerList[startingPlayer]->getName().compare("Human") == 0) {
 					std::cout << "# " << playerList[startingPlayer]->getPlayerID() << " Player: [" << playerList[startingPlayer]->getName() << "] it's your turn to issue an order!" << endl;
 					std::cout << "~=~ Order and their ordertype ID:   ~=~ " << endl;
 					std::cout << "~=~ 0 - DeployOrder, 3 args         ~=~ " << endl;
@@ -503,7 +552,7 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 					std::cout << "to add an order into your order list " << endl;
 					std::cout << "2. enter \"endissueorder\" to stop your turns of order issueing" << endl;
 					std::cout << "You have: " << playerList[startingPlayer]->getEstimatePool() << " Armies in your reinforcement pool! (estimate)" << endl;
-				//}
+				}
 			}
 		}
 			break;
@@ -600,6 +649,7 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 				if (controlledAll) {
 					someoneWin = true;
 					winPlayerName = playerList[j]->getName();
+					
 				}
 			}
 
@@ -626,18 +676,26 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 			//win Phase
 			Command* command = NULL;
 			bool commandIsNotValid = true;
-			while (commandIsNotValid) {
-				//read a command .
-				command = cmdProcessor->getCommand();
-				commandIsNotValid = !(cmdProcessor->validate(*command, currentStage));
-				if (commandIsNotValid) {
-					cout << "Invaild Command! please re-enter the command: " << endl;
-					command->saveEffect("Invalid Command");
-				}
-				else {
-					command->saveEffect("");
+			//Huamn player need to enter commnands
+			if (!tournaMode || playerList[startingPlayer]->getName().compare("Human") == 0) {
+				while (commandIsNotValid) {
+					//read a command .
+					command = cmdProcessor->getCommand();
+					commandIsNotValid = !(cmdProcessor->validate(*command, currentStage));
+					if (commandIsNotValid) {
+						cout << "Invaild Command! please re-enter the command: " << endl;
+						command->saveEffect("Invalid Command");
+					}
+					else {
+						command->saveEffect("");
 
+					}
 				}
+			}
+			//AI auto-running
+			else {
+				reset();
+				break;
 			}
 
 			//execute the command refers to different stage.
@@ -1021,5 +1079,6 @@ void GameEngine::executreOrderPhase(int startingPlayer) {
 
 void GameEngine::transition(int newState) {
 	this->currentStage = newState;
+	logValue = "Current Game State: [" + stageToString(currentStage) + "]";
 	notify(this);
 }

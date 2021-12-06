@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
         return 0;
     } 
     else if (std::regex_match(argv[1], reg1)) {
-            GameEngine::defualtTerritoriesAmount = 3;
+            GameEngine::defualtTerritoriesAmount = 1;
             GameEngine::useFileCommandProcessor = false;
             GameEngine::isDebugMode = true;
             GameEngine::instance()->startup();
