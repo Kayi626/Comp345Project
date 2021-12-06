@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
             return 0;
     }
     else if (std::regex_match(argv[1], reg2)) {
-            GameEngine::defualtTerritoriesAmount = 3;
+            GameEngine::defualtTerritoriesAmount = 1;
             GameEngine::useFileCommandProcessor = true;
             GameEngine::setFilePath(extractLineArgumentCommand(argv[1]));
             GameEngine::isDebugMode = true;

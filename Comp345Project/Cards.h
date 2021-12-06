@@ -34,14 +34,14 @@ class Card {
   void set_card_type_id(int num);
 
   // get card type
-  string* get_card_type();
+  string get_card_type();
 
  private:
   // 0 for boomb, 1 for reinforcement, 2 for blockade, 3 for airlift, and 4 for
   // diplomacy
   vector<string> vec_types_card = {"bomb", "reinforcement", "blockade", "airlift", "diplomacy"};
   // set for card type
-  string* card_type;
+  string card_type;
 };
 
 // inherit the card class

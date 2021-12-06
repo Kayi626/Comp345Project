@@ -8,6 +8,7 @@
 using namespace std;
 
 #include "CommandProcessing.h"
+#include "GameEngine.h"
 
 //*******************************CommandProcessor***********************************
 CommandProcessor::CommandProcessor() {
@@ -398,7 +399,6 @@ void Command::saveEffect(string effect) {
 	}
 
     
-
 	temp1.append(temp2);
 	temp1.append(temp3);
     

@@ -152,18 +152,37 @@ std::string GameEngine::stringToLog() {
 };
 
 void GameEngine::setGameResult(string str) {
-	logValue = str;
+	logValue = "The winner of this game run is ["+str+"]";
 	winRecord[map_positioner].push_back(str);
 	notify(this);
 }
 void GameEngine::setTournaMode(bool value){
 	if (value == false && tournaMode == true) {
-		logValue = tourResultToStr() + "\n===============================Tournament Ends===============================";;
+		logValue = tourResultToStr() + "\n===============================Tournament Ends===============================\n";
 		tournaMode = value;
 		notify(this);
 	}
 	else if (value == true && tournaMode == false) {
-		logValue = "===============================Tournament Starts===============================";
+		string temp3 = "Tournament Mode: ";
+		vector<string> map = GameEngine::tourna_paravec[0];
+		vector<string> strategy = GameEngine::tourna_paravec[1];
+		string num_games = GameEngine::tourna_paravec[2][0];
+		string max_num_runs = GameEngine::tourna_paravec[3][0];
+		string tempmap = "Map[";
+		for (auto& a : map) {
+			
+			tempmap += (GameEngine::mapfile_map.find(a)->second + ((map.size()!=1)?"|":""));
+		}
+		tempmap += "]  ";
+
+		string tempstrate = "PlayerStratey[";
+		for (auto& a : strategy) {
+			tempstrate += (GameEngine::strategy_map.find(a)->second + ((strategy.size() != 1) ? "|" : ""));
+		}
+		tempstrate += "]";
+
+		temp3 = temp3 + tempmap + tempstrate + "  NumberOfGamesPerMap[" + num_games + "]  MaxNumOfRuns[" + max_num_runs + "]";
+		logValue = "===============================Tournament Starts===============================\n"+temp3;
 		tournaMode = value;
 		notify(this);
 	}
@@ -265,8 +284,6 @@ void GameEngine::startup() {
 
 	//keep looping until the actual game start.
 	while (isStartup){
-
-		cout << "================================================================================¨[" << endl;
 		showState();
 		//check the current game state by a switch statement. displays the message refers to that stage.
 		switch (currentStage)
@@ -306,15 +323,14 @@ void GameEngine::startup() {
 			//*******************Validate tournament command + Runs****************************
 			tourna_paravec = cmdProcessor->validateTourna(*command, currentStage);	
 		
-			tournaMode = !(tourna_paravec.size() == 0);
+			bool temp = !(tourna_paravec.size() == 0);
+			if (temp) { command->saveEffect("");}
+			setTournaMode(temp);
 			//Turn on tournaMode and Run games under this condition
 			if (tournaMode) {
-
-				command->saveEffect("");
 				int num_map = tourna_paravec[0].size();
-				int num_games = tourna_paravec[2].size();
-				// TODO: ADD MAX_NUMS_RUNS INTO THE RUN
-				int max_num_runs = tourna_paravec[3].size();
+				int num_games = stoi(tourna_paravec[2][0]);
+				cout << num_map << endl << num_games << endl;
 				for (int x = 0; x < num_map; x++) {
 					map_positioner = x;
 					vector<string> temp;
@@ -323,6 +339,7 @@ void GameEngine::startup() {
 						this->startup();
 				    }
 				}
+				setTournaMode(false);
 				return;
 			}
 			//**************************************************************************
@@ -512,6 +529,8 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 
 	int totalPlayer = playerList.size();
 	int counter_runs = 0;
+	bool someoneWin = false;
+	string winPlayerName = "";
 	cout << "¨X===============================================================================¨[" << endl;
 	cout << "¨d~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¨g" << endl;
 	cout << "¨d                            WarZone: Game started                              ¨g" << endl;
@@ -625,8 +644,7 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 
 		}
 		case -1: {
-			bool someoneWin = false;
-			string winPlayerName = "";
+			
 			//check win Phase
 			for (int j = playerList.size()-1; j >=0; j--)
 			{
@@ -653,18 +671,14 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 				if (controlledAll) {
 					someoneWin = true;
 					winPlayerName = playerList[j]->getName();
+			
 					
 				}
 			}
 
-			if (someoneWin) {
-				transition(8);
-			}
-			else {
+			if (!someoneWin) {
 				transition(5);
 			}
-
-
 			//if (true) {
 			//	transition(8);
 			//}
@@ -696,11 +710,6 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 					}
 				}
 			}
-			//AI auto-running
-			else {
-				reset();
-				break;
-			}
 
 			//execute the command refers to different stage.
 			cout << endl << "Executing command:  " << command->getOriginalCommand() << endl;
@@ -714,23 +723,38 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 				cout << endl << "Thank you for playing! Game ends!"  << endl;
 				exit(1);
 			}
-
-
-
 			break;
 		}
 		default:
 			cout << "ERROR: Invaid state during mainGameLoop()." << endl;
 			break;
 		}
+		
+		//Output and record the game result 
+		if (someoneWin) {
 
-		cout << "================================================================================¨a" << endl << endl << endl;
-
-		if (counter_runs > stoi(tourna_paravec[3][0])) {
-		    
-			cout << "Exceed the maximum turns. The game result of the current game run is DRAW." << endl;
+			if (!tournaMode || playerList[startingPlayer]->getName().compare("Human") == 0) {
+				setGameResult(winPlayerName);
+				cout << endl << "================The winner of this game================" << endl << "\t\t" + winPlayerName << endl<<"======================================================="<<endl;
+				transition(8);
+			}
+			else {
+				setGameResult(winPlayerName);
+				cout << endl << "================The winner of this game================" << endl << "\t\t" + winPlayerName  << endl<<"======================================================="<<endl;
+				reset();
+				break;
+			}
 		}
 
+		//If the number of execute runs exceed the argument maximum number of execute runs, the game result is draw.
+		if (counter_runs > stoi(tourna_paravec[3][0])) {
+			cout << "Exceed the maximum turns. The game result of the current game run is DRAW." << endl;
+			setGameResult("Draw");
+			break;
+		}
+		//cout << "================================================================================¨a" << endl << endl << endl;
+
+	
 	}
 
 }
@@ -809,7 +833,7 @@ void GameEngine::reset() {
 	this->isStartup = true;
 	transition(0);
 
-	if (string(typeid(*this->cmdProcessor).name()) == "class CommandProcessor") {
+	if (!tournaMode && string(typeid(*this->cmdProcessor).name()) == "class CommandProcessor") {
 		delete this->cmdProcessor;
 		this->cmdProcessor = nullptr;
 	}
@@ -817,7 +841,7 @@ void GameEngine::reset() {
 	map = new Map();
 	delete deck;
 	deck = new Deck();
-
+	
 	for (int i = 0; i < playerList.size(); i++)
 		delete playerList[i];
 	playerList.clear();
@@ -904,13 +928,24 @@ int GameEngine::issueOrderPhase(int startingPlayer) {
 	}
 	//AI Player: auto-running commands
 	else {
-		command = cmdProcessor->saveCommand("AI Player's turn of issuing orders");
+		if (playerList[startingPlayer]->getName().compare("Aggressive") == 0) {
+			command = cmdProcessor->saveCommand("Aggressive Player Issuing Orders");
+				}
+		else if (playerList[startingPlayer]->getName().compare("Benevolent") == 0) {
+			command = cmdProcessor->saveCommand("Benevolent Player Issuing Orders");
+				}
+		else if (playerList[startingPlayer]->getName().compare("Cheater") == 0) {
+			command = cmdProcessor->saveCommand("Cheater Player Issuing Orders");
+				}
+		else if (playerList[startingPlayer]->getName().compare("Neutral") == 0) {
+			command = cmdProcessor->saveCommand("Neutral Player Issuing Orders");
+				}
 		command->saveEffect("");
 		playerList[startingPlayer]->issueOrder(0,this->map->getMapGraph()[0][0],0,this->map->getMapGraph()[0][0]);
-		//theCurrentPlayer = switchCurrentPlayer(startingPlayer);
-		//return theCurrentPlayer;
-		command = cmdProcessor->saveCommand("endissueorder");
-		command->saveEffect("");
+		theCurrentPlayer = switchCurrentPlayer(startingPlayer);
+		return theCurrentPlayer;
+		//command = cmdProcessor->saveCommand("endissueorder");
+		//command->saveEffect("");
 	}
 
 	//execute the command refers to different stage.
@@ -1081,7 +1116,12 @@ void GameEngine::executreOrderPhase(int startingPlayer) {
 
 void GameEngine::transition(int newState) {
 	this->currentStage = newState;
-	logValue = "Current Game State: [" + stageToString(currentStage) + "]";
+	if (newState != 0) {
+		logValue = "Current Game State: [" + stageToString(currentStage) + "]";
+	}
+	else {
+		logValue = "Current Game State has been re-set to default(0)";
+	}
 	notify(this);
 }
 
@@ -1118,7 +1158,7 @@ string GameEngine::tourResultToStr() {
 	//output data;
 	std::stringstream ss;
 	ss << inDisp << endl;
-	for (auto &opt : vecOptTable) { ss << std::right << std::setw(15) << opt; }
-	cout << "<--- Tournament result is printed. --->" << endl;
+	for (auto &opt : vecOptTable) { ss << std::left << std::setw(15) << opt; }
+	cout << "<--- Tournament Has Completed And Tournament Report Has been Generated in gamelog.txt. --->" << endl;
 	return ss.str();
 }
