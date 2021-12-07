@@ -1,7 +1,6 @@
 ; map: smallMap.map
 
 
-
 [continents]
 MORDOR 5 #666666
 RHOVANION 6 yellow
@@ -16,6 +15,7 @@ RHOVANION 6 yellow
 6 Black_lake 2 596 315
 
 
+
 [borders]
 1 2 4 6
 2 5 4 3 
@@ -23,5 +23,6 @@ RHOVANION 6 yellow
 4 5 2 1 6
 5 1 2 4 3
 6 1 4
+
 
 

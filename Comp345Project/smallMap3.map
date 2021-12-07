@@ -1,0 +1,33 @@
+﻿; map: smallMap3.map
+
+
+[continents]
+MORDOR 5 #666666
+RHOVANION 6 yellow
+
+
+[countries]
+1 NURN 1 528 322
+2 Plateau_of_Gorogoth 1 514 285
+3 Orodruin 1 501 267
+4 Barad_D 2 544 276
+5 Ered_Lithui 2 502 244
+6 Black_lake 1 596 315
+7 Anfalas 1 323 332
+8 Lebennin 1 410 336
+
+
+
+
+
+[borders]
+1 2 4 6 5 8
+2 5 4 3 1 7
+3 5 2 
+4 2 1 6
+5 1 2 3
+6 1 4
+7 8 2
+8 7 1 
+
+ 

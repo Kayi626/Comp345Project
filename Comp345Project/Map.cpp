@@ -15,7 +15,7 @@ using namespace std;
 void MapLoader::mapReader(const string& mapName) {
   //std::cout << endl << "---Loading Map File---" << endl << endl;
   mapPath = mapName;
-  int lineFlag;
+  int lineFlag = 0;
   string line;
   ifstream mapFile;
   mapFile.open(mapName.c_str(), ios::in);

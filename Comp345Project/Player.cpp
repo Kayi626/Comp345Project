@@ -209,6 +209,7 @@ void Player::update() {
 void Player::printPlayerTerrtories() {
 
 	std::cout << "----- These are the Terrtories to be defended by player: " << this->playerName << " -----" << endl;
+	this->update();
 	for (int i = 0; i < controlledTerritories.size();++i) {
 		Territory temp = *(controlledTerritories[i]);
 		std::cout << "ID: " << temp.getCountryID()<< " Territory: " << temp.getName() << " have armies: " << temp.getArmyNumber() << endl;

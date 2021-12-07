@@ -24,7 +24,7 @@ bool GameEngine::useFileCommandProcessor = true;
 string GameEngine::fileLineReaderFilePath = "../Comp345Project/commands_p4_t1.txt";
 int GameEngine::defualtTerritoriesAmount = 2;
 bool GameEngine::tournaMode = false;
-map<string, string> GameEngine::mapfile_map = {{"1", "LOTR2.map"}, {"2","smallMap.map"}, {"3","bigeurope.map"}};
+map<string, string> GameEngine::mapfile_map = {{"1", "LOTR2.map"}, {"2","smallMap.map"}, {"3","smallMap2.map"}, {"4","smallMap3.map"},{"5","bigeurope.map"}};
 map<string, string> GameEngine::strategy_map = { {"A","Aggressive"},{"B","Benevolent"},{"N","Neutral"},{"C","Cheater"},{"H","Human"}};
 int GameEngine::map_positioner = 0;
 vector<vector<string>> GameEngine::tourna_paravec;
@@ -413,7 +413,9 @@ void GameEngine::startup() {
 				}
 				else {
 					//the map is not validate
-					std::cout << "The map is not valid! please use command: loadmap <mapfile>   to load a different map!" << endl;
+						std::cout << "The map is not valid! please use command: loadmap <mapfile>   to load a different map!" << endl;
+						command->saveEffect("Error: The map is not valid! Loading a different map is needed!");
+					
 				}
 			}
 			else {
@@ -480,6 +482,7 @@ void GameEngine::startup() {
 				//distribute terrtories to the players - base on the initial number of terrtories. 
 				if (connectedGraph.size() < initialPlayerTerritoriesAmount * playerList.size()) {
 					std::cout << "ERROR: there's no enough terrtories for player's initial distribution!" << endl;
+					command->saveEffect("Error: there's no enough terrtories for player's initial distribution!");
 					exit(0);
 				}
 				int terrIndexCounter = 0;
@@ -557,10 +560,28 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 			//assign reinforcement Phase
 			break;
 		case 6: {
+			//if all the player has decide to end his turn, switch to next phase:
+			bool allPlayerEndIssueingOrder = true;
+			for (int i = 0; i < playerList.size(); i++)
+			{
+				if (!(playerList[i]->gethasEndThisIssueOrderTurn())) {
+					allPlayerEndIssueingOrder = false;
+				}
+			}
+			if (allPlayerEndIssueingOrder) {
+				transition(7);
+				for (int i = 0; i < playerList.size(); i++)
+				{
+					playerList[i]->sethasEndThisIssueOrderTurn(false);
+					
+				}
+				cout << "All players have completed issuing orders!" << endl;
+				break;
+			}
 			//issue orders Phase
 			if (!tournaMode || playerList[startingPlayer]->getName().compare("Human") == 0) {
 			   if (!(playerList[startingPlayer]->gethasEndThisIssueOrderTurn())) {
-				cout << "========================PLAYER " + playerList[startingPlayer]->getName() + " TURN====================================" << endl;
+				cout << "========================PLAYER " + playerList[startingPlayer]->getName() + " TURN======================================" << endl;
 				playerList[startingPlayer]->getOrderList()->displayAll();
 				//display the current player's orderlist
 				std::cout << endl;
@@ -592,19 +613,36 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 			   }
 		    }
 		 	else {
+	
 				if (!(playerList[startingPlayer]->gethasEndThisIssueOrderTurn())) {
+					cout << "========================PLAYER " + playerList[startingPlayer]->getName() + " TURN====================================" << endl;
+					//display the current player's orderlist
+					std::cout << endl;
+					(playerList[startingPlayer]->getHandsOfCard())->print_vec_hand_cards();
+					//display the current player's hand
+					std::cout << endl;
+					playerList[startingPlayer]->printPlayerTerrtories();
+					std::cout << endl;
+					//show the terrtories player own / can attack
+					showState();
+					
 					if (playerList[startingPlayer]->getName().compare("Aggressive") == 0) {
 						cout << "Aggressive AI Player is issuing orders......" << endl;
+						std::cout << endl;
 					}
 					else if (playerList[startingPlayer]->getName().compare("Benevolent") == 0) {
 						cout << "Benevolent AI Player is issuing orders....." << endl;
+						std::cout << endl;
 					}
 					else if (playerList[startingPlayer]->getName().compare("Cheater") == 0) {
 						cout << "Cheater AI Player is issuing orders....." << endl;
+						std::cout << endl;
 					}
 					else if (playerList[startingPlayer]->getName().compare("Neutral") == 0) {
 						cout << "Neutral AI Player is issuing orders....." << endl;
+						std::cout << endl;
 					}
+
 				}
 				else {
 					if (playerList[startingPlayer]->getName().compare("Aggressive") == 0) {
@@ -651,21 +689,6 @@ void GameEngine::mainGameLoop(int startingPlayer) {
 		case 6: {
 			//issue orders Phase
 
-			//if all the player has decide to end his turn, switch to next phase:
-			bool allPlayerEndIssueingOrder = true;
-			for (int i = 0; i < playerList.size(); i++)
-			{
-				if (!(playerList[i]->gethasEndThisIssueOrderTurn())) {
-					allPlayerEndIssueingOrder = false;
-				}
-			}
-			if (allPlayerEndIssueingOrder) {
-				transition(7);
-				for (int i = 0; i < playerList.size(); i++)
-				{
-					playerList[i]->sethasEndThisIssueOrderTurn(false);
-				}
-			}
 
 			if (playerList[startingPlayer]->gethasEndThisIssueOrderTurn()||currentStage==7) {
 				//if this player have set to end this turn of issuing order
@@ -983,19 +1006,20 @@ int GameEngine::issueOrderPhase(int startingPlayer) {
 	//AI Player: auto-running commands
 	else {
 		if (playerList[startingPlayer]->getName().compare("Aggressive") == 0) {
-			command = cmdProcessor->saveCommand("Aggressive Player Issuing Orders");
+			command = cmdProcessor->saveCommand("Aggressive AI Player Issuing Orders");
 				}
 		else if (playerList[startingPlayer]->getName().compare("Benevolent") == 0) {
-			command = cmdProcessor->saveCommand("Benevolent Player Issuing Orders");
+			command = cmdProcessor->saveCommand("Benevolent AI Player Issuing Orders");
 				}
 		else if (playerList[startingPlayer]->getName().compare("Cheater") == 0) {
-			command = cmdProcessor->saveCommand("Cheater Player Issuing Orders");
+			command = cmdProcessor->saveCommand("Cheater AI Player Issuing Orders");
 				}
 		else if (playerList[startingPlayer]->getName().compare("Neutral") == 0) {
-			command = cmdProcessor->saveCommand("Neutral Player Issuing Orders");
+			command = cmdProcessor->saveCommand("Neutral AI Player Issuing Orders");
 				}
 		command->saveEffect("");
 		playerList[startingPlayer]->issueOrder(0,this->map->getMapGraph()[0][0],0,this->map->getMapGraph()[0][0]);
+		playerList[startingPlayer]->getOrderList()->displayAll();
 		theCurrentPlayer = switchCurrentPlayer(startingPlayer);
 		return theCurrentPlayer;
 		//command = cmdProcessor->saveCommand("endissueorder");
