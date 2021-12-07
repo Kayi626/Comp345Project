@@ -97,6 +97,9 @@
     <Text Include="commands_p3_t3.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="tournament1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="LOTR2.map">
@@ -106,6 +109,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="smallMap.map">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="smallMap2.map">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="smallMap3.map">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

@@ -368,6 +368,11 @@ void Command::saveEffect(string effect) {
 		notify(this);
 		return;
 	}
+	if (std::regex_match(effect, std::regex("Error(.*)"))) {
+		this->effect = effect;
+		notify(this);
+		return;
+	}
     if ((this->getArgs())[0].compare("gamestart") == 0) {
 		temp3 = ". The game starts. ";
 	}

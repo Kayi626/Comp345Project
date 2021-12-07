@@ -420,7 +420,8 @@ string AdvanceOrder::execute() {
 	if (targetTerritory->getcontrolledPlayerID() == fromTerritory->getcontrolledPlayerID()) {
 		//if there's no battle between to terrtories
 		this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber()) + numberOfArmies);
-		this->fromTerritory->setArmyNumber((this->fromTerritory->getArmyNumber()) - numberOfArmies);
+		int temp = (this->fromTerritory->getArmyNumber() - numberOfArmies <= 0)? 0 : (this->fromTerritory->getArmyNumber() - numberOfArmies <= 0);
+		this->fromTerritory->setArmyNumber(temp);
 
 		string temp1 = "[Order Executed]Player: ";
 		string temp2 = to_string(this->getPlayerID());
@@ -466,7 +467,8 @@ string AdvanceOrder::execute() {
 					currentRemainingArmies - 1;
 				}
 			}
-			this->fromTerritory->setArmyNumber((this->fromTerritory->getArmyNumber()) - numberOfArmies);
+			int temp = (this->fromTerritory->getArmyNumber() - numberOfArmies <= 0) ? 0 : this->fromTerritory->getArmyNumber() - numberOfArmies;
+			this->fromTerritory->setArmyNumber(temp);
 			if (currentRemainingArmies < 1) battle = false;
 			if (this->targetTerritory->getArmyNumber() < 1) battle = false;
 		}
