@@ -473,12 +473,14 @@ string AdvanceOrder::execute() {
 			if (this->targetTerritory->getArmyNumber() < 1) battle = false;
 		}
 		if (this->targetTerritory->getArmyNumber() == 0) {
+			//Simulate a neutral player to an aggressive player
+			GameEngine::instance()->updateNeutralPlayer(this->targetTerritory->getcontrolledPlayerID());
 			//attacker win the battle
 			this->targetTerritory->setControlledPlayerID(this->getPlayerID());
 			this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber()) + currentRemainingArmies);
 
 			GameEngine::instance()->setPlayerConquered(this->getPlayerID());
-
+			
 			string temp1 = "[Order Executed]Player: ";
 			string temp2 = to_string(this->getPlayerID());
 			string temp3 = " advanced ";
@@ -500,7 +502,7 @@ string AdvanceOrder::execute() {
 			return temp1;
 		}
 		else {
-
+			GameEngine::instance()->updateNeutralPlayer(this->targetTerritory->getcontrolledPlayerID());
 			string temp1 = "[Order Executed]Player: ";
 			string temp2 = to_string(this->getPlayerID());
 			string temp3 = " advanced ";
@@ -745,7 +747,8 @@ string AirliftOrder::execute() {
 		return temp1;
 	}
 	this->targetTerritory->setArmyNumber((this->targetTerritory->getArmyNumber()) + numberOfArmies);
-	this->fromTerritory->setArmyNumber((this->fromTerritory->getArmyNumber()) - numberOfArmies);
+	int temp = (this->fromTerritory->getArmyNumber() - numberOfArmies <= 0) ? 0 : this->fromTerritory->getArmyNumber() - numberOfArmies;
+	this->fromTerritory->setArmyNumber(temp);
 
 	string temp1 = "[Order Executed]Player: ";
 	string temp2 = to_string(this->getPlayerID());
@@ -888,8 +891,8 @@ string CheatingOrder::execute() {
 		//validate() will always return true.
 		return temp1;
 	}
-	//this->targetTerritory->setControlledPlayerID( this->getPlayerID());
-
+	GameEngine::instance()->updateNeutralPlayer(this->targetTerritory->getcontrolledPlayerID());
+	this->targetTerritory->setControlledPlayerID( this->getPlayerID());
 	string temp1 = "[Order Executed]Cheater player automatically conquers the terrtory: ";
 	string temp2 = this->targetTerritory->getName();
 	temp1.append(temp2);

@@ -110,6 +110,7 @@ public:
 	void  setGameResult(string str);
 	void  setTournaMode(bool value);
 	void  increNumGames();
+	void  updateNeutralPlayer(int neutralplayer_id);
 
 	void addPlayerToList(Player* player,int id);
 	void reinforcementPhase();
