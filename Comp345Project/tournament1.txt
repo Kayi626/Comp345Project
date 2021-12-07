@@ -1,1 +1,1 @@
-tournament -M 2 -P A B C N -G 5 -D 50              
+tournament -M 2 -P A N C -G 2 -D 50              

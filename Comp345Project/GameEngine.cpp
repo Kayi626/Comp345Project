@@ -1196,6 +1196,16 @@ void GameEngine::executreOrderPhase(int startingPlayer) {
 	transition(-1);
 }
 
+void  GameEngine::updateNeutralPlayer(int neutralplayer_id) {
+	//If a neutral player is attacked, he or she will become an agrressive player.
+	for (Player* p : playerList) {
+		if (p->getPlayerID()==neutralplayer_id && p->getName().compare("Neutral")==0) {
+			p->setPlayerStrategy(new AggressivePlayerStrategy(p));
+		}
+		
+	}
+}
+
 void  GameEngine::increNumGames() {
 	totalNumGames++;
 	int temp = ((totalNumGames % stoi(tourna_paravec[2][0]) == 0) ? stoi(tourna_paravec[2][0]) : (totalNumGames % stoi(tourna_paravec[2][0])));
